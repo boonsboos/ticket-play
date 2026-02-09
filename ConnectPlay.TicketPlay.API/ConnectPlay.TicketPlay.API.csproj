@@ -8,6 +8,12 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+	  <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.12" />
   </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="../ConnectPlay.TicketPlay/ConnectPlay.TicketPlay.csproj"></ProjectReference>
+	</ItemGroup>
 
 </Project>
