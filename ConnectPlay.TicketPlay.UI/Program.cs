@@ -1,37 +1,55 @@
+using Refit;
+using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.Components;
+using ConnectPlay.TicketPlay.UI.Repositories;
+using ConnectPlay.TicketPlay.Abstract.Repositories;
 
-namespace ConnectPlay.TicketPlay.UI
+namespace ConnectPlay.TicketPlay.UI;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
+        // Add services
+        ConfigureApi(builder.Services, builder.Configuration.GetConnectionString("BaseUrl") ?? throw new InvalidOperationException("API base URL is empty!"));
+        ConfigureServices(builder.Services);
 
-            var app = builder.Build();
+        builder.Services.AddRazorComponents()
+            .AddInteractiveServerComponents();
 
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+        var app = builder.Build();
 
-            app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-            app.UseHttpsRedirection();
+        // Configure the HTTP request pipeline.
+        //if (!app.Environment.IsDevelopment())
+        //{
+        //    app.UseExceptionHandler("/Error");
+        //    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+        //    app.UseHsts();
+        //}
 
-            app.UseAntiforgery();
+        //app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
+        //app.UseHttpsRedirection();
 
-            app.MapStaticAssets();
-            app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+        //app.UseAntiforgery();
 
-            app.Run();
-        }
+        app.MapStaticAssets();
+        app.MapRazorComponents<App>()
+            .AddInteractiveServerRenderMode();
+
+        app.Run();
+    }
+
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<IMovieRepository, MovieRepository>();
+    }
+
+    private static void ConfigureApi(IServiceCollection services, string baseUrl)
+    {
+        services
+            .AddRefitClient<IMovieApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
 }
