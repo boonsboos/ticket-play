@@ -44,6 +44,8 @@ public class Program
         app.Run();
     }
 
+    #region Dependency Injection
+
     private static void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IMovieRepository, MovieRepository>();
@@ -55,4 +57,6 @@ public class Program
             .AddRefitClient<IMovieApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
+
+    #endregion
 }
