@@ -30,9 +30,11 @@ public class Program
         //}
 
         //app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
-        //app.UseHttpsRedirection();
+        app.UseHttpsRedirection();
 
-        //app.UseAntiforgery();
+        app.UseAntiforgery();
+        
+        app.UseStaticFiles();
 
         app.MapStaticAssets();
         app.MapRazorComponents<App>()
