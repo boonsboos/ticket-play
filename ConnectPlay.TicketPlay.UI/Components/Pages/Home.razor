@@ -2,11 +2,16 @@
 
 <PageTitle>Home</PageTitle>
 
+<h1>Home</h1>
+<hr />
+
 <!-- We have some variables. Where do they come from? Take a look in Home.razor.cs -->
 
-@* @if (currentMovies.Count() == 0)
+<h2>Showing now</h2>
+
+@if (currentMovies.Count() == 0)
 {
-    <p>No current movies currently playing.</p>
+    <p><i>No movies currently showing in the cinema...</i></p>
 } 
 else
 {
@@ -16,9 +21,13 @@ else
     }
 }
 
+<hr />
+
+<h2>New arrivals</h2>
+
 @if (newMovies.Count() == 0)
 {
-    <p>No new movies coming soon.</p>
+    <p><i>No new movies coming soon...</i></p>
 }
 else
 {
@@ -26,4 +35,4 @@ else
     {
         <p>@movie.Title</p>
     }
-} *@
+}

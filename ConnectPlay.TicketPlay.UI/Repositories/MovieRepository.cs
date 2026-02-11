@@ -15,12 +15,16 @@ public class MovieRepository : IMovieRepository
 
     public Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
     {
-        throw new NotImplementedException();
+        return Task.FromResult<IEnumerable<Movie>>([]);
     }
 
     public Task<IEnumerable<Movie>> GetNewMoviesAsync()
     {
-        throw new NotImplementedException();
+        return Task.FromResult<IEnumerable<Movie>>([
+            new Movie {
+                Title = "Glorbo's Adventures 2",
+                MinimumAge = 8
+            }]);
     }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
