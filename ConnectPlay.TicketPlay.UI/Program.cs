@@ -36,6 +36,7 @@ public class Program
 
         app.UseStaticFiles();
 
+        // Map stuff to endpoints
         app.MapStaticAssets();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
