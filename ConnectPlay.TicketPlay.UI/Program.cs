@@ -17,6 +17,7 @@ public class Program
         ConfigureServices(builder.Services);
 
         builder.Services.AddRazorComponents()
+            .AddInteractiveWebAssemblyComponents()
             .AddInteractiveServerComponents();
 
         var app = builder.Build();
@@ -39,6 +40,7 @@ public class Program
         // Map stuff to endpoints
         app.MapStaticAssets();
         app.MapRazorComponents<App>()
+            .AddInteractiveWebAssemblyRenderMode()
             .AddInteractiveServerRenderMode();
 
         app.Run();
