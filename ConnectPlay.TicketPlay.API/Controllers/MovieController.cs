@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class MovieController : ControllerBase
+// API resource for movie related queries.
+
+[ApiController] // Register as part of the API
+[Route("[controller]")] // Base route contains the name of the controller (MovieController -> movie)
+public class MovieController : ControllerBase // Controllerbase provides useful utility methods for returning HTTP responses
 {
     private readonly IMovieRepository _movieRepository;
 
@@ -15,9 +17,11 @@ public class MovieController : ControllerBase
         _movieRepository = movieRepository;
     }
 
-    [HttpGet]
-    [Route("current")]
-    public async Task<IActionResult> GetCurrent()
+    // ProducesResponseType is not required, but is useful for API documentation and tools like Swagger to understand what this endpoint returns.
+    [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)] // Document that this endpoint returns a list of movies on HTTP OK
+    [HttpGet] // Register a GET endpoint
+    [Route("current")] // At route /movie/current
+    public async Task<IActionResult> GetCurrentAsync() // Always suffix async methods with "Async"
     {
         var currentMovies = await _movieRepository.GetCurrentMoviesAsync();
 
@@ -25,12 +29,13 @@ public class MovieController : ControllerBase
         return Ok(currentMovies);
     }
 
+    [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]
     [HttpGet]
     [Route("new")]
-    public async Task<IActionResult> GetNew()
+    public Task<IActionResult> GetNew()
     {
         // HTTP No Content
-        return await Task.FromResult(NoContent());
+        return Task.FromResult<IActionResult>(NoContent());
     }
 
     [HttpGet]
