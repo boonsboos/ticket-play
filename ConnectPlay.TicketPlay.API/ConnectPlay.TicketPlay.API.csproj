@@ -20,4 +20,8 @@
 		<ProjectReference Include="../ConnectPlay.TicketPlay/ConnectPlay.TicketPlay.csproj"></ProjectReference>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Migrations\" />
+	</ItemGroup>
+
 </Project>
