@@ -2,6 +2,37 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Home</h1>
+<hr />
 
-Welcome to your new app.
+<!-- We have some variables. Where do they come from? Take a look in Home.razor.cs -->
+
+<h2>Showing now</h2>
+
+@if (currentMovies.Count() == 0)
+{
+    <p><i>No movies currently showing in the cinema...</i></p>
+} 
+else
+{
+    @foreach(var movie in currentMovies)
+    {
+        <p>@movie.Title</p>
+    }
+}
+
+<hr />
+
+<h2>New arrivals</h2>
+
+@if (newMovies.Count() == 0)
+{
+    <p><i>No new movies coming soon...</i></p>
+}
+else
+{
+    @foreach (var movie in newMovies)
+    {
+        <p>@movie.Title</p>
+    }
+}

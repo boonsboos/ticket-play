@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
+    <File Path="README.md" />
   </Folder>
   <Project Path="ConnectPlay.TicketPlay.API/ConnectPlay.TicketPlay.API.csproj" />
   <Project Path="ConnectPlay.TicketPlay.Tests/ConnectPlay.TicketPlay.Tests.csproj" Id="6b9c35e9-2c91-49f5-92fb-18e1aecc583c" />

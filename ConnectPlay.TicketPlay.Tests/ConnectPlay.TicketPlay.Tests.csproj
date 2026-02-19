@@ -10,6 +10,13 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="NSubstitute" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ConnectPlay.TicketPlay.API\ConnectPlay.TicketPlay.API.csproj" />
+    <ProjectReference Include="..\ConnectPlay.TicketPlay.UI\ConnectPlay.TicketPlay.UI.csproj" />
+    <ProjectReference Include="..\ConnectPlay.TicketPlay\ConnectPlay.TicketPlay.csproj" />
   </ItemGroup>
 
 </Project>
