@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ConnectPlay.TicketPlay.Models;
+﻿namespace ConnectPlay.TicketPlay.Models;
 
 public record MovieFilters
 {
