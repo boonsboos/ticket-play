@@ -1,10 +1,9 @@
 ﻿namespace ConnectPlay.TicketPlay.Models;
 
-[Flags]
-public enum TicketType
+public enum TicketType : byte
 {
     Adult,
     Child,
     Student,
-    Senior, // 65+
+    Senior // 65+
 }

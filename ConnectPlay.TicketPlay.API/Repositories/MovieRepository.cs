@@ -21,14 +21,14 @@ public class MovieRepository : IMovieRepository
     {
         using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
-        return await dbContext.Movies.Where(movie => movie.IsCurrent).ToListAsync();
+        return await dbContext.Movies.Where(movie => movie.Tags.Contains("Current")).ToListAsync();
     }
 
     public async Task<IEnumerable<Movie>> GetNewMoviesAsync()
     {
         using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
-        return await dbContext.Movies.Where(movie => movie.IsNew).ToListAsync();
+        return await dbContext.Movies.Where(movie => movie.Tags.Contains("New")).ToListAsync();
     }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
