@@ -11,6 +11,6 @@ public record Hall
     public required int HallNumber { get; init; }
     public required int Capacity { get; init; }
     public required bool WheelchairAccessible { get; init; }
-    public required bool ThreeDProjector { get; init; }
+    public required bool Has3DProjector { get; init; }
 
 }
