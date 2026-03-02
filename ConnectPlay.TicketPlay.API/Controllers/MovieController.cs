@@ -1,5 +1,6 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -27,6 +28,16 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
 
         // HTTP OK
         return Ok(currentMovies);
+    }
+
+    [ProducesResponseType(typeof(IEnumerable<MovieListItemDto>), StatusCodes.Status200OK)]
+    [HttpGet] // This is the Get endpoint.
+    [Route("today")]
+    public async Task<IActionResult> GetTodayAsync()
+    {
+        var now = DateTimeOffset.Now; // We take the current date and time to find movies that are playing today
+        var result = await _movieRepository.GetTodaysMoviesAsync(now);
+        return Ok(result);
     }
 
     [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]

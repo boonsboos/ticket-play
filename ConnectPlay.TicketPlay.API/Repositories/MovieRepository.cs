@@ -1,6 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
@@ -34,5 +35,44 @@ public class MovieRepository : IMovieRepository
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task<IReadOnlyList<MovieListItemDto>> GetTodaysMoviesAsync(DateTimeOffset now)
+    {
+        // Using "await using" so the database connection is closed when its done.
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var startOfDay = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset); // Start of the day in the same timezone as now where you are.
+        var startNextDay = startOfDay.AddDays(1);
+        var screenings = await dbContext.Screenings
+            // Include, Where, OrderBy are to build up the query
+            .Include(screening => screening.Movie) // Ef will automatically join the Movie table
+            .Where(screening => screening.StartTime >= startOfDay && screening.StartTime < startNextDay)
+            .OrderBy(screening => screening.StartTime)
+            .ToListAsync(); // Excute the query and get the screenings for today
+        var todayMoviesWithScreenings = screenings
+            .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
+            .Select(movieGroup =>
+            {
+                // Filter out the screenings that already started 
+                var todaysScreeningTimes = movieGroup
+                    .Select(screening => screening.StartTime)
+                    .Where(startTime => startTime >= now)
+                    .OrderBy(startTime => startTime)
+                    .ToList(); // Create the actual list of screening times for the movies of today
+
+                return new MovieListItemDto
+                {
+                    Id = movieGroup.Key.Id.ToString(),
+                    Title = movieGroup.Key.Title,
+                    Genre = movieGroup.Key.Genre,
+                    PosterUrl = movieGroup.Key.PosterUrl.ToString(),
+                    ScreeningTimes = todaysScreeningTimes.Take(3).ToList(),
+                    HasMoreScreenings = todaysScreeningTimes.Count > 3
+                };
+            })
+            .Where(movieListItem => movieListItem.ScreeningTimes.Count > 0) // Filter out movies that only had screenings that already started
+            .ToList();
+        return todayMoviesWithScreenings;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace ConnectPlay.TicketPlay.API.Contexts;
 

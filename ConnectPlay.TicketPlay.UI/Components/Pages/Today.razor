@@ -1,0 +1,60 @@
+﻿@page "/today"
+
+@using ConnectPlay.TicketPlay.Models.Dto
+@using System.Net.Http.Json
+@using Microsoft.Extensions.Logging
+
+@inject HttpClient HttpClient
+@inject ILogger<Today> Logger
+
+<h1>Films van vandaag</h1>
+
+@if (isLoading)
+{
+    <p>Films worden geladen!</p>
+} else if (!string.IsNullOrWhiteSpace(errorMessage)) { // if the errorMessage has a value, show it
+    <p class="text-danger">@errorMessage</p>
+} else
+{
+    @foreach (var movie in movies)
+    {
+        <div class="çard mb-3 p-3">
+            <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid mb-2" />
+            <h3>@movie.Title</h3>
+            <p class="text-muted">@movie.Genre</p>
+            <div class="d-flex gap-2 flex-wrap">
+                @foreach (var startTime in movie.ScreeningTimes)
+                {
+                    <span class="badge bg-primary">@startTime.ToLocalTime().ToString("HH:mm")</span>
+                }
+                @if (movie.HasMoreScreenings)
+                {
+                    <span class="badge bg-secondary">Zie meer</span>
+                }
+            </div>
+        </div>
+    }
+}
+
+@code {
+    private IReadOnlyList<MovieListItemDto> movies = Array.Empty<MovieListItemDto>();
+    private bool isLoading = true;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            movies = await HttpClient.GetFromJsonAsync<IReadOnlyList<MovieListItemDto>>("movie/today"); // Does the GET request to the API endpoint
+        }
+        catch (Exception e)
+        {
+            errorMessage = "Het laden van films is niet mogelijk op dit moment.";
+            Logger.LogError(e, "Error when loading the movies of today from the API.");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
