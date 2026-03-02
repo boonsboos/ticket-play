@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConnectPlay.TicketPlay.Models;
 
 [Table("tickets")]
 public record Ticket
 {
+    [Key]
     public Guid TicketId { get; init; }
     public required Screening Screening { get; init; }
     public required Seat Seat { get; init; }
