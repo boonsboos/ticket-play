@@ -35,9 +35,11 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [Route("today")]
     public async Task<IActionResult> GetTodayAsync()
     {
-        var now = DateTimeOffset.Now; // We take the current date and time to find movies that are playing today
-        var result = await _movieRepository.GetTodaysMoviesAsync(now);
-        return Ok(result);
+        var todaysMovies = await _movieRepository.GetTodaysMoviesAsync();
+
+        if (!todaysMovies.Any()) { return Ok(Array.Empty<MovieListItemDto>()); }
+
+        return Ok(todaysMovies);
     }
 
     [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]

@@ -1,12 +1,5 @@
 ﻿@page "/today"
 
-@using ConnectPlay.TicketPlay.Models.Dto
-@using System.Net.Http.Json
-@using Microsoft.Extensions.Logging
-
-@inject HttpClient HttpClient
-@inject ILogger<Today> Logger
-
 <h1>Films van vandaag</h1>
 
 @if (isLoading)
@@ -33,28 +26,5 @@
                 }
             </div>
         </div>
-    }
-}
-
-@code {
-    private IReadOnlyList<MovieListItemDto> movies = Array.Empty<MovieListItemDto>();
-    private bool isLoading = true;
-    private string? errorMessage;
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            movies = await HttpClient.GetFromJsonAsync<IReadOnlyList<MovieListItemDto>>("movie/today"); // Does the GET request to the API endpoint
-        }
-        catch (Exception e)
-        {
-            errorMessage = "Het laden van films is niet mogelijk op dit moment.";
-            Logger.LogError(e, "Error when loading the movies of today from the API.");
-        }
-        finally
-        {
-            isLoading = false;
-        }
     }
 }

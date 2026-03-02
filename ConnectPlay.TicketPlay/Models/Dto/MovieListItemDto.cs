@@ -1,6 +1,6 @@
 ﻿namespace ConnectPlay.TicketPlay.Models.Dto;
 
-public sealed class MovieListItemDto
+public record MovieListItemDto
 {
     public string Id { get; init; }
     public string Title { get; init; } = string.Empty;

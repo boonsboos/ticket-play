@@ -37,10 +37,12 @@ public class MovieRepository : IMovieRepository
         throw new NotImplementedException();
     }
 
-    public async Task<IReadOnlyList<MovieListItemDto>> GetTodaysMoviesAsync(DateTimeOffset now)
+    public async Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync()
     {
         // Using "await using" so the database connection is closed when its done.
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var now = DateTimeOffset.Now;
 
         var startOfDay = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset); // Start of the day in the same timezone as now where you are.
         var startNextDay = startOfDay.AddDays(1);
@@ -50,6 +52,7 @@ public class MovieRepository : IMovieRepository
             .Where(screening => screening.StartTime >= startOfDay && screening.StartTime < startNextDay)
             .OrderBy(screening => screening.StartTime)
             .ToListAsync(); // Excute the query and get the screenings for today
+
         var todayMoviesWithScreenings = screenings
             .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
             .Select(movieGroup =>
