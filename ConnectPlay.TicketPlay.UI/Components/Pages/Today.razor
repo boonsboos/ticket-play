@@ -7,8 +7,11 @@
     <p>Films worden geladen!</p>
 } else if (!string.IsNullOrWhiteSpace(errorMessage)) { // if the errorMessage has a value, show it
     <p class="text-danger">@errorMessage</p>
-} else
+}
+else if (!movies.Any())
 {
+    <p>Er zijn vandaag geen films meer gepland.</p>
+}
     @foreach (var movie in movies)
     {
         <div class="çard mb-3 p-3">
