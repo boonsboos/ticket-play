@@ -8,7 +8,7 @@ public class TicketPlayContext : DbContext
 {
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Seat> Seats { get; set; }
-    public DbSet<Hall> Rooms { get; set; }
+    public DbSet<Hall> Halls { get; set; }
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<Screening> Screenings { get; set; }
     public DbSet<Order> Orders { get; set; }
