@@ -5,10 +5,8 @@
 @if (isLoading)
 {
     <p>Films worden geladen!</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage)) // if the errorMessage has a value, show it
-{ 
-  <p class="text-danger">@errorMessage</p>
+} else if (!string.IsNullOrWhiteSpace(errorMessage)) { // if the errorMessage has a value, show it
+    <p class="text-danger">@errorMessage</p>
 }
 else if (!movies.Any())
 {
