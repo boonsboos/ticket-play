@@ -6,7 +6,7 @@ public record MovieListItemDto
     public string Title { get; init; } = string.Empty;
     public string Genre { get; init; } = string.Empty;
     public string PosterUrl { get; init; } = string.Empty;
-    public IReadOnlyList<DateTimeOffset> ScreeningTimes { get; init; } = Array.Empty<DateTimeOffset>();
+    public IEnumerable<DateTimeOffset> ScreeningTimes { get; init; } = [];
     public bool HasMoreScreenings { get; init; }
 
 }

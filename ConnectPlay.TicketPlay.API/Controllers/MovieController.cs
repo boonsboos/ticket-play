@@ -37,8 +37,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     {
         var todaysMovies = await _movieRepository.GetTodaysMoviesAsync();
 
-        if (!todaysMovies.Any()) { return Ok(Array.Empty<MovieListItemDto>()); }
-
         return Ok(todaysMovies);
     }
 

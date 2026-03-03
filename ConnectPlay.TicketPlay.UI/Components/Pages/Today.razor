@@ -1,30 +1,34 @@
-﻿@page "/today"
+﻿@page "/movie/today"
 
 <h1>Films van vandaag</h1>
 
 @if (isLoading)
 {
     <p>Films worden geladen!</p>
-} else if (!string.IsNullOrWhiteSpace(errorMessage)) { // if the errorMessage has a value, show it
-    <p class="text-danger">@errorMessage</p>
-} else
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage)) // if the errorMessage has a value, show it
+{ 
+  <p class="text-danger">@errorMessage</p>
+}
+else if (!movies.Any())
 {
-    @foreach (var movie in movies)
-    {
-        <div class="çard mb-3 p-3">
-            <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid mb-2" />
-            <h3>@movie.Title</h3>
-            <p class="text-muted">@movie.Genre</p>
-            <div class="d-flex gap-2 flex-wrap">
-                @foreach (var startTime in movie.ScreeningTimes)
-                {
-                    <span class="badge bg-primary">@startTime.ToLocalTime().ToString("HH:mm")</span>
-                }
-                @if (movie.HasMoreScreenings)
-                {
-                    <span class="badge bg-secondary">Zie meer</span>
-                }
-            </div>
+    <p>Er zijn vandaag geen films meer gepland.</p>
+}
+@foreach (var movie in movies)
+{
+    <div class="çard mb-3 p-3">
+        <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid mb-2" />
+        <h3>@movie.Title</h3>
+        <p class="text-muted">@movie.Genre</p>
+        <div class="d-flex gap-2 flex-wrap">
+            @foreach (var startTime in movie.ScreeningTimes)
+            {
+                <span class="badge bg-primary">@startTime.ToLocalTime().ToString("HH:mm")</span>
+            }
+            @if (movie.HasMoreScreenings)
+            {
+                <span class="badge bg-secondary">Zie meer</span>
+            }
         </div>
-    }
+    </div>
 }

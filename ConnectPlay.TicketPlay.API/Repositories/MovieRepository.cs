@@ -70,11 +70,10 @@ public class MovieRepository : IMovieRepository
                     Title = movieGroup.Key.Title,
                     Genre = movieGroup.Key.Genre,
                     PosterUrl = movieGroup.Key.PosterUrl.ToString(),
-                    ScreeningTimes = todaysScreeningTimes.Take(3).ToList(),
-                    HasMoreScreenings = todaysScreeningTimes.Count > 3
+                    ScreeningTimes = todaysScreeningTimes
                 };
             })
-            .Where(movieListItem => movieListItem.ScreeningTimes.Count > 0) // Filter out movies that only had screenings that already started
+            .Where(movieListItem => movieListItem.ScreeningTimes.Any()) // Filter out movies that only had screenings that already started, Any() stops if found 
             .ToList();
         return todayMoviesWithScreenings;
     }
