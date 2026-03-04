@@ -1,8 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.UI.Api;
-using System.Collections.Frozen;
-using System.Collections.Immutable;
 
 namespace ConnectPlay.TicketPlay.UI.Repositories;
 
@@ -36,6 +35,32 @@ public class MovieRepository : IMovieRepository
                 Tags = "Family,Adventure,Sequel"
             }
         ]);
+    }
+
+    public async Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync()
+    {
+        return await _movieApi.GetTodayMoviesAsync();
+    }
+
+    public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
+    {
+        var movie = await _movieApi.GetMovieByIdAsync(id);
+
+        if (movie == null)
+            return null;
+
+        var dto = new MovieDetailDto
+        {
+            Id = movie.Id,
+            Title = movie.Title,
+            Description = movie.Description,
+            Genre = movie.Genre,
+            PosterUrl = movie.PosterUrl.ToString(),
+            Duration = movie.Duration,
+            MinimumAge = movie.MinimumAge
+        };
+
+        return dto;
     }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
