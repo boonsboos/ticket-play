@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSTest.Sdk/4.0.1">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -14,24 +14,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NSubstitute" Version="5.3.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ConnectPlay.TicketPlay.API\ConnectPlay.TicketPlay.API.csproj" />
     <ProjectReference Include="..\ConnectPlay.TicketPlay.UI\ConnectPlay.TicketPlay.UI.csproj" />
     <ProjectReference Include="..\ConnectPlay.TicketPlay\ConnectPlay.TicketPlay.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="18.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="MSTest.TestAdapter" Version="4.1.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="MSTest.TestFramework" Version="4.1.0" />
   </ItemGroup>
 
 </Project>

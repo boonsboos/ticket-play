@@ -37,7 +37,7 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     {
         var todaysMovies = await _movieRepository.GetTodaysMoviesAsync();
 
-        return Ok(todaysMovies);
+        return Ok(todaysMovies); // Ok() is short for OkeObjectResult and creates a Http 200 response ojbect with the data in it
     }
 
     [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]
