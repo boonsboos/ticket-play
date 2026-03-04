@@ -55,6 +55,7 @@ public class MovieRepository : IMovieRepository
 
         var todayMoviesWithScreenings = screenings
             .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
+            .OrderBy(movieGroup => movieGroup.Key.Title)
             .Select(movieGroup =>
             {
                 // Filter out the screenings that already started 
