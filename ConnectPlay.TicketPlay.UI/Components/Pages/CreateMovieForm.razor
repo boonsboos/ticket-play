@@ -1,0 +1,184 @@
+﻿@page "/movies/create"
+@using System.ComponentModel.DataAnnotations
+@using System.Net.Http.Json
+@using ConnectPlay.TicketPlay.Models.Dto
+@inject HttpClient Http
+
+<PageTitle>Create Movie</PageTitle>
+
+<h1>Create Movie</h1>
+<hr />
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">@successMessage</div>
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm Model="model" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <InputText class="form-control" @bind-Value="model.Title" />
+        <ValidationMessage For="@(() => model.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <InputTextArea class="form-control" @bind-Value="model.Description" />
+        <ValidationMessage For="@(() => model.Description)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Duration (minutes)</label>
+        <InputNumber class="form-control" @bind-Value="model.Duration" />
+        <ValidationMessage For="@(() => model.Duration)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Release date</label>
+        <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
+        <ValidationMessage For="@(() => model.ReleaseDate)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Poster URL</label>
+        <InputText class="form-control" @bind-Value="model.PosterUrl" />
+        <ValidationMessage For="@(() => model.PosterUrl)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Language</label>
+        <InputText class="form-control" @bind-Value="model.Language" />
+        <ValidationMessage For="@(() => model.Language)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Minimum age</label>
+        <InputNumber class="form-control" @bind-Value="model.MinimumAge" />
+        <ValidationMessage For="@(() => model.MinimumAge)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Genre</label>
+        <InputText class="form-control" @bind-Value="model.Genre" />
+        <ValidationMessage For="@(() => model.Genre)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tags (comma separated)</label>
+        <InputText class="form-control" @bind-Value="model.TagsCsv" />
+        <ValidationMessage For="@(() => model.TagsCsv)" />
+    </div>
+
+    <button class="btn btn-primary" type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Saving..." : "Create")
+    </button>
+</EditForm>
+
+@code {
+    private CreateMovieFormModel model = new();
+
+    private bool isSubmitting;
+    private string? successMessage;
+    private string? errorMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        isSubmitting = true;
+        successMessage = null;
+        errorMessage = null;
+
+        try
+        {
+            if (!Uri.TryCreate(model.PosterUrl, UriKind.Absolute, out var posterUri))
+            {
+                errorMessage = "Poster URL must be a valid absolute URL.";
+                return;
+            }
+
+            var tags = ParseTags(model.TagsCsv);
+
+            var dto = new CreateMovieDto
+            {
+                Title = model.Title!,
+                Description = model.Description!,
+                Duration = model.Duration!.Value,
+                ReleaseDate = DateOnly.FromDateTime(model.ReleaseDate!.Value),
+                PosterUrl = posterUri,
+                Language = model.Language!,
+                MinimumAge = model.MinimumAge!.Value,
+                Genre = model.Genre!,
+                Tags = tags
+            };
+
+            // IMPORTANT: adjust route to your API:
+            // If your API controller uses [Route("[controller]")], use "movie" not "api/movie".
+            var response = await Http.PostAsJsonAsync("movie", dto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                successMessage = "Movie created successfully.";
+                model = new();
+            }
+            else
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                errorMessage = string.IsNullOrWhiteSpace(body)
+                    ? $"Create failed ({(int)response.StatusCode})."
+                    : $"Create failed ({(int)response.StatusCode}): {body}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Unexpected error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private static List<string> ParseTags(string? csv)
+        => (csv ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+    private sealed class CreateMovieFormModel
+    {
+        [Required, StringLength(200)]
+        public string? Title { get; set; }
+
+        [Required, StringLength(4000)]
+        public string? Description { get; set; }
+
+        [Required, Range(1, 600)]
+        public int? Duration { get; set; }
+
+        [Required]
+        public DateTime? ReleaseDate { get; set; } = DateTime.Today;
+
+        [Required]
+        public string? PosterUrl { get; set; }
+
+        [Required, StringLength(50)]
+        public string? Language { get; set; }
+
+        [Required, Range(0, 21)]
+        public int? MinimumAge { get; set; }
+
+        [Required, StringLength(50)]
+        public string? Genre { get; set; }
+
+        // UI input field
+        [Required, StringLength(500)]
+        public string? TagsCsv { get; set; }
+    }
+}

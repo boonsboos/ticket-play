@@ -1,5 +1,6 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -43,5 +44,13 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     public async Task<IActionResult> Search([FromQuery] string movie, [FromBody] MovieFilters? filters)
     {
         return NotFound();
+    }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
+    {
+        await _movieRepository.CreateMovieAsync(dto);
+        return Created(); // "it went ok", no payload given.
     }
 }
