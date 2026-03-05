@@ -14,8 +14,11 @@ public partial class CreateHall : ComponentBase
     private string? message;
     private string alertClass = "alert-success";
 
+    private bool isSubmitting = false;
+
     private async Task HandleSubmit()
     {
+        isSubmitting = true;
         try
         {
             // basic validation
@@ -51,7 +54,7 @@ public partial class CreateHall : ComponentBase
                     : null,
                 Rows = [.. form.Rows]
             };
-            
+
             await HallApi.CreateNewHallAsync(request);
 
             message = "Hall created successfully.";
@@ -61,6 +64,10 @@ public partial class CreateHall : ComponentBase
         {
             message = ex.Message;
             alertClass = "alert-danger";
+        }
+        finally
+        {
+            isSubmitting = false;
         }
     }
 
@@ -113,7 +120,7 @@ public partial class CreateHall : ComponentBase
         public bool Has3DProjector { get; set; }
 
         // dynamic rows: each int = seats in that row
-        public List<int> Rows { get; set; } = [5, 2];
+        public List<int> Rows { get; set; } = [5]; // start with 1 row of 5 seats by default
         public int WheelchairRow { get; set; } = 0;
         public int WheelchairSeat { get; set; } = 0;
     }

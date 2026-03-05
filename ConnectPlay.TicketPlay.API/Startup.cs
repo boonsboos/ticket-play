@@ -46,6 +46,7 @@ public class Startup(IConfiguration configuration)
 
     private void ConfigureRepositories(IServiceCollection services)
     {
-        services.AddScoped<IMovieRepository, MovieRepository>();
+        services.AddScoped<IMovieRepository, MovieRepository>()
+        .AddScoped<IHallRepository, HallRepository>();
     }
 }

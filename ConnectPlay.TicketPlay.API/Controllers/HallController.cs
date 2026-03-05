@@ -76,6 +76,10 @@ public class HallController : ControllerBase
         if (createdHall is null)
             return Problem("No hall has been created.", statusCode: StatusCodes.Status500InternalServerError);
 
-        return Created($"/halls/{createdHall.Id}", new { createdHall.Id, createdHall.HallNumber, createdHall.Capacity });
+        return Created($"/halls/{createdHall.Id}", new CreateHallResponse
+        {
+            HallNumber = createdHall.HallNumber,
+            Capacity = createdHall.Capacity
+        });
     }
 }
