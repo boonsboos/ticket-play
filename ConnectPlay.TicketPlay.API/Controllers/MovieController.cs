@@ -43,10 +43,11 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]
     [HttpGet]
     [Route("new")]
-    public Task<IActionResult> GetNew()
+    public async Task<IActionResult> GetNewAsync()
     {
-        // HTTP No Content
-        return Task.FromResult<IActionResult>(NoContent());
+        // Returns a empty list if no movies are available
+        var newMovies = await _movieRepository.GetNewMoviesAsync();
+        return Ok(newMovies);
     }
 
     [HttpGet]
