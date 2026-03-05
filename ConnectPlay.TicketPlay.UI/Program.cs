@@ -57,6 +57,7 @@ public class Program
     {
         services
             .AddRefitClient<IMovieApi>()
+            .AddRefitClient<IHallApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
 

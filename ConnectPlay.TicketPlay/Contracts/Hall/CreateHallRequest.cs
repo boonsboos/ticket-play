@@ -5,9 +5,10 @@
 namespace ConnectPlay.TicketPlay.Contracts.Hall;
 
 // API request contract for the Hall feature.
-public sealed record CreateHallRequest(
-    int HallNumber,
-    bool Has3DProjector,
-    HallWheelchairSeat? WheelchairSeat,
-    List<int> Rows
-);
+public sealed record CreateHallRequest
+{
+    public int HallNumber { get; init; }
+    public bool Has3DProjector { get; init; }
+    public HallWheelchairSeat? WheelchairSeat { get; init; }
+    public List<int> Rows { get; init; } = [];
+}
