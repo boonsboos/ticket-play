@@ -68,14 +68,15 @@ public class OrderProcessingServiceTests
         var screeningRepository = Substitute.For<IScreeningRepository>();
         var ticketRepository = Substitute.For<ITicketRepository>();
         var seatAssignmentService = Substitute.For<ISeatAssignmentService>();
+        var orderRepository = Substitute.For<IOrderRepository>();
 
-        screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns((Screening) null!);
+        screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns((Screening)null!);
 
-        var orderProcessingService = new OrderProcessingService(screeningRepository, ticketRepository, seatAssignmentService);
+        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
-            async () => await orderProcessingService.ProcessOrderAsync(2, [])
+            async () => await orderProcessingService.ReserveAsync(2, [])
         );
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto.Ticket;
 
 namespace ConnectPlay.TicketPlay.API.Abstract;
 
@@ -11,5 +10,5 @@ public interface ISeatAssignmentService
     /// <param name="screening">The screening the tickets request</param>
     /// <param name="tickets">The requested tickets</param>
     /// <returns></returns>
-    public Task<IEnumerable<Seat>> AssignAsync(Screening screening, IEnumerable<CreateTicketDto> tickets);
+    public Task<IEnumerable<Seat>> AssignAsync(Screening screening, IEnumerable<TicketType> tickets);
 }

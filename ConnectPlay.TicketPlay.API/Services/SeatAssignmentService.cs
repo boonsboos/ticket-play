@@ -1,7 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto.Ticket;
 
 namespace ConnectPlay.TicketPlay.API.Services;
 
@@ -16,27 +15,34 @@ public class SeatAssignmentService : ISeatAssignmentService
         this.ticketRepository = ticketRepository;
     }
 
-    public async Task<IEnumerable<Seat>> AssignAsync(Screening screening, IEnumerable<CreateTicketDto> tickets)
+    public async Task<IEnumerable<Seat>> AssignAsync(Screening screening, IEnumerable<TicketType> tickets)
     {
         var availableSeats = await GetAvailableSeatsAsync(screening);
 
+        if (availableSeats.Count < tickets.Count())
+        {
+            throw new InvalidOperationException($"A request was made for {tickets.Count()} tickets, but the screening only has room for {availableSeats.Count} people");
+        }
+
         var rows = availableSeats.GroupBy(seat => seat.Row).ToList();
 
-        SortFromMiddle(rows);
+        rows = SortFromMiddle(rows);
 
         var assignedSeats = new List<Seat>();
-
-        // Actual seat assignment process:
-        // find the row with the most optimal placing for the seats
-        // but start from the middle and prefer the left
 
         // 1) try to fit as many people next to each other
         assignedSeats.AddRange(InternalAssignSeatsOptimistic(rows, tickets));
 
-        // 2) spread the seats through the hall
-        if (assignedSeats.Count() < tickets.Count())
+        // 2) spread the seats through the row otherwise
+        if (assignedSeats.Count == 0)
         {
             assignedSeats.AddRange(InternalAssignSeatsPessimistic(rows, tickets));
+        }
+
+        // 3) spread the seats throughout the entire hall
+        if (assignedSeats.Count == 0)
+        {
+            assignedSeats.AddRange(availableSeats.Take(tickets.Count()));
         }
 
         return assignedSeats;
@@ -58,25 +64,29 @@ public class SeatAssignmentService : ISeatAssignmentService
     /// <param name="rows"></param>
     /// <param name="tickets"></param>
     /// <returns></returns>
-    private List<Seat> InternalAssignSeatsOptimistic(IEnumerable<IGrouping<int, Seat>> rows, IEnumerable<CreateTicketDto> tickets)
+    private List<Seat> InternalAssignSeatsOptimistic(IEnumerable<IGrouping<int, Seat>> rows, IEnumerable<TicketType> tickets)
     {
         var amountOfSeats = tickets.Count();
 
         var firstFittingRow = rows.FirstOrDefault(row => HasAdjacentSeats(row, amountOfSeats));
         if (firstFittingRow is null) return [];
 
-        return [.. firstFittingRow];
+        return [.. firstFittingRow.Take(amountOfSeats)];
     }
 
     /// <summary>
-    /// Assigns seats where all visitors can not sit next to each other
+    /// Assigns seats where all visitors can not sit next to each other but still on the same row
     /// </summary>
     /// <param name="rows"></param>
     /// <param name="tickets"></param>
     /// <returns></returns>
-    private List<Seat> InternalAssignSeatsPessimistic(IEnumerable<IGrouping<int, Seat>> rows, IEnumerable<CreateTicketDto> tickets)
+    private List<Seat> InternalAssignSeatsPessimistic(IEnumerable<IGrouping<int, Seat>> rows, IEnumerable<TicketType> tickets)
     {
-        return [];
+        var amountOfSeats = tickets.Count();
+        var firstFittingRow = rows.FirstOrDefault(row => row.Count() >= amountOfSeats);
+        if (firstFittingRow is null) return [];
+
+        return [.. firstFittingRow.Take(amountOfSeats)];
     }
 
     /// <summary>
@@ -84,7 +94,7 @@ public class SeatAssignmentService : ISeatAssignmentService
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="list">the list to sort</param>
-    private static void SortFromMiddle<T>(List<T> list)
+    private static List<T> SortFromMiddle<T>(List<T> list)
     {
         var length = list.Count();
         var oddLength = length % 2 == 1;
@@ -99,7 +109,8 @@ public class SeatAssignmentService : ISeatAssignmentService
             leftSide = middle - 1;
             rightSide = middle + 1;
             items.Add(list[middle]);
-        } else
+        }
+        else
         {
             leftSide = middle - 1;
             rightSide = middle;
@@ -112,6 +123,8 @@ public class SeatAssignmentService : ISeatAssignmentService
             leftSide--;
             rightSide++;
         }
+
+        return items;
     }
 
     /// <summary>
