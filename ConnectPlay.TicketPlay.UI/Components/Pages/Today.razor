@@ -27,12 +27,18 @@ else
                     <p class="text-muted mb-2">@movie.Genre</p>
 
                     <div class="d-flex gap-2 flex-wrap">
-                        @foreach (var startTime in movie.ScreeningTimes.Take(3))
+                        @{
+                            // Materialize up to 4 screening times to avoid multiple enumeration
+                            var screeningTimes = movie.ScreeningTimes.Take(4).ToList();
+                            var visibleTimes = screeningTimes.Take(3);
+                            var hasMoreScreenings = screeningTimes.Count > 3;
+                        }
+                        @foreach (var startTime in visibleTimes)
                         {
                             <span class="badge bg-primary">@startTime.ToLocalTime().ToString("HH:mm")</span>
                         }
 
-                        @if (movie.ScreeningTimes.Count() > 3)
+                        @if (hasMoreScreenings)
                         {
                             <span class="badge bg-secondary">Zie meer</span>
                         }
