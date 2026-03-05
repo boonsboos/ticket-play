@@ -2,6 +2,8 @@
 using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
 
@@ -70,13 +72,14 @@ public class HallController : ControllerBase
 
         hall.Capacity = hall.Seats.Count; // Calulated based on the seats count
 
+
         // Create a new hall and make the appropiate response
         var createdHall = await _hallRepo.CreateHallAsync(hall);
 
         if (createdHall is null)
-            return Problem("No hall has been created.", statusCode: StatusCodes.Status500InternalServerError);
+            return Conflict("A hall with the same hall number already exists.");
 
-        return Created($"/halls/{createdHall.Id}", new CreateHallResponse
+        return Created($"/hall/{createdHall.Id}", new CreateHallResponse
         {
             HallNumber = createdHall.HallNumber,
             Capacity = createdHall.Capacity

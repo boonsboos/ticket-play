@@ -55,9 +55,9 @@ public partial class CreateHall : ComponentBase
                 Rows = [.. form.Rows]
             };
 
-            await HallApi.CreateNewHallAsync(request);
+            var response = await HallApi.CreateNewHallAsync(request);
 
-            message = "Hall created successfully.";
+            message = $"Hall {response.HallNumber} created with capacity of {response.Capacity} seats.";
             alertClass = "alert-success";
         }
         catch (Exception ex)
