@@ -229,7 +229,7 @@ namespace ConnectPlay.TicketPlay.API.Migrations
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Seat", b =>
                 {
                     b.HasOne("ConnectPlay.TicketPlay.Models.Hall", "Hall")
-                        .WithMany("Seats")
+                        .WithMany()
                         .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -258,11 +258,6 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Navigation("Screening");
 
                     b.Navigation("Seat");
-                });
-
-            modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Hall", b =>
-                {
-                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Order", b =>
