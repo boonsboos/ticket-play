@@ -8,5 +8,5 @@ public interface IMovieRepository
     public Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
     public Task<IEnumerable<Movie>> GetNewMoviesAsync();
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters);
-    public Task<IEnumerable<MovieListItemDto>> GetTodayMoviesAsync();
+    public Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync();
 }
