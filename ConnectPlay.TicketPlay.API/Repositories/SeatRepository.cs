@@ -23,6 +23,8 @@ public class SeatRepository : ISeatRepository
 
         return await dbContext.Seats
             .Where(seat => seat.Hall.Id == hall.Id)
+            .OrderBy(seat => seat.Row)
+            .OrderBy(seat => seat.SeatNumber)
             .ToListAsync();
     }
 }
