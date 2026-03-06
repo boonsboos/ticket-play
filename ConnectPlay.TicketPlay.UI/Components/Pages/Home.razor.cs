@@ -1,25 +1,19 @@
-﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+﻿using Microsoft.AspNetCore.Components;
+using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
-using Microsoft.AspNetCore.Components;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages;
 
 public partial class Home : ComponentBase
 {
-    private readonly IMovieRepository movieRepository;
+    [Inject] protected IMovieRepository MovieRepository { get; set; } = default!;
 
-    private IEnumerable<Movie> currentMovies = [];
-    private IEnumerable<Movie> newMovies = [];
-
-    // Get dependency injected MovieRepository instance
-    public Home(IMovieRepository movieRepository)
-    {
-        this.movieRepository = movieRepository;
-    }
+    protected IEnumerable<Movie> currentMovies = new List<Movie>();
+    protected IEnumerable<Movie> newMovies = new List<Movie>();
 
     protected override async Task OnInitializedAsync()
     {
-        currentMovies = await movieRepository.GetCurrentMoviesAsync();
-        newMovies = await movieRepository.GetNewMoviesAsync();
+        currentMovies = await MovieRepository.GetCurrentMoviesAsync();
+        newMovies = await MovieRepository.GetNewMoviesAsync();
     }
 }

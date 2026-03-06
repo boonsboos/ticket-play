@@ -44,23 +44,14 @@ public class MovieRepository : IMovieRepository
 
     public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
     {
-        var movie = await _movieApi.GetMovieByIdAsync(id);
-
-        if (movie == null)
-            return null;
-
-        var dto = new MovieDetailDto
+        try
         {
-            Id = movie.Id,
-            Title = movie.Title,
-            Description = movie.Description,
-            Genre = movie.Genre,
-            PosterUrl = movie.PosterUrl.ToString(),
-            Duration = movie.Duration,
-            MinimumAge = movie.MinimumAge
-        };
-
-        return dto;
+            return await _movieApi.GetMovieByIdAsync(id);
+        }
+        catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
     }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)

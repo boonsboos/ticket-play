@@ -55,10 +55,18 @@ public class Program
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)
     {
-        services
-            .AddRefitClient<IMovieApi>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
+        services.AddRefitClient<IMovieApi>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl))
+            .ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                // Voor development: accepteer self-signed certificaten
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback =
+                        HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                };
+            });
     }
 
-    #endregion
-}
+        #endregion
+    }

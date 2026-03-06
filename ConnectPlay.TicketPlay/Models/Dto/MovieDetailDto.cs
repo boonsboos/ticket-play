@@ -2,11 +2,12 @@
 
 public record MovieDetailDto
 {
-    public int Id { get; set; }
-    public string Title { get; set; } = default!;
-    public string Description { get; set; } = default!;
-    public string Genre { get; set; } = default!;
-    public string PosterUrl { get; set; } = default!;
-    public int Duration { get; set; }
-    public int MinimumAge { get; set; }
+    public int Id { get; init; }
+    public string Title { get; init; } = string.Empty;
+    public string Description { get; init; } = string.Empty;
+    public string Genre { get; init; } = string.Empty;
+    public string PosterUrl { get; init; } = string.Empty;
+    public int Duration { get; init; }
+    public int MinimumAge { get; init; }
+    public string Tags { get; init; } = string.Empty;
 }

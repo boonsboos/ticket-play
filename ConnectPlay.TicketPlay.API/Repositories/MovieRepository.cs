@@ -32,26 +32,24 @@ public class MovieRepository : IMovieRepository
         return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.New)).ToListAsync();
     }
 
+
     public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
     {
-        // Create a new DbContext instance for this operation
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-
-        // Project the Movie entity to a MovieDetailDto directly in the database query for efficiency
-        return await dbContext.Movies
-            .Where(m => m.Id == id)
-            .Select(m => new MovieDetailDto
-            {
-                Id = m.Id,
-                Title = m.Title,
-                Description = m.Description,
-                Genre = m.Genre,
-                PosterUrl = m.PosterUrl.ToString(),
-                Duration = m.Duration,
-                MinimumAge = m.MinimumAge
-            })
-            // Give only one result, or null if not found
-            .FirstOrDefaultAsync();
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
+        return await db.Movies
+                       .Where(m => m.Id == id)
+                       .Select(m => new MovieDetailDto
+                       {
+                           Id = m.Id,
+                           Title = m.Title,
+                           Description = m.Description,
+                           Genre = m.Genre,
+                           PosterUrl = m.PosterUrl.ToString(),
+                           Duration = m.Duration,
+                           MinimumAge = m.MinimumAge,
+                           Tags = m.Tags
+                       })
+                       .FirstOrDefaultAsync();
     }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
