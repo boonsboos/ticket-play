@@ -1,0 +1,30 @@
+﻿@page "/payment/pin"
+
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="text-center">
+
+        <h2 class="mb-4">@Title</h2>
+
+        <div class="pin-panel shadow">
+            <input type="password" maxlength="4" class="form-control text-center mb-3" value="@EnteredPin" readonly />
+            
+            <div class="pin-buttons">
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(1)">1</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(2)">2</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(3)">3</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(4)">4</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(5)">5</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(6)">6</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(7)">7</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(8)">8</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(9)">9</button>
+                <button class="btn btn-secondary">*</button>
+                <button class="btn btn-secondary" @onclick="() => AddPinNumber(0)">0</button>
+                <button class="btn btn-secondary">#</button>
+                <button class="btn btn-danger" @onclick="CancelPayment">Annuleren</button>
+                <button class="btn btn-warning" @onclick="RemoveLastNumber">Correctie</button>
+                <button class="btn btn-success" @onclick="PaymentSuccessful">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
