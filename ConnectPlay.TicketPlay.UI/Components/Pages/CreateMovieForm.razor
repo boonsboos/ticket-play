@@ -14,8 +14,19 @@
 
 @if (!string.IsNullOrWhiteSpace(successMessage))
 {
-    <div class="alert alert-success">@successMessage</div>
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @successMessage
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
+                        @onclick="() => successMessage = null"></button>
+            </div>
+        </div>
+    </div>
 }
+
 @if (!string.IsNullOrWhiteSpace(errorMessage))
 {
     <div class="alert alert-danger">@errorMessage</div>
@@ -49,6 +60,12 @@
             <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
             <ValidationMessage For="@(() => model.ReleaseDate)" />
         </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Poster URL</label>
+        <InputText class="form-control" @bind-Value="model.PosterUrl" />
+        <ValidationMessage For="@(() => model.PosterUrl)" />
     </div>
 
     <div class="row">
@@ -131,7 +148,9 @@
             // If your API controller uses [Route("[controller]")], use "movie" not "api/movie".
             await MovieApi.CreateMovieAsync(dto);
 
-            
+            successMessage = "Movie has been created successfully";
+            model = new();
+
         }
         catch (Exception ex)
         {
