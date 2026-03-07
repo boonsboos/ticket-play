@@ -1,8 +1,11 @@
 ﻿@page "/movies/create"
+@rendermode InteractiveServer
 @using System.ComponentModel.DataAnnotations
 @using System.Net.Http.Json
 @using ConnectPlay.TicketPlay.Models.Dto
-@inject HttpClient Http
+@using ConnectPlay.TicketPlay.UI.Api
+@using ConnectPlay.TicketPlay.Models
+@inject IMovieApi MovieApi
 
 <PageTitle>Create Movie</PageTitle>
 
@@ -34,40 +37,47 @@
         <ValidationMessage For="@(() => model.Description)" />
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Duration (minutes)</label>
-        <InputNumber class="form-control" @bind-Value="model.Duration" />
-        <ValidationMessage For="@(() => model.Duration)" />
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label class="form-label">Duration (minutes)</label>
+            <InputNumber class="form-control" @bind-Value="model.Duration" />
+            <ValidationMessage For="@(() => model.Duration)" />
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label class="form-label">Release date</label>
+            <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
+            <ValidationMessage For="@(() => model.ReleaseDate)" />
+        </div>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Release date</label>
-        <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
-        <ValidationMessage For="@(() => model.ReleaseDate)" />
-    </div>
+    <div class="row">
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Language</label>
+            <InputText class="form-control" @bind-Value="model.Language" />
+            <ValidationMessage For="@(() => model.Language)" />
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Poster URL</label>
-        <InputText class="form-control" @bind-Value="model.PosterUrl" />
-        <ValidationMessage For="@(() => model.PosterUrl)" />
-    </div>
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Minimum age</label>
+            <InputSelect class="form-control" @bind-Value="model.MinimumAge">
+                <option value="">Select minimum age</option>
+                <option value="@MinimumAgeRating.AL">AL</option>
+                <option value="@MinimumAgeRating.Age6">6</option>
+                <option value="@MinimumAgeRating.Age9">9</option>
+                <option value="@MinimumAgeRating.Age12">12</option>
+                <option value="@MinimumAgeRating.Age14">14</option>
+                <option value="@MinimumAgeRating.Age16">16</option>
+                <option value="@MinimumAgeRating.Age18">18</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => model.MinimumAge)" />
+        </div>
 
-    <div class="mb-3">
-        <label class="form-label">Language</label>
-        <InputText class="form-control" @bind-Value="model.Language" />
-        <ValidationMessage For="@(() => model.Language)" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Minimum age</label>
-        <InputNumber class="form-control" @bind-Value="model.MinimumAge" />
-        <ValidationMessage For="@(() => model.MinimumAge)" />
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Genre</label>
-        <InputText class="form-control" @bind-Value="model.Genre" />
-        <ValidationMessage For="@(() => model.Genre)" />
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Genre</label>
+            <InputText class="form-control" @bind-Value="model.Genre" />
+            <ValidationMessage For="@(() => model.Genre)" />
+        </div>
     </div>
 
     <div class="mb-3">
@@ -112,27 +122,16 @@
                 ReleaseDate = DateOnly.FromDateTime(model.ReleaseDate!.Value),
                 PosterUrl = posterUri,
                 Language = model.Language!,
-                MinimumAge = model.MinimumAge!.Value,
+                MinimumAge = (int)model.MinimumAge!.Value,
                 Genre = model.Genre!,
                 Tags = tags
             };
 
             // IMPORTANT: adjust route to your API:
             // If your API controller uses [Route("[controller]")], use "movie" not "api/movie".
-            var response = await Http.PostAsJsonAsync("movie", dto);
+            await MovieApi.CreateMovieAsync(dto);
 
-            if (response.IsSuccessStatusCode)
-            {
-                successMessage = "Movie created successfully.";
-                model = new();
-            }
-            else
-            {
-                var body = await response.Content.ReadAsStringAsync();
-                errorMessage = string.IsNullOrWhiteSpace(body)
-                    ? $"Create failed ({(int)response.StatusCode})."
-                    : $"Create failed ({(int)response.StatusCode}): {body}";
-            }
+            
         }
         catch (Exception ex)
         {
@@ -153,7 +152,7 @@
 
     private sealed class CreateMovieFormModel
     {
-        [Required, StringLength(200)]
+        [Required, StringLength(255)]
         public string? Title { get; set; }
 
         [Required, StringLength(4000)]
@@ -171,14 +170,14 @@
         [Required, StringLength(50)]
         public string? Language { get; set; }
 
-        [Required, Range(0, 21)]
-        public int? MinimumAge { get; set; }
+        [Required]
+        public MinimumAgeRating? MinimumAge { get; set; }
 
         [Required, StringLength(50)]
         public string? Genre { get; set; }
 
         // UI input field
-        [Required, StringLength(500)]
+        [StringLength(500)]
         public string? TagsCsv { get; set; }
     }
 }

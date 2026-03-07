@@ -10,5 +10,5 @@ public record CreateMovieDto
     public required string Language { get; init; }
     public required int MinimumAge { get; init; }
     public required string Genre { get; init; }
-    public required List<string> Tags { get; init; }
+    public List<string>? Tags { get; init; }
 }
