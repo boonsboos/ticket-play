@@ -1,6 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace ConnectPlay.TicketPlay.API.Contexts;
 
@@ -19,5 +18,15 @@ public class TicketPlayContext : DbContext
 
     protected TicketPlayContext()
     {
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Hall>()
+            .HasIndex(b => b.HallNumber)
+            .IsUnique();
+        modelBuilder.Entity<Movie>()
+            .HasIndex(m => m.Title)
+            .IsUnique();
     }
 }

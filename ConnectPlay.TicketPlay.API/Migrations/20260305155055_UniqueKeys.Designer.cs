@@ -4,6 +4,7 @@ using ConnectPlay.TicketPlay.API.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectPlay.TicketPlay.API.Migrations
 {
     [DbContext(typeof(TicketPlayContext))]
-    partial class TicketPlayContextModelSnapshot : ModelSnapshot
+    [Migration("20260305155055_UniqueKeys")]
+    partial class UniqueKeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,7 +232,7 @@ namespace ConnectPlay.TicketPlay.API.Migrations
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Seat", b =>
                 {
                     b.HasOne("ConnectPlay.TicketPlay.Models.Hall", "Hall")
-                        .WithMany()
+                        .WithMany("Seats")
                         .HasForeignKey("HallId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -258,6 +261,11 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Navigation("Screening");
 
                     b.Navigation("Seat");
+                });
+
+            modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Hall", b =>
+                {
+                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Order", b =>

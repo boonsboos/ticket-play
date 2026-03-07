@@ -8,12 +8,15 @@ namespace ConnectPlay.TicketPlay.UI.Api;
 
 public interface IMovieApi
 {
-    [Get("/movies/current")]
+    [Get("/movie/current")]
     Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
 
-    [Get("/movies/new")]
+    [Get("/movie/new")]
     Task<IEnumerable<Movie>> GetNewMoviesAsync();
 
     [Post("/movie")]
     Task CreateMovieAsync(CreateMovieDto movie);
+  
+    [Get("/movie/today")]
+    Task<IEnumerable<MovieListItemDto>> GetTodayMoviesAsync();
 }
