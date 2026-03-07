@@ -46,4 +46,8 @@ public class MovieRepository : IMovieRepository
     {
         throw new NotImplementedException();
     }
+    public async Task CreateMovieAsync(CreateMovieDto dto)
+    {
+        await _movieApi.CreateMovieAsync(dto);
+    }
 }

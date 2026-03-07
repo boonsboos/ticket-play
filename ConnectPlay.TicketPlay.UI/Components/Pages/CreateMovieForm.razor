@@ -1,0 +1,202 @@
+﻿@page "/movies/create"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.Net.Http.Json
+@using ConnectPlay.TicketPlay.Models.Dto
+@using ConnectPlay.TicketPlay.UI.Api
+@using ConnectPlay.TicketPlay.Models
+@inject IMovieApi MovieApi
+
+<PageTitle>Create Movie</PageTitle>
+
+<h1>Create Movie</h1>
+<hr />
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @successMessage
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
+                        @onclick="() => successMessage = null"></button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm Model="model" OnValidSubmit="HandleValidSubmit" FormName="CreateMovieForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <InputText class="form-control" @bind-Value="model.Title" />
+        <ValidationMessage For="@(() => model.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <InputTextArea class="form-control" @bind-Value="model.Description" />
+        <ValidationMessage For="@(() => model.Description)" />
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label class="form-label">Duration (minutes)</label>
+            <InputNumber class="form-control" @bind-Value="model.Duration" />
+            <ValidationMessage For="@(() => model.Duration)" />
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label class="form-label">Release date</label>
+            <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
+            <ValidationMessage For="@(() => model.ReleaseDate)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Poster URL</label>
+        <InputText class="form-control" @bind-Value="model.PosterUrl" />
+        <ValidationMessage For="@(() => model.PosterUrl)" />
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Language</label>
+            <InputText class="form-control" @bind-Value="model.Language" />
+            <ValidationMessage For="@(() => model.Language)" />
+        </div>
+
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Minimum age</label>
+            <InputSelect class="form-control" @bind-Value="model.MinimumAge">
+                <option value="">Select minimum age</option>
+                <option value="@MinimumAgeRating.AL">AL</option>
+                <option value="@MinimumAgeRating.Age6">6</option>
+                <option value="@MinimumAgeRating.Age9">9</option>
+                <option value="@MinimumAgeRating.Age12">12</option>
+                <option value="@MinimumAgeRating.Age14">14</option>
+                <option value="@MinimumAgeRating.Age16">16</option>
+                <option value="@MinimumAgeRating.Age18">18</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => model.MinimumAge)" />
+        </div>
+
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Genre</label>
+            <InputText class="form-control" @bind-Value="model.Genre" />
+            <ValidationMessage For="@(() => model.Genre)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tags (comma separated)</label>
+        <InputText class="form-control" @bind-Value="model.TagsCsv" />
+        <ValidationMessage For="@(() => model.TagsCsv)" />
+    </div>
+
+    <button class="btn btn-primary" type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Saving..." : "Create")
+    </button>
+</EditForm>
+
+@code {
+    private CreateMovieFormModel model = new();
+
+    private bool isSubmitting;
+    private string? successMessage;
+    private string? errorMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        isSubmitting = true;
+        successMessage = null;
+        errorMessage = null;
+
+        try
+        {
+            if (!Uri.TryCreate(model.PosterUrl, UriKind.Absolute, out var posterUri))
+            {
+                errorMessage = "Poster URL must be a valid absolute URL.";
+                return;
+            }
+
+            var tags = ParseTags(model.TagsCsv);
+
+            var dto = new CreateMovieDto
+            {
+                Title = model.Title!,
+                Description = model.Description!,
+                Duration = model.Duration!.Value,
+                ReleaseDate = DateOnly.FromDateTime(model.ReleaseDate!.Value),
+                PosterUrl = posterUri,
+                Language = model.Language!,
+                MinimumAge = (int)model.MinimumAge!.Value,
+                Genre = model.Genre!,
+                Tags = tags
+            };
+
+            // IMPORTANT: adjust route to your API:
+            // If your API controller uses [Route("[controller]")], use "movie" not "api/movie".
+            await MovieApi.CreateMovieAsync(dto);
+
+            successMessage = "Movie has been created successfully";
+            model = new();
+
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Unexpected error: {ex.Message}";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private static List<string> ParseTags(string? csv)
+        => (csv ?? string.Empty)
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(t => !string.IsNullOrWhiteSpace(t))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+    private sealed class CreateMovieFormModel
+    {
+        [Required, StringLength(255)]
+        public string? Title { get; set; }
+
+        [Required, StringLength(4000)]
+        public string? Description { get; set; }
+
+        [Required, Range(1, 600)]
+        public int? Duration { get; set; }
+
+        [Required]
+        public DateTime? ReleaseDate { get; set; } = DateTime.Today;
+
+        [Required]
+        public string? PosterUrl { get; set; }
+
+        [Required, StringLength(50)]
+        public string? Language { get; set; }
+
+        [Required]
+        public MinimumAgeRating? MinimumAge { get; set; }
+
+        [Required, StringLength(50)]
+        public string? Genre { get; set; }
+
+        // UI input field
+        [StringLength(500)]
+        public string? TagsCsv { get; set; }
+    }
+}

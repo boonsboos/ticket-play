@@ -56,4 +56,12 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     {
         return NotFound();
     }
+
+    [HttpPost]
+    [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
+    {
+        await _movieRepository.CreateMovieAsync(dto);
+        return Created(); // "it went ok", no payload given.
+    }
 }
