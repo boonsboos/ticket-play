@@ -18,7 +18,7 @@ public class KioskController : ControllerBase
     }
 
     [HttpPost]
-    [Route("{screeningId}/reserve")] // /kiosk/1234/order
+    [Route("{screeningId}/reserve")] // /kiosk/1234/reserve
     public async Task<IActionResult> PlaceOrderAsync([FromRoute] int screeningId, [FromBody] IEnumerable<TicketType> tickets)
     {
         if (!tickets.Any()) return BadRequest();
