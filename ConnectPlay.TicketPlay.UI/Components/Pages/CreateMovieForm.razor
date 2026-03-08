@@ -71,8 +71,12 @@
     <div class="row">
         <div class="mb-3 col-md-4">
             <label class="form-label">Language</label>
-            <InputText class="form-control" @bind-Value="model.Language" />
-            <ValidationMessage For="@(() => model.Language)" />
+            <InputSelect class="form-control" @bind-Value="model.Language">
+                <option value="">Select language</option>
+                <option value="Nederlands">Nederlands</option>
+                <option value="English">English</option>
+            </InputSelect>
+    <ValidationMessage For="@(() => model.Language)" />
         </div>
 
         <div class="mb-3 col-md-4">
