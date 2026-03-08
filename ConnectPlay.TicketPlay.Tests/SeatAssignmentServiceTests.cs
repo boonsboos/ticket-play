@@ -36,7 +36,7 @@ public class SeatAssignmentServiceTests
         HasBreak = true,
     };
 
-    private static readonly TicketType testTicketType = TicketType.Adult;
+    private static readonly TicketType testTicketType = TicketType.Regular;
 
     [TestMethod]
     public async Task AssignAsync_AssignsSingleSeat()

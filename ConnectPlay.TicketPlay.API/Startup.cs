@@ -49,12 +49,17 @@ public class Startup(IConfiguration configuration)
 
     private void ConfigureRepositories(IServiceCollection services)
     {
-        services.AddScoped<IMovieRepository, MovieRepository>();
+        services.AddScoped<IMovieRepository, MovieRepository>()
+            .AddScoped<IScreeningRepository, ScreeningRepository>()
+            .AddScoped<ISeatRepository, SeatRepository>()
+            .AddScoped<ITicketRepository, TicketRepository>()
+            .AddScoped<IOrderRepository, OrderRepository>();
     }
 
     private void ConfigureTicketPlayServices(IServiceCollection services)
     {
         services.AddScoped<ISeatAssignmentService, SeatAssignmentService>();
         services.AddScoped<IKioskOrderService, KioskOrderService>();
+        services.AddSingleton<IPriceCalculationService, PriceCalculationService>();
     }
 }

@@ -30,7 +30,8 @@ public class ScreeningRepository : IScreeningRepository
         if (screenings.Any())
         {
             return screenings.First();
-        } else
+        }
+        else
         {
             return null;
         }

@@ -7,7 +7,7 @@ using NSubstitute;
 namespace ConnectPlay.TicketPlay.Tests;
 
 [TestClass]
-public class OrderProcessingServiceTests
+public class KioskOrderServiceTests
 {
     private readonly Screening WheelchairInaccessible2DProjectorScreening = new Screening
     {
@@ -69,10 +69,11 @@ public class OrderProcessingServiceTests
         var ticketRepository = Substitute.For<ITicketRepository>();
         var seatAssignmentService = Substitute.For<ISeatAssignmentService>();
         var orderRepository = Substitute.For<IOrderRepository>();
+        var priceCalculation = Substitute.For<IPriceCalculationService>();
 
         screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns((Screening)null!);
 
-        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository);
+        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository, priceCalculation);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
