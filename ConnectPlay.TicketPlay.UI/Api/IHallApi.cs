@@ -6,5 +6,5 @@ namespace ConnectPlay.TicketPlay.UI.Api;
 public interface IHallApi
 {
     [Post("/hall")]
-    public Task<CreateHallResponse> CreateNewHallAsync(CreateHallRequest hallRequest);
+    public Task<ApiResponse<CreateHallResponse>> CreateNewHallAsync(CreateHallRequest hallRequest);
 }

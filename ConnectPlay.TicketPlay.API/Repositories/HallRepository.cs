@@ -6,37 +6,36 @@ using MySqlConnector;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
-public class HallRepository : IHallRepository
+public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogger<HallRepository> _logger) : IHallRepository
 {
-    private readonly IDbContextFactory<TicketPlayContext> db;
-    private readonly ILogger _logger;
-
-    public HallRepository(IDbContextFactory<TicketPlayContext> db, ILogger<HallRepository> logger)
-    {
-        this.db = db;
-        this._logger = logger;
-    }
-
     public async Task<Hall?> CreateHallAsync(Hall hall)
     {
-        using var dbContext = await db.CreateDbContextAsync();
-
-        dbContext.Halls.Add(hall);
-
         try
         {
+            using var dbContext = await context.CreateDbContextAsync();
+
+            dbContext.Halls.Add(hall);
+
             await dbContext.SaveChangesAsync();
             return hall;
         }
-        // catch (DbUpdateException ex) when (
-        //     ex.InnerException is MySqlException mysqlEx &&
-        //     mysqlEx.ErrorCode == MySqlErrorCode.DuplicateKeyEntry)
-        // {
-        //     return null;
-        // }
-        catch(Exception ex)
+        catch (DbUpdateException e) when (e.InnerException is MySqlException mysqlEx && mysqlEx.ErrorCode == MySqlErrorCode.DuplicateKeyEntry)
         {
-        this._logger.LogError(ex, "An error occurred while creating the hall.");
+            return null;
+        }
+    }
+
+    public async Task<bool> HallNumberExist(int hallNumber)
+    {
+        try
+        {
+            using var dbContext = await context.CreateDbContextAsync();
+            return await dbContext.Halls.AnyAsync(h => h.HallNumber == hallNumber);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError("An error occurred while checking if the hall number exists.");
+            return false;
         }
     }
 }

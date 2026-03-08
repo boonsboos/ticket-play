@@ -2,32 +2,26 @@
 using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MySqlConnector;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class HallController : ControllerBase
+public class HallController(IHallRepository hallRepository) : ControllerBase
 {
-    private readonly IHallRepository _hallRepo;
-
-    public HallController(IHallRepository hallRepository)
-    {
-        _hallRepo = hallRepository;
-    }
-
     [HttpPost]
     public async Task<IActionResult> CreateHallAsync([FromBody] CreateHallRequest request)
     {
+        if (await hallRepository.HallNumberExist(request.HallNumber))
+            return Conflict("A hall with the same hall number already exists.");
+
         if (request.Rows is null || request.Rows.Count == 0)
             return BadRequest("Rows must not be empty.");
 
         if (request.Rows.Any(r => r <= 0))
             return BadRequest("All row seat counts must be > 0.");
 
-        // When WheelchairSeat is not null it will check if the given row and seat are valid
+        // When WheelchairSeat is not null, check if the given row and seat are valid
         if (request.WheelchairSeat is not null)
         {
             var wheelchairRow = request.WheelchairSeat.Row;
@@ -74,7 +68,7 @@ public class HallController : ControllerBase
 
 
         // Create a new hall and make the appropiate response
-        var createdHall = await _hallRepo.CreateHallAsync(hall);
+        var createdHall = await hallRepository.CreateHallAsync(hall);
 
         if (createdHall is null)
             return Conflict("A hall with the same hall number already exists.");

@@ -1,6 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
+using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages.Manager;
 
@@ -11,8 +12,9 @@ public partial class CreateHall : ComponentBase
     private readonly CreateHallFormModel form = new();
     private CreateHallRequest request = new();
 
-    private string? message;
-    private string alertClass = "alert-success";
+    private string toastMessage = "";
+    private string toastColor = "bg-success";
+    private bool showToast = false;
 
     private bool isSubmitting = false;
 
@@ -57,13 +59,23 @@ public partial class CreateHall : ComponentBase
 
             var response = await HallApi.CreateNewHallAsync(request);
 
-            message = $"Hall {response.HallNumber} created with capacity of {response.Capacity} seats.";
-            alertClass = "alert-success";
+            if (response.IsSuccessStatusCode)
+            {
+                var hall = response.Content!;
+
+                ShowSuccess($"Hall {hall.HallNumber} created with capacity of {hall.Capacity} seats.");
+            }
+            else
+            {
+                // read error message returned by API
+                var errorContent = response.Error?.Content;
+
+                ShowError(!string.IsNullOrWhiteSpace(errorContent)    ? errorContent: $"Server returned {response.StatusCode}");
+            }
         }
-        catch (Exception ex)
+        catch (ApiException e)
         {
-            message = ex.Message;
-            alertClass = "alert-danger";
+            ShowError(e.Message);
         }
         finally
         {
@@ -113,6 +125,24 @@ public partial class CreateHall : ComponentBase
         return form.Rows[row - 1];
     }
 
+    private void ShowSuccess(string message)
+    {
+        toastMessage = message;
+        toastColor = "bg-success";
+        showToast = true;
+    }
+
+    private void ShowError(string message)
+    {
+        toastMessage = message;
+        toastColor = "bg-danger";
+        showToast = true;
+    }
+
+    private void HideToast()
+    {
+        showToast = false;
+    }
 
     public sealed class CreateHallFormModel
     {
