@@ -23,7 +23,7 @@ public partial class CreateHall : ComponentBase
         isSubmitting = true;
         try
         {
-            // basic validation
+            // Validate if at least one row and seat is added, and wheelchair seat is valid if specified
             if (form.Rows.Count == 0)
                 throw new InvalidOperationException("Add at least one row.");
 
@@ -46,19 +46,19 @@ public partial class CreateHall : ComponentBase
                 wheelchair = new HallWheelchairSeat(row, seat);
             }
 
-
+            // Map form to request and call API
             request = request with
             {
                 HallNumber = form.HallNumber,
                 Has3DProjector = form.Has3DProjector,
-                WheelchairSeat = (form.WheelchairRow > 0 && form.WheelchairSeat > 0)
-                    ? new HallWheelchairSeat(form.WheelchairRow, form.WheelchairSeat)
+                WheelchairSeat = (wheelchair is not null)
+                    ? wheelchair
                     : null,
                 Rows = [.. form.Rows]
             };
 
             var response = await HallApi.CreateNewHallAsync(request);
-
+            // Handle response and show appropriate toast message
             if (response.IsSuccessStatusCode)
             {
                 var hall = response.Content!;
@@ -67,10 +67,9 @@ public partial class CreateHall : ComponentBase
             }
             else
             {
-                // read error message returned by API
                 var errorContent = response.Error?.Content;
 
-                ShowError(!string.IsNullOrWhiteSpace(errorContent)    ? errorContent: $"Server returned {response.StatusCode}");
+                ShowError(!string.IsNullOrWhiteSpace(errorContent) ? errorContent : $"Server returned {response.StatusCode}");
             }
         }
         catch (ApiException e)
@@ -83,13 +82,19 @@ public partial class CreateHall : ComponentBase
         }
     }
 
+    /// <summary>
+    /// Adds a new row to the form with a default number of seats (same as last row or 5 if no rows).
+    /// </summary>
     private void AddRow()
     {
         var defaultSeats = form.Rows.LastOrDefault() > 0 ? form.Rows.Last() : 5;
         form.Rows.Add(defaultSeats);
         EnsureWheelchairSelectionValid();
     }
-
+    /// <summary>
+    /// <para>Removes the row at the specified index from the form.</para>
+    /// </summary>
+    /// <param name="index">The zero-based index of the row to remove.</param>
     private void RemoveRow(int index)
     {
         if (index < 0 || index >= form.Rows.Count) return;
@@ -98,6 +103,9 @@ public partial class CreateHall : ComponentBase
         EnsureWheelchairSelectionValid();
     }
 
+    /// <summary>
+    /// Ensures that the wheelchair seat selection is valid based on the current rows and seats configuration.
+    /// </summary>
     private void EnsureWheelchairSelectionValid()
     {
         if (form.WheelchairRow <= 0 || form.WheelchairSeat <= 0) return;
@@ -110,13 +118,19 @@ public partial class CreateHall : ComponentBase
             return;
         }
 
-        // Clamp row
+        // Clamp row to number of rows, if row is out of range, reset to 1 (first row) since we know at least 1 row exists
         form.WheelchairRow = Math.Clamp(form.WheelchairRow, 1, form.Rows.Count);
 
-        // Clamp seat to seats in selected row
+        // Clamp seat to seats in selected row or reset to 1 if out of range (since we know at least 1 seat exists in that row)
         form.WheelchairSeat = Math.Clamp(form.WheelchairSeat, 1, form.Rows[form.WheelchairRow - 1]);
     }
 
+    /// <summary>
+    /// Returns the number of seats in the currently selected wheelchair row, or 0 if no valid wheelchair row is selected.
+    /// </summary>
+    /// <returns>
+    /// The number of seats in the selected wheelchair row, or 0 if no valid wheelchair row is selected.
+    /// </returns>
     private int SeatsInSelectedWheelchairRow()
     {
         if (form.WheelchairRow <= 0) return 0;
@@ -146,7 +160,7 @@ public partial class CreateHall : ComponentBase
 
     public sealed class CreateHallFormModel
     {
-        public int HallNumber { get; set; } = 1;
+        public  int HallNumber { get; set; } = 1;
         public bool Has3DProjector { get; set; }
 
         // dynamic rows: each int = seats in that row

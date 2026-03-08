@@ -5,5 +5,5 @@ namespace ConnectPlay.TicketPlay.Abstract.Repositories;
 public interface IHallRepository
 {
     public Task<Hall?> CreateHallAsync(Hall hall);
-    public Task<bool> HallNumberExist(int hallNumber);
+    public Task<bool> HallNumberExistAsync(int hallNumber);
 }

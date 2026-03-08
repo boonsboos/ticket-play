@@ -12,10 +12,10 @@ public class HallController(IHallRepository hallRepository) : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateHallAsync([FromBody] CreateHallRequest request)
     {
-        if (await hallRepository.HallNumberExist(request.HallNumber))
+        if (await hallRepository.HallNumberExistAsync(request.HallNumber))
             return Conflict("A hall with the same hall number already exists.");
 
-        if (request.Rows is null || request.Rows.Count == 0)
+        if (request.Rows.Count == 0)
             return BadRequest("Rows must not be empty.");
 
         if (request.Rows.Any(r => r <= 0))
@@ -64,10 +64,10 @@ public class HallController(IHallRepository hallRepository) : ControllerBase
             }
         }
 
-        hall.Capacity = hall.Seats.Count; // Calulated based on the seats count
+        hall.Capacity = hall.Seats.Count;
 
 
-        // Create a new hall and make the appropiate response
+        // Create a new hall and make the appropriate response
         var createdHall = await hallRepository.CreateHallAsync(hall);
 
         if (createdHall is null)

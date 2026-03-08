@@ -6,7 +6,7 @@ using MySqlConnector;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
-public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogger<HallRepository> _logger) : IHallRepository
+public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogger<HallRepository> logger) : IHallRepository
 {
     public async Task<Hall?> CreateHallAsync(Hall hall)
     {
@@ -21,11 +21,12 @@ public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogge
         }
         catch (DbUpdateException e) when (e.InnerException is MySqlException mysqlEx && mysqlEx.ErrorCode == MySqlErrorCode.DuplicateKeyEntry)
         {
+            logger.LogError(e, "A hall with the same hall number already exists.");
             return null;
         }
     }
 
-    public async Task<bool> HallNumberExist(int hallNumber)
+    public async Task<bool> HallNumberExistAsync(int hallNumber)
     {
         try
         {
@@ -34,7 +35,7 @@ public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogge
         }
         catch (Exception e)
         {
-            _logger.LogError("An error occurred while checking if the hall number exists.");
+            logger.LogError(e, "An error occurred while checking if the hall number exists.");
             return false;
         }
     }
