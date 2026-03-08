@@ -2,6 +2,7 @@ using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.Components;
 using ConnectPlay.TicketPlay.UI.Repositories;
+using ConnectPlay.TicketPlay.UI.Services;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI;
@@ -51,12 +52,14 @@ public class Program
     private static void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IMovieRepository, MovieRepository>();
+        services.AddScoped<KioskService>();
     }
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)
     {
         services
             .AddRefitClient<IMovieApi>()
+            .AddRefitClient<IKioskApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
 
