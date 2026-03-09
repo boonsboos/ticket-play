@@ -7,7 +7,7 @@ namespace ConnectPlay.TicketPlay.Models;
 public record Ticket
 {
     [Key]
-    public Guid TicketId { get; init; }
+    public Guid TicketId { get; set; }
     public required Screening Screening { get; init; }
     public required Seat Seat { get; init; }
     public TicketType TicketType { get; init; }
