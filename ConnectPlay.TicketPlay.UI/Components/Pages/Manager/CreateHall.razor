@@ -1,0 +1,117 @@
+﻿@page "/manager/create-hall"
+@rendermode InteractiveServer
+
+<div class="container my-4" style="max-width: 1200px;">
+    <h3 class="mb-4">Create Hall</h3>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateHallForm">
+                <ValidationSummary />
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-9">
+                        <label class="form-label">Hall Number</label>
+                        <InputNumber class="form-control" @bind-Value="form.HallNumber" />
+                    </div>
+
+                    <div class="col-md-3 d-flex align-items-end">
+                        <div class="form-check">
+                            <InputCheckbox class="form-check-input" @bind-Value="form.Has3DProjector" />
+                            <label class="form-check-label">
+                                Has 3D Projector
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-between mb-3 border-bottom">
+                    <h5 class="">Rows configuration</h5>
+
+                    <button type="button" class="btn btn-sm btn-outline-primary mb-2" @onclick="AddRow">
+                        + Add row
+                    </button>
+                </div>
+
+                <div class="vstack gap-3 mb-4">
+                    @for (var i = 0; i < form.Rows.Count; i++)
+                    {
+                        var rowIndex = i;
+
+                        <div class="border rounded p-3 bg-light-subtle">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong>Row @(rowIndex + 1)</strong>
+
+                                <button type="button" class="btn btn-sm btn-outline-danger"
+                                        disabled="@(form.Rows.Count == 1)" @onclick="() => RemoveRow(rowIndex)">
+                                    Remove
+                                </button>
+                            </div>
+
+                            <label class="form-label">Seats in this row</label>
+                            <InputNumber class="form-control" @bind-Value="form.Rows[rowIndex]"
+                                         @bind-Value:after="EnsureWheelchairSelectionValid" min="1" />
+                        </div>
+                    }
+                </div>
+
+                <hr />
+                <h5 class="mb-3 border-bottom pb-2">Wheelchair seat</h5>
+                <div class="card bg-light border-0 mb-4">
+                    <div class="card-body">
+                        <p class="text-muted small mb-3">
+                            Select a wheelchair seat if this hall has one.
+                        </p>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Row</label>
+                                <InputSelect class="form-select" @bind-Value="form.WheelchairRow"
+                                             @bind-Value:after="EnsureWheelchairSelectionValid">
+                                    <option value="0">Select row</option>
+                                    @for (var r = 1; r <= form.Rows.Count; r++)
+                                    {
+                                        <option value="@r">@r</option>
+                                    }
+                                </InputSelect>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">Seat</label>
+                                <InputSelect class="form-select" @bind-Value="form.WheelchairSeat">
+                                    <option value="0">Select seat</option>
+                                    @{
+                                        var maxSeat = SeatsInSelectedWheelchairRow();
+                                        for (var s = 1; s <= maxSeat; s++)
+                                        {
+                                            <option value="@s">@s</option>
+                                        }
+                                    }
+                                </InputSelect>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
+                        Create Hall
+                    </button>
+                </div>
+            </EditForm>
+
+            @if (showToast)
+            {
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div class="toast show align-items-center text-white @toastColor border-0">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @toastMessage
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" @onclick="HideToast">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
