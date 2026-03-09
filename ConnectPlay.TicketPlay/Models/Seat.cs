@@ -8,7 +8,7 @@ public record Seat
 {
     [Key]
     public int Id { get; init; }
-    public Hall Hall { get; set; } = null!;
+    public Hall? Hall { get; set; } = null;
     public required int Row { get; init; }
     public required int SeatNumber { get; init; }
     public required bool IsForWheelchair { get; init; }
