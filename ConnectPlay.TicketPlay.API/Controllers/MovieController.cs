@@ -56,4 +56,30 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     {
         return NotFound();
     }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
+    {
+
+        var allowedLanguages = new[] { "Nederlands", "English" };
+        if (!allowedLanguages.Contains(dto.Language))
+        {
+            ModelState.AddModelError(nameof(dto.Language), "Language must be Nederlands or English.");
+        }
+
+        if (!Enum.IsDefined(typeof(MinimumAgeRating), dto.MinimumAge))
+        {
+            ModelState.AddModelError(nameof(dto.MinimumAge), "Invalid minimum age.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        await _movieRepository.CreateMovieAsync(dto);
+        return StatusCode(StatusCodes.Status201Created); // "Movie was created", no payload given.
+    }
 }

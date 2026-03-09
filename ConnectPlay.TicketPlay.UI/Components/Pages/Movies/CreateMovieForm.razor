@@ -1,0 +1,110 @@
+﻿@page "/movies/create"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using ConnectPlay.TicketPlay.Models
+@inherits CreateMovieBase
+
+<PageTitle>Create Movie</PageTitle>
+
+<h1>Create Movie</h1>
+<hr />
+
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div class="toast show align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    @successMessage
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" aria-label="Close"
+                        @onclick="() => successMessage = null"></button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm Model="model" OnValidSubmit="HandleValidSubmit" FormName="CreateMovieForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <InputText class="form-control" @bind-Value="model.Title" />
+        <ValidationMessage For="@(() => model.Title)" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Description</label>
+        <InputTextArea class="form-control" @bind-Value="model.Description" />
+        <ValidationMessage For="@(() => model.Description)" />
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label class="form-label">Duration (minutes)</label>
+            <InputNumber class="form-control" @bind-Value="model.Duration" />
+            <ValidationMessage For="@(() => model.Duration)" />
+        </div>
+
+        <div class="mb-3 col-md-6">
+            <label class="form-label">Release date</label>
+            <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
+            <ValidationMessage For="@(() => model.ReleaseDate)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Poster URL</label>
+        <InputText class="form-control" @bind-Value="model.PosterUrl" />
+        <ValidationMessage For="@(() => model.PosterUrl)" />
+    </div>
+
+    <div class="row">
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Language</label>
+            <InputSelect class="form-control" @bind-Value="model.Language">
+                <option value="">Select language</option>
+                <option value="Nederlands">Nederlands</option>
+                <option value="English">English</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => model.Language)" />
+        </div>
+
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Minimum age</label>
+            <InputSelect class="form-control" @bind-Value="model.MinimumAge">
+                <option value="">Select minimum age</option>
+                <option value="@MinimumAgeRating.AL">AL</option>
+                <option value="@MinimumAgeRating.Age6">6</option>
+                <option value="@MinimumAgeRating.Age9">9</option>
+                <option value="@MinimumAgeRating.Age12">12</option>
+                <option value="@MinimumAgeRating.Age14">14</option>
+                <option value="@MinimumAgeRating.Age16">16</option>
+                <option value="@MinimumAgeRating.Age18">18</option>
+            </InputSelect>
+            <ValidationMessage For="@(() => model.MinimumAge)" />
+        </div>
+
+        <div class="mb-3 col-md-4">
+            <label class="form-label">Genre</label>
+            <InputText class="form-control" @bind-Value="model.Genre" />
+            <ValidationMessage For="@(() => model.Genre)" />
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Tags (comma separated)</label>
+        <InputText class="form-control" @bind-Value="model.TagsCsv" />
+        <ValidationMessage For="@(() => model.TagsCsv)" />
+    </div>
+
+    <button class="btn btn-primary" type="submit" disabled="@isSubmitting">
+        @(isSubmitting ? "Saving..." : "Create")
+    </button>
+</EditForm>
