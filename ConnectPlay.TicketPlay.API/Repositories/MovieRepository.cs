@@ -56,4 +56,67 @@ public class MovieRepository : IMovieRepository
     {
         throw new NotImplementedException();
     }
+
+    public async Task CreateMovieAsync(CreateMovieDto dto)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var movie = new Movie
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            Duration = dto.Duration,
+            ReleaseDate = dto.ReleaseDate,
+            PosterUrl = dto.PosterUrl,
+            Language = dto.Language,
+            MinimumAge = dto.MinimumAge,
+            Genre = dto.Genre,
+            Tags = string.Join(',', dto.Tags)
+        };
+
+        dbContext.Movies.Add(movie);
+
+        await dbContext.SaveChangesAsync();
+    }
+    
+    public async Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync()
+    {
+        // Using "await using" so the database connection is closed when its done.
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var now = DateTimeOffset.Now;
+
+        var startOfDay = new DateTimeOffset(now.Year, now.Month, now.Day, 0, 0, 0, now.Offset); // Start of the day in the same timezone as now where you are.
+        var startNextDay = startOfDay.AddDays(1);
+        var screenings = await dbContext.Screenings
+            // Include, Where, OrderBy are to build up the query
+            .Include(screening => screening.Movie) // Ef will automatically join the Movie table
+            .Where(screening => screening.StartTime >= now && screening.StartTime < startNextDay)
+            .OrderBy(screening => screening.StartTime)
+            .ToListAsync(); // Excute the query and get the screenings for today that have not yet started
+
+        var todayMoviesWithScreenings = screenings
+            .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
+            .OrderBy(movieGroup => movieGroup.Key.Title)
+            .Select(movieGroup =>
+            {
+                // Create the list of screening times for the movies of today (only future screenings were fetched)
+                var todaysScreeningTimes = movieGroup
+                    .Select(screening => screening.StartTime)
+                    .OrderBy(startTime => startTime)
+                    .ToList(); // Create the actual list of screening times for the movies of today
+
+                return new MovieListItemDto
+                {
+                    Id = movieGroup.Key.Id.ToString(),
+                    Title = movieGroup.Key.Title,
+                    Genre = movieGroup.Key.Genre,
+                    PosterUrl = movieGroup.Key.PosterUrl.ToString(),
+                    ScreeningTimes = todaysScreeningTimes
+                };
+            })
+            .Where(movieListItem => movieListItem.ScreeningTimes.Any()) // Filter out movies that only had screenings that already started, Any() stops if found 
+            .ToList();
+        return todayMoviesWithScreenings;
+    }
 }

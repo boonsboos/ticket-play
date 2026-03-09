@@ -1,0 +1,10 @@
+﻿@page "/kiosk/overview"
+
+<h3>Overview</h3>
+
+<h4>Je stoelen zijn:</h4>
+@foreach (var seat in kioskService.Seats) {
+    <p>@seat.ToString()</p>
+}
+
+<button class="btn btn-primary">Betalen</button>

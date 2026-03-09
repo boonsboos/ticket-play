@@ -1,5 +1,6 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -29,13 +30,24 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(currentMovies);
     }
 
+    [ProducesResponseType(typeof(IEnumerable<MovieListItemDto>), StatusCodes.Status200OK)] // the response is a list of MovieListItemDto
+    [HttpGet] // This is the Get endpoint.
+    [Route("today")] // the route will become movie/today
+    public async Task<IActionResult> GetTodayAsync() // Task<IActionResult> is the standard return type for async API endpoints (200 Ok, 404 Not Found)
+    {
+        var todaysMovies = await _movieRepository.GetTodaysMoviesAsync();
+
+        return Ok(todaysMovies); // Ok() is short for OkObjectResult and creates a Http 200 response object with the data in it
+    }
+
     [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]
     [HttpGet]
     [Route("new")]
-    public Task<IActionResult> GetNew()
+    public async Task<IActionResult> GetNewAsync()
     {
-        // HTTP No Content
-        return Task.FromResult<IActionResult>(NoContent());
+        // Returns a empty list if no movies are available
+        var newMovies = await _movieRepository.GetNewMoviesAsync();
+        return Ok(newMovies);
     }
 
 
@@ -60,5 +72,31 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     public async Task<IActionResult> Search([FromQuery] string movie, [FromBody] MovieFilters? filters)
     {
         return NotFound();
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
+    {
+
+        var allowedLanguages = new[] { "Nederlands", "English" };
+        if (!allowedLanguages.Contains(dto.Language))
+        {
+            ModelState.AddModelError(nameof(dto.Language), "Language must be Nederlands or English.");
+        }
+
+        if (!Enum.IsDefined(typeof(MinimumAgeRating), dto.MinimumAge))
+        {
+            ModelState.AddModelError(nameof(dto.MinimumAge), "Invalid minimum age.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        await _movieRepository.CreateMovieAsync(dto);
+        return StatusCode(StatusCodes.Status201Created); // "Movie was created", no payload given.
     }
 }

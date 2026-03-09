@@ -36,13 +36,16 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Property<int>("HallNumber")
                         .HasColumnType("int");
 
-                    b.Property<bool>("ThreeDProjector")
+                    b.Property<bool>("Has3DProjector")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("WheelchairAccessible")
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("HallNumber")
+                        .IsUnique();
 
                     b.ToTable("halls");
                 });
@@ -86,9 +89,12 @@ namespace ConnectPlay.TicketPlay.API.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasColumnType("varchar(255)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("movies");
                 });
@@ -127,6 +133,9 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Property<int>("HallId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("HasBreak")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
@@ -150,8 +159,11 @@ namespace ConnectPlay.TicketPlay.API.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("HallId")
+                    b.Property<int?>("HallId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsForWheelchair")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("Row")
                         .HasColumnType("int");
@@ -217,10 +229,8 @@ namespace ConnectPlay.TicketPlay.API.Migrations
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Seat", b =>
                 {
                     b.HasOne("ConnectPlay.TicketPlay.Models.Hall", "Hall")
-                        .WithMany()
-                        .HasForeignKey("HallId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Seats")
+                        .HasForeignKey("HallId");
 
                     b.Navigation("Hall");
                 });
@@ -246,6 +256,11 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Navigation("Screening");
 
                     b.Navigation("Seat");
+                });
+
+            modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Hall", b =>
+                {
+                    b.Navigation("Seats");
                 });
 
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Order", b =>

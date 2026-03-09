@@ -19,4 +19,7 @@ public interface IMovieApi
 
     [Get("/movie/{id}")]
     Task<MovieDetailDto> GetMovieByIdAsync(int id);
+
+    [Post("/movie")]
+    Task CreateMovieAsync(CreateMovieDto movie);
 }

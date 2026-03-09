@@ -53,9 +53,12 @@ public class MovieRepository : IMovieRepository
             return null;
         }
     }
-
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
         throw new NotImplementedException();
+    }
+    public async Task CreateMovieAsync(CreateMovieDto dto)
+    {
+        await _movieApi.CreateMovieAsync(dto);
     }
 }
