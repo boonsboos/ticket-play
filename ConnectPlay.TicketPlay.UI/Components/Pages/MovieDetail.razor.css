@@ -1,0 +1,24 @@
+﻿.bg-purple {
+    background-color: #4B006E;
+    color: white;
+}
+
+    .bg-purple:hover {
+        background-color: #6e33a3;
+    }
+
+.btn.btn-purple {
+    background-color: #4B006E;
+    color: white;
+    border: none;
+    transition: background-color 0.3s;
+}
+
+    .btn.btn-purple:hover {
+        background-color: #6e33a3;
+    }
+
+.showtime-section {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 1rem;
+}
