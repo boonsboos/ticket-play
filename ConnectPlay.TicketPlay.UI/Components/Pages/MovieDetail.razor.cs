@@ -10,6 +10,7 @@ public partial class MovieDetail : ComponentBase
     [Parameter] public int Id { get; init; }
 
     [Inject] protected IMovieRepository MovieRepository { get; init; } = default!;
+    [Inject] protected ILogger<MovieDetail> Logger { get; init; } = default!;
 
     protected MovieDetailDto? Movie { get; set; }
 
@@ -27,12 +28,12 @@ public partial class MovieDetail : ComponentBase
             catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 Movie = null;
-                Console.WriteLine($"Movie with Id {Id} not found.");
+                Logger.LogWarning("Movie with Id {MovieId} not found.", Id);
             }
             catch (Exception ex)
             {
                 Movie = null;
-                Console.WriteLine($"Error fetching movie {Id}: {ex.Message}");
+                Logger.LogError(ex, "Error fetching movie with Id {MovieId}", Id);
             }
         }
     }
