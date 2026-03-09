@@ -50,7 +50,7 @@ public class Startup(IConfiguration configuration)
     private void ConfigureRepositories(IServiceCollection services)
     {
         services.AddScoped<IMovieRepository, MovieRepository>()
-            .AddScoped<IHallRepository, HallRepository>();
+            .AddScoped<IHallRepository, HallRepository>()
             .AddScoped<IScreeningRepository, ScreeningRepository>()
             .AddScoped<ISeatRepository, SeatRepository>()
             .AddScoped<ITicketRepository, TicketRepository>()

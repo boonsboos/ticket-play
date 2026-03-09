@@ -160,7 +160,7 @@ public partial class CreateHall : ComponentBase
 
     public sealed class CreateHallFormModel
     {
-        public  int HallNumber { get; set; } = 1;
+        public int HallNumber { get; set; } = 1;
         public bool Has3DProjector { get; set; }
 
         // dynamic rows: each int = seats in that row
