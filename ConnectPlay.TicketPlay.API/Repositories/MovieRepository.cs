@@ -40,12 +40,12 @@ public class MovieRepository : IMovieRepository
                        .Where(m => m.Id == id)
                        .Select(m => new MovieDetailDto
                        {
-                           Id = m.Id,
                            Title = m.Title,
                            Description = m.Description,
                            Genre = m.Genre,
                            PosterUrl = m.PosterUrl.ToString(),
                            Duration = m.Duration,
+                           ReleaseDate = m.ReleaseDate,
                            MinimumAge = m.MinimumAge,
                            Tags = m.Tags
                        })
