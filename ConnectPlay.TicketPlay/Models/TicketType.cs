@@ -2,7 +2,7 @@
 
 public enum TicketType : byte
 {
-    Adult,
+    Regular,
     Child,
     Student,
     Senior // 65+

@@ -63,26 +63,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
     {
 
-        if (string.IsNullOrWhiteSpace(dto.Title))
-        {
-            ModelState.AddModelError(nameof(dto.Title), "Title is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.Description))
-        {
-            ModelState.AddModelError(nameof(dto.Description), "Description is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.Language))
-        {
-            ModelState.AddModelError(nameof(dto.Language), "Language is required.");
-        }
-
-        if (string.IsNullOrWhiteSpace(dto.Genre))
-        {
-            ModelState.AddModelError(nameof(dto.Genre), "Genre is required.");
-        }
-
         var allowedLanguages = new[] { "Nederlands", "English" };
         if (!allowedLanguages.Contains(dto.Language))
         {
@@ -92,11 +72,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         if (!Enum.IsDefined(typeof(MinimumAgeRating), dto.MinimumAge))
         {
             ModelState.AddModelError(nameof(dto.MinimumAge), "Invalid minimum age.");
-        }
-
-        if (dto.Tags is not null && dto.Tags.Any(tag => tag.Length > 50))
-        {
-            ModelState.AddModelError(nameof(dto.Tags), "Each tag may contain at most 50 characters.");
         }
 
         if (!ModelState.IsValid)
