@@ -12,4 +12,6 @@ public record Seat
     public required int Row { get; init; }
     public required int SeatNumber { get; init; }
     public required bool IsForWheelchair { get; init; }
+
+    public override string ToString() => $"{Row}-{SeatNumber}";
 }
