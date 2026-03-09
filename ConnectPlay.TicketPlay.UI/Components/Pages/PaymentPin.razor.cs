@@ -19,7 +19,9 @@ public partial class PaymentPin
         }
     }
 
-    // TODO(): Call the api to release the seats an cancel order
+    // TODO(): Call the a method in de KioskServcei to cancel order and reset the state
+    // KioskService call the api to set order status to canceled
+    // KioskService deletes the current tickets of specified order
     public void CancelPayment()
     {
         EnteredPin = string.Empty;
