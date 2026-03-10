@@ -1,0 +1,51 @@
+﻿@page "/movie/{Id:int}"
+
+@if (!_hasLoaded)
+{
+    <div class="container mt-4 text-center">
+        <p>Loading movie...</p>
+    </div>
+}
+else if (Movie == null)
+{
+    <div class="container mt-4 text-center">
+        <div class="alert alert-warning">
+            Film niet gevonden.
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-4 d-flex justify-content-center">
+        <div class="card movie-card mb-4 w-100" style="max-width:1000px;">
+            <div class="row g-0 align-items-start">
+                <div class="col-md-4 d-flex justify-content-center p-3">
+                    <img src="@Movie.PosterUrl" alt="@Movie.Title" class="img-fluid rounded" />
+                </div>
+                <div class="col-md-8 p-4 d-flex flex-column">
+                    <h2>@Movie.Title</h2>
+                    <p class="text-muted">@Movie.Genre • @Movie.Duration min • @Movie.ReleaseDate • @Movie.MinimumAge+</p>
+                    @if (!string.IsNullOrWhiteSpace(Movie.Tags))
+                    {
+                        <div class="mb-3">
+                            @foreach (var tag in Movie.Tags.Split(','))
+                            {
+                                <span class="badge rounded-pill bg-purple me-1">@tag.Trim()</span>
+                            }
+                        </div>
+                    }
+                    <p>@Movie.Description</p>
+                </div>
+            </div>
+            <div class="card-footer showtime-section text-center">
+                <h5>Voorstellingen</h5>
+                <div class="d-flex justify-content-center flex-wrap gap-3 mt-2">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container d-flex justify-content-between mt-3" style="max-width:1000px;">
+        <button class="btn btn-outline-primary">← Ga terug</button>
+        <button class="btn btn-purple">Volgende →</button>
+    </div>
+}

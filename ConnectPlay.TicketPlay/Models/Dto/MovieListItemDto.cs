@@ -7,5 +7,4 @@ public record MovieListItemDto
     public string Genre { get; init; } = string.Empty;
     public string PosterUrl { get; init; } = string.Empty;
     public IEnumerable<DateTimeOffset> ScreeningTimes { get; init; } = [];
-
 }
