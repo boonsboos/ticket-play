@@ -32,15 +32,15 @@ public partial class OrderOverview : ComponentBase
         this.Tickets = kioskService.Tickets;
         this.Screening = kioskService.SelectedScreening;
 
-        this.StartTime = Screening.StartTime.TimeOfDay.ToString(@"hh\:mm");
-        this.Is3D = Screening.Hall.Has3DProjector;
+        this.StartTime = Screening?.StartTime.TimeOfDay.ToString(@"hh\:mm") ?? "??:??";
+        this.Is3D = Screening?.Hall.Has3DProjector ?? false;
 
         base.OnInitialized();
     }
 
     private void ToPayment() => navigationManager.NavigateTo("/payment/pin");
 
-    protected void ToMovie() => navigationManager.NavigateTo("/movie/" + this.Movie.Id);
+    protected void ToMovie() => navigationManager.NavigateTo("/movie/" + (Movie?.Id ?? -1));
 
     private float CalculateTotal()
     {
@@ -65,5 +65,5 @@ public partial class OrderOverview : ComponentBase
         };
     }
 
-    private float RegularPrice() => Movie.Duration > 120 ? 9.00f : 8.50f;
+    private float RegularPrice() => (Movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;
 }
