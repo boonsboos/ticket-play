@@ -8,7 +8,6 @@ namespace ConnectPlay.TicketPlay.UI.Components.Pages;
 public partial class OrderOverview : ComponentBase
 {
     private readonly KioskService kioskService;
-    private readonly IMovieRepository movieRepository;
     private readonly NavigationManager navigationManager;
 
     protected Movie? Movie { get; set; }
@@ -18,10 +17,9 @@ public partial class OrderOverview : ComponentBase
     protected IEnumerable<TicketType> Tickets { get; set; } = [];
     protected bool Is3D { get; set; }
 
-    public OrderOverview(KioskService kioskService, IMovieRepository movieRepository, NavigationManager navigationManager)
+    public OrderOverview(KioskService kioskService, NavigationManager navigationManager)
     {
         this.kioskService = kioskService;
-        this.movieRepository = movieRepository;
         this.navigationManager = navigationManager;
     }
 
