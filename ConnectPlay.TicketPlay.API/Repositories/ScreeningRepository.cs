@@ -22,18 +22,27 @@ public class ScreeningRepository : IScreeningRepository
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
-        var screenings = dbContext.Screenings
+        return await dbContext.Screenings
             .Include(screening => screening.Hall)
             .Include(screening => screening.Movie)
-            .Where(screening => screening.Id == id);
+            .FirstOrDefaultAsync(screening => screening.Id == id);
+    }
 
-        if (screenings.Any())
-        {
-            return screenings.First();
-        }
-        else
-        {
-            return null;
-        }
+    public async Task<Screening[]> GetTodayScreeningsFromMovieAsync(int movieId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var today = DateTime.Today;
+        var tomorrow = today.AddDays(1);
+
+        // Returned an array of Screenings or empty array: []
+        return await dbContext.Screenings
+            .Include (screening => screening.Hall)
+            .Include (screening => screening.Movie)
+            .Where(screening =>
+                screening.Movie.Id == movieId &&
+                screening.StartTime >= today &&
+                screening.StartTime < tomorrow)
+            .ToArrayAsync();
     }
 }
