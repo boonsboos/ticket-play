@@ -40,4 +40,22 @@ public class KioskController : ControllerBase
             return BadRequest([]);
         }
     }
+
+    [HttpPut]
+    [Route("{orderId}/cancel")]
+    public async Task<IActionResult> CancelOrderAsync([FromRoute] int orderId) //FromRoute get the orderId from the url and use it as a parameter
+    {
+        try
+        {
+            await orderProcessingService.CancelAsync(orderId); // Controller call the service to cancel the order
+            return Ok(); // 200 code
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant cancel {OrderId}", orderId);
+            return BadRequest(); // 400 code
+        }
+
+        
+    }
 }

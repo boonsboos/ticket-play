@@ -17,7 +17,7 @@ public class KioskService
     }
 
     public Movie? Movie { get => currentOrder?.Tickets.First()?.Screening.Movie; }
-
+    public int? CurrentOrderId { get => currentOrder?.Id; } // Onyl get the order id if ther is a current order
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [];
 
@@ -47,6 +47,28 @@ public class KioskService
         }
     }
     
+    public async Task CancelOrder()
+    {
+        // Ensure that there is a current order to cancel else trow exception
+        ArgumentNullException.ThrowIfNull(currentOrder);
+
+        var orderId = currentOrder.Id;
+
+        // kioskApi is the API Client injected into the service
+        // CancelOrderAsync() send a resuqest to the API to cancel the order
+        // With await we wait for the respone frome the api
+        var cancelResponse = await kioskApi.CancelOrderAsync(orderId);
+
+        if (cancelResponse.IsSuccessStatusCode)
+        {
+            Cleanup(); // clean the kioskservice 
+        }
+        else
+        {
+            logger.LogError("Canceling order faild {OrderId}", orderId);
+        }
+    }
+
     /// <summary>
     /// Call after payment is finished and the tickets can be printed
     /// </summary>

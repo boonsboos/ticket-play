@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ConnectPlay.TicketPlay.UI.Services;
+using Microsoft.AspNetCore.Components;
 using NSubstitute.Core;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages;
@@ -7,6 +8,8 @@ public partial class PaymentPin
 {
     [Inject]
     public NavigationManager NavigationManager { get; set; } = default!;
+    [Inject]
+    public KioskService KioskService { get; set; } = default!;
     public int[] PinNumbers { get; } = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
     public string EnteredPin { get; set; } = string.Empty;
     public string Title { get; set; } = "Voer uw pincode in.";
@@ -21,10 +24,11 @@ public partial class PaymentPin
 
     // TODO(): Call the a method in de KioskServcei to cancel order and reset the state
     // KioskService call the api to set order status to canceled
-    // KioskService deletes the current tickets of specified order
-    public void CancelPayment()
+    // Kioskcontroller deletes the current tickets of specified order
+    public async Task CancelPayment()
     {
         EnteredPin = string.Empty;
+        await KioskService.CancelOrder(); // call the method in the KioskService to cancel the order and reset the state
         NavigationManager.NavigateTo("/");
     }
 
