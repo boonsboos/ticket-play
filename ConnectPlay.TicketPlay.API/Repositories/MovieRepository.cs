@@ -32,11 +32,53 @@ public class MovieRepository : IMovieRepository
         return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.New)).ToListAsync();
     }
 
+
+    public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
+    {
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
+        return await db.Movies
+                       .Where(m => m.Id == id)
+                       .Select(m => new MovieDetailDto
+                       {
+                           Title = m.Title,
+                           Description = m.Description,
+                           Genre = m.Genre,
+                           PosterUrl = m.PosterUrl.ToString(),
+                           Duration = m.Duration,
+                           ReleaseDate = m.ReleaseDate,
+                           MinimumAge = m.MinimumAge,
+                           Tags = m.Tags
+                       })
+                       .FirstOrDefaultAsync();
+    }
+
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
         throw new NotImplementedException();
     }
 
+    public async Task CreateMovieAsync(CreateMovieDto dto)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var movie = new Movie
+        {
+            Title = dto.Title,
+            Description = dto.Description,
+            Duration = dto.Duration,
+            ReleaseDate = dto.ReleaseDate,
+            PosterUrl = dto.PosterUrl,
+            Language = dto.Language,
+            MinimumAge = dto.MinimumAge,
+            Genre = dto.Genre,
+            Tags = string.Join(',', dto.Tags)
+        };
+
+        dbContext.Movies.Add(movie);
+
+        await dbContext.SaveChangesAsync();
+    }
+    
     public async Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync()
     {
         // Using "await using" so the database connection is closed when its done.

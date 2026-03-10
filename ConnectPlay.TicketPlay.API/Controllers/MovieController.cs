@@ -50,10 +50,53 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(newMovies);
     }
 
+
+    [HttpGet("{id:int}")]
+    // Document that this endpoint returns a single movie on HTTP OK, and can also return HTTP Not Found if the movie with the given id does not exist.
+    [ProducesResponseType(typeof(Movie), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    // The route parameter {id:int} means that this endpoint will match routes like /movie/123, and the id parameter will be parsed as an integer and passed to the method.
+    public async Task<IActionResult> GetByIdAsync(int id)
+    {
+        // Get the movie with the given id from the repository. This will return null if no such movie exists.
+        var movie = await _movieRepository.GetMovieByIdAsync(id);
+
+        if (movie == null)
+            return NotFound();
+
+        return Ok(movie);
+    }
+
     [HttpGet]
     [Route("search")]
     public async Task<IActionResult> Search([FromQuery] string movie, [FromBody] MovieFilters? filters)
     {
         return NotFound();
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
+    {
+
+        var allowedLanguages = new[] { "Nederlands", "English" };
+        if (!allowedLanguages.Contains(dto.Language))
+        {
+            ModelState.AddModelError(nameof(dto.Language), "Language must be Nederlands or English.");
+        }
+
+        if (!Enum.IsDefined(typeof(MinimumAgeRating), dto.MinimumAge))
+        {
+            ModelState.AddModelError(nameof(dto.MinimumAge), "Invalid minimum age.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
+        await _movieRepository.CreateMovieAsync(dto);
+        return StatusCode(StatusCodes.Status201Created); // "Movie was created", no payload given.
     }
 }

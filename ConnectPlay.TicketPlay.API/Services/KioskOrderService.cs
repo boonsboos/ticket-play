@@ -59,7 +59,8 @@ public class KioskOrderService : IKioskOrderService
             {
                 Screening = screening,
                 Seat = assignedSeats.ElementAt(i),
-                TicketType = reservation.ElementAt(i)
+                TicketType = reservation.ElementAt(i),
+                OrderId = 0
             };
             tickets.Add(t);
         }
