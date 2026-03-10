@@ -11,4 +11,5 @@ public record Ticket
     public required Screening Screening { get; init; }
     public required Seat Seat { get; init; }
     public TicketType TicketType { get; init; }
+    public required int OrderId { get; init; }
 }
