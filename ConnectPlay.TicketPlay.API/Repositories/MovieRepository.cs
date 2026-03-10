@@ -32,6 +32,26 @@ public class MovieRepository : IMovieRepository
         return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.New)).ToListAsync();
     }
 
+
+    public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
+    {
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
+        return await db.Movies
+                       .Where(m => m.Id == id)
+                       .Select(m => new MovieDetailDto
+                       {
+                           Title = m.Title,
+                           Description = m.Description,
+                           Genre = m.Genre,
+                           PosterUrl = m.PosterUrl.ToString(),
+                           Duration = m.Duration,
+                           ReleaseDate = m.ReleaseDate,
+                           MinimumAge = m.MinimumAge,
+                           Tags = m.Tags
+                       })
+                       .FirstOrDefaultAsync();
+    }
+
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
         throw new NotImplementedException();

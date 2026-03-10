@@ -14,9 +14,12 @@ public interface IMovieApi
     [Get("/movie/new")]
     Task<IEnumerable<Movie>> GetNewMoviesAsync();
 
-    [Post("/movie")]
-    Task CreateMovieAsync(CreateMovieDto movie);
-  
     [Get("/movie/today")]
     Task<IEnumerable<MovieListItemDto>> GetTodayMoviesAsync();
+
+    [Get("/movie/{id}")]
+    Task<MovieDetailDto> GetMovieByIdAsync(int id);
+
+    [Post("/movie")]
+    Task CreateMovieAsync(CreateMovieDto movie);
 }

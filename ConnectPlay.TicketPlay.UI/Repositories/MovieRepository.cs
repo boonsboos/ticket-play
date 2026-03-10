@@ -42,6 +42,17 @@ public class MovieRepository : IMovieRepository
         return await _movieApi.GetTodayMoviesAsync();
     }
 
+    public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
+    {
+        try
+        {
+            return await _movieApi.GetMovieByIdAsync(id);
+        }
+        catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+    }
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
         throw new NotImplementedException();
