@@ -38,15 +38,9 @@ public partial class OrderOverview : ComponentBase
         base.OnInitialized();
     }
 
-    private void ToPayment()
-    {
-        navigationManager.NavigateTo("/payment/pin"); // TODO: fix pin URL
-    }
+    private void ToPayment() => navigationManager.NavigateTo("/payment/pin");
 
-    protected void ToMovie()
-    {
-        navigationManager.NavigateTo("/movie/" + this.Movie.Id); // TODO: fix pin URL
-    }
+    protected void ToMovie() => navigationManager.NavigateTo("/movie/" + this.Movie.Id);
 
     private float CalculateTotal()
     {
