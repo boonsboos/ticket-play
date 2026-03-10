@@ -1,7 +1,7 @@
 ﻿namespace ConnectPlay.TicketPlay.Models.Dto;
 
-public record ScreeningsDto
+public record ScreeningDto
 {
-    public DateTime Time { get; set; }
-    public int Hall { get; set; }
+    public DateTimeOffset Time { get; init; }
+    public int Hall { get; init; }
 }

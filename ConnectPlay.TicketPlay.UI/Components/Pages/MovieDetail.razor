@@ -1,9 +1,17 @@
 ﻿@page "/movie/{Id:int}"
 
-@if (Movie == null)
+@if (!_hasLoaded)
 {
     <div class="container mt-4 text-center">
         <p>Loading movie...</p>
+    </div>
+}
+else if (Movie == null)
+{
+    <div class="container mt-4 text-center">
+        <div class="alert alert-warning">
+            Film niet gevonden.
+        </div>
     </div>
 }
 else
@@ -16,7 +24,7 @@ else
                 </div>
                 <div class="col-md-8 p-4 d-flex flex-column">
                     <h2>@Movie.Title</h2>
-                    <p class="text-muted">@Movie.Genre • @Movie.Duration min • @Movie.ReleaseDate @Movie.MinimumAge+</p>
+                    <p class="text-muted">@Movie.Genre • @Movie.Duration min • @Movie.ReleaseDate • @Movie.MinimumAge+</p>
                     @if (!string.IsNullOrWhiteSpace(Movie.Tags))
                     {
                         <div class="mb-3">

@@ -7,10 +7,10 @@ namespace ConnectPlay.TicketPlay.UI.Components.Pages;
 
 public partial class MovieDetail : ComponentBase
 {
-    [Parameter] public int Id { get; init; }
+    [Parameter] public int Id { get; set; }
 
-    [Inject] protected IMovieRepository MovieRepository { get; init; } = default!;
-    [Inject] protected ILogger<MovieDetail> Logger { get; init; } = default!;
+    [Inject] protected IMovieRepository MovieRepository { get; set; } = default!;
+    [Inject] protected ILogger<MovieDetail> Logger { get; set; } = default!;
 
     protected MovieDetailDto? Movie { get; set; }
 
@@ -21,14 +21,15 @@ public partial class MovieDetail : ComponentBase
         if (!_hasLoaded && Id != 0)
         {
             _hasLoaded = true;
+
             try
             {
                 Movie = await MovieRepository.GetMovieByIdAsync(Id);
-            }
-            catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
-            {
-                Movie = null;
-                Logger.LogWarning("Movie with Id {MovieId} not found.", Id);
+
+                if (Movie is null)
+                {
+                    Logger.LogWarning("Movie with Id {MovieId} not found.", Id);
+                }
             }
             catch (Exception ex)
             {
