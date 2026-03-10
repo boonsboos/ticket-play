@@ -6,5 +6,5 @@ public interface IScreeningRepository
 {
     public Task<Screening?> GetScreeningAsync(int id);
 
-    public Task<Screening[]> GetTodayScreeningsFromMovieAsync(int movieId);
+    public Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId);
 }

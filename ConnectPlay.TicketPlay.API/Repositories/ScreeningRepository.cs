@@ -28,7 +28,7 @@ public class ScreeningRepository : IScreeningRepository
             .FirstOrDefaultAsync(screening => screening.Id == id);
     }
 
-    public async Task<Screening[]> GetTodayScreeningsFromMovieAsync(int movieId)
+    public async Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 

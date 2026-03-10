@@ -17,10 +17,10 @@ public class ScreeningController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
-    [Route("today")]
-    public async Task<IActionResult> GetTodayByMovieIdAsync(int id)
+    [Route("today/{movieId}")]
+    public async Task<IActionResult> GetTodayByMovieIdAsync(int movieId)
     {
-        var todayScreenings = await _screeningRepository.GetTodayScreeningsFromMovieAsync(id);
+        var todayScreenings = await _screeningRepository.GetTodayScreeningsFromMovieAsync(movieId);
 
         return Ok(todayScreenings);
     }
