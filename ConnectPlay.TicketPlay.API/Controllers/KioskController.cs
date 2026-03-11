@@ -33,12 +33,12 @@ public class KioskController : ControllerBase
         catch (ArgumentException argException)
         {
             logger.LogError(argException, "Failed to fullfill tickets");
-            return BadRequest([]);
+            return BadRequest();
         }
         catch (InvalidOperationException invalidOpException)
         {
             logger.LogError(invalidOpException, "Unable to fullfill tickets");
-            return BadRequest([]);
+            return BadRequest();
         }
     }
 
