@@ -10,7 +10,6 @@ public partial class PaymentPin
     public NavigationManager NavigationManager { get; set; } = default!;
     [Inject]
     public KioskService KioskService { get; set; } = default!;
-    public int[] PinNumbers { get; } = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
     public string EnteredPin { get; set; } = string.Empty;
     public string Title { get; set; } = "Voer uw pincode in.";
 
