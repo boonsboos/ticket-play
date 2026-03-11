@@ -58,16 +58,11 @@ public class Program
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)
     {
-        services.AddRefitClient<IMovieApi>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
-
-        services.AddRefitClient<IScreeningApi>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
-
-        services.AddRefitClient<IHallApi>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
-
-        services.AddRefitClient<IKioskApi>()
+        services
+            .AddRefitClient<IMovieApi>()
+            .AddRefitClient<IScreeningApi>()
+            .AddRefitClient<IHallApi>()
+            .AddRefitClient<IKioskApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
 
