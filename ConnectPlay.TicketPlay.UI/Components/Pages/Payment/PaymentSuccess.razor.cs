@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages;
+namespace ConnectPlay.TicketPlay.UI.Components.Pages.Payment;
 
 public partial class PaymentSuccess
 {

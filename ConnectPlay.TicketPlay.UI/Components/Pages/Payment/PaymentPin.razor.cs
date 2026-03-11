@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using NSubstitute.Core;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages;
+namespace ConnectPlay.TicketPlay.UI.Components.Pages.Payment;
 
 public partial class PaymentPin
 {

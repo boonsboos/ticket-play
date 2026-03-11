@@ -49,10 +49,8 @@ public class KioskService
     
     public async Task CancelOrder()
     {
-        // Ensure that there is a current order to cancel else trow exception
-        ArgumentNullException.ThrowIfNull(currentOrder);
-
-        var orderId = currentOrder.Id;
+        // Ensure that there is a current order id to cancel else trow exception
+        var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
 
         // kioskApi is the API Client injected into the service
         // CancelOrderAsync() send a resuqest to the API to cancel the order
@@ -71,9 +69,7 @@ public class KioskService
 
     public async Task PayOrder()
     {
-        ArgumentNullException.ThrowIfNull(currentOrder);
-        
-        var orderId = currentOrder.Id;
+        var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
 
         var payResponse = await kioskApi.PayOrderAsync(orderId);
 
