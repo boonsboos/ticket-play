@@ -20,35 +20,19 @@ public partial class MovieDetail : ComponentBase
 
     protected override async Task OnParametersSetAsync()
     {
-        Logger.LogInformation("OnParametersSetAsync start. Id = {Id}, _loadedId = {LoadedId}", Id, _loadedId);
 
         if (Id == 0 || _loadedId == Id)
         {
-            Logger.LogInformation("Skipping load. Id = {Id}, _loadedId = {LoadedId}", Id, _loadedId);
             return;
         }
 
-        _loadedId = Id;
+        _loadedId = Id; 
 
         try
         {
-            Logger.LogInformation("Before MOVIE({Id})", Id);
             Movie = await MovieRepository.GetMovieByIdAsync(Id);
-            Logger.LogInformation("After MOVIE({Id})", Id);
 
-            Logger.LogInformation("Before SCREENING({Id})", Id);
             Screenings = await ScreeningRepository.GetTodayScreeningsFromMovieAsync(Id);
-            Logger.LogInformation("After SCREENING({Id})", Id);
-
-            if (Movie is null)
-            {
-                Logger.LogWarning("Movie with Id {MovieId} not found.", Id);
-            }
-
-            if (Screenings is null)
-            {
-                Logger.LogWarning("No screenings found for this movie.");
-            }
         }
         catch (Exception ex)
         {
