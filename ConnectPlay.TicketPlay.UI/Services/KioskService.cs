@@ -12,7 +12,7 @@ public class KioskService
 
     public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
-    public Movie? Movie { get => currentOrder?.Tickets.First()?.Screening.Movie; }
+    public Movie? Movie => currentOrder?.Tickets.First()?.Screening.Movie;
     public int? CurrentOrderId { get => currentOrder?.Id; } // Onyl get the order id if ther is a current order
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [];
@@ -32,8 +32,6 @@ public class KioskService
     {
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
-
-        logger.LogInformation("Placing order for screening {ScreeningId} with [{tickets}]", SelectedScreening.Id, string.Join(", ", Tickets));
 
         var response = await kioskApi.ReserveSeatsAsync(SelectedScreening.Id, Tickets);
         if (response.IsSuccessStatusCode)
@@ -99,6 +97,8 @@ public class KioskService
 
     public float GetPrice(TicketType ticketType)
     {
+        var movie = Movie ?? SelectedScreening?.Movie;
+        if (movie == null) return 0;
         // everyone except regular gets €1,50 off
         return ticketType switch
         {

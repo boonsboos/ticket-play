@@ -21,7 +21,6 @@ public class KioskController : ControllerBase
     [Route("{screeningId}/reserve")] // /kiosk/1234/reserve
     public async Task<IActionResult> PlaceOrderAsync([FromRoute] int screeningId, [FromBody] IEnumerable<TicketType> tickets)
     {
-        logger.LogInformation("Received order request for screening {ScreeningId} with [{tickets}]", screeningId, string.Join(", ", tickets));
         if (!tickets.Any()) return BadRequest();
 
         try

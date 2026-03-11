@@ -30,7 +30,7 @@
                     <button class="btn btn-outline-secondary" @onclick="() => DecreaseTicket(ticketType)">
                         <i class="bi bi-dash"></i>
                     </button>
-                    <p class="mb-0">@kioskService.Tickets.Count(t => t == ticketType)</p>
+                    <p class="mb-0">@(Tickets.FirstOrDefault(t => t.Type == ticketType)?.Count ?? 0)</p>
                     <button class="btn btn-outline-secondary" @onclick="() => IncreaseTicket(ticketType)">
                         <i class="bi bi-plus"></i>
                     </button>
@@ -66,5 +66,5 @@
 <div class="container d-flex justify-content-between mt-3">
     <button class="btn btn-outline-primary" @onclick="ToMovie">Terug</button>
     <button class="btn btn-primary" @onclick="HandlePlaceOrder"
-            disabled="@(!kioskService.Tickets.Any())">Verder</button>
+            disabled="@(!Tickets.Any())">Verder</button>
 </div>

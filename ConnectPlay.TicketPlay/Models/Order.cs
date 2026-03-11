@@ -8,24 +8,14 @@ public record Order
 {
     [Key]
     public int Id { get; set; }
-    public required ICollection<Ticket> Tickets { get; init; } = [];
+    public ICollection<Ticket> Tickets { get; set; } = [];
     public OrderStatus Status { get; set; } = OrderStatus.Pending; // change to set beacuse we need to update the status and with init it cant be changed 
     public required float Total { get; set; }
-    public string OrderCode
-    {
-        get
-        {
-            return field ??= GenerateOrderCode();
-        }
-        init
-        {
-            field = GenerateOrderCode();
-        }
-    }
+    public string OrderCode { get; set; } = GenerateOrderCode();
 
     // generate something that resembles a unique code based on the GUID of the first ticket in the order
-    private string GenerateOrderCode()
+    private static string GenerateOrderCode()
     {
-        return Tickets.First().ToString()[..8];
+        return Guid.NewGuid().ToString("N")[..8].ToUpper();
     }
 }
