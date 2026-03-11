@@ -37,8 +37,8 @@ public class ScreeningRepository : IScreeningRepository
 
         // Returned an array of Screenings or empty array: []
         return await dbContext.Screenings
-            .Include (screening => screening.Hall)
-            .Include (screening => screening.Movie)
+            .Include(screening => screening.Hall)
+            .Include(screening => screening.Movie)
             .Where(screening =>
                 screening.Movie.Id == movieId &&
                 screening.StartTime >= today &&
