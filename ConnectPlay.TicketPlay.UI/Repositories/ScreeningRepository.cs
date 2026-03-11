@@ -8,10 +8,12 @@ namespace ConnectPlay.TicketPlay.UI.Repositories;
 public class ScreeningRepository : IScreeningRepository
 {
     private readonly IScreeningApi _screeningApi;
+    private readonly ILogger<ScreeningRepository> _logger;
 
-    public ScreeningRepository(IScreeningApi screeningApi)
+    public ScreeningRepository(IScreeningApi screeningApi, ILogger<ScreeningRepository> logger)
     {
         _screeningApi = screeningApi;
+        _logger = logger;
     }
 
     public async Task CreateScreeningAsync(CreateScreeningDto dto)
@@ -22,23 +24,15 @@ public class ScreeningRepository : IScreeningRepository
         }
         catch (Refit.ApiException ex)
         {
-            // Log of handleer API-fouten
-            Console.WriteLine($"Error creating screening: {ex.Content}");
+            _logger.LogError(ex, "Error creating screening via Screening API: {Content}", ex.Content);
             throw;
         }
     }
 
     public Task<Screening?> GetScreeningAsync(int id)
     {
-        try
-        {
-            // No API call available here yet — return null to satisfy interface.
-            return Task.FromResult<Screening?>(null);
-        }
-        catch (Refit.ApiException ex)
-        {
-            Console.WriteLine($"Error fetching screening: {ex.Content}");
-            return Task.FromResult<Screening?>(null);
-        }
+        throw new NotImplementedException();
     }
+
+    public async Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId) => await _screeningApi.GetTodayByMovieIdAsync(movieId);
 }

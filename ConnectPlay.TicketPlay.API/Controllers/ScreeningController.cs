@@ -1,4 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 public class ScreeningsController : ControllerBase
 {
     private readonly IScreeningRepository _repository;
+    private readonly IScreeningRepository _screeningRepository;
 
-    public ScreeningsController(IScreeningRepository repository)
+    public ScreeningsController(IScreeningRepository repository, IScreeningRepository screeningRepository)
     {
         _repository = repository;
+        _screeningRepository = screeningRepository;
     }
 
     [HttpPost("screening/new")]
@@ -26,5 +29,15 @@ public class ScreeningsController : ControllerBase
         await _repository.CreateScreeningAsync(dto);
 
         return CreatedAtAction(nameof(Create), new { dto.MovieId, dto.HallId, dto.Time }, dto);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
+    [Route("today/{movieId}")]
+    public async Task<IActionResult> GetTodayByMovieIdAsync(int movieId)
+    {
+        var todayScreenings = await _screeningRepository.GetTodayScreeningsFromMovieAsync(movieId);
+
+        return Ok(todayScreenings);
     }
 }

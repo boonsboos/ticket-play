@@ -8,4 +8,6 @@ public interface IScreeningRepository
     public Task<Screening?> GetScreeningAsync(int id);
 
     public Task CreateScreeningAsync(CreateScreeningDto dto);
+    public Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId);
+
 }

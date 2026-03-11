@@ -4,5 +4,6 @@ public enum OrderStatus : byte // backed as byte, will be a number in database
 {
     Pending,
     Paid,
-    Redeemed // for when the tickets have been printed out
+    Redeemed, // for when the tickets have been printed out
+    Cancelled
 }
