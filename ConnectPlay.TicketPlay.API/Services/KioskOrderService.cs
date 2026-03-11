@@ -2,6 +2,7 @@
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Contracts.Kiosk;
 using ConnectPlay.TicketPlay.Models;
+using System.Data;
 using System.Runtime.CompilerServices;
 
 namespace ConnectPlay.TicketPlay.API.Services;
@@ -50,6 +51,20 @@ public class KioskOrderService : IKioskOrderService
         });
     }
 
+    // We use await because the methods are async and we want to ensuse that the order is only cancelled
+    // after the tickets are deltere and the order is updated
+    public async Task CancelAsync(int orderId)
+    {
+        var order = await orderRepository.GetOrderByIdAsync(orderId) ?? throw new ArgumentException("Order does not exist"); // get the order so we can chagne te status of the order
+
+        order.Status = OrderStatus.Cancelled; // change the status of the order to cancelled
+
+        
+        await ticketRepository.DeleteTicketsByOrderIdAsync(orderId);
+
+        await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Cancelled);
+    }
+
     private async Task<IEnumerable<Ticket>> SaveTicketsAsync(Screening screening, IEnumerable<TicketType> reservation, IEnumerable<Seat> assignedSeats)
     {
         List<Ticket> tickets = [];
@@ -66,5 +81,12 @@ public class KioskOrderService : IKioskOrderService
         }
 
         return await ticketRepository.ReserveTicketsAsync(tickets);
+    }
+
+    public async Task PayAsync(int orderId)
+    {
+        var order = await orderRepository.GetOrderByIdAsync(orderId) ?? throw new ArgumentException("Order does not exist");
+
+        await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Paid);
     }
 }
