@@ -2,7 +2,6 @@
 using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
@@ -19,7 +18,11 @@ public class TicketRepository : ITicketRepository
     {
         await using var context = await dbContextFactory.CreateDbContextAsync();
 
-        return context.Tickets.Include(ticket => ticket.Seat);
+        return await context.Tickets
+            .Include(ticket => ticket.Seat)
+            .Include(ticket => ticket.Screening)
+            .Where(ticket => ticket.Screening.Id == screening.Id)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<Ticket>> ReserveTicketsAsync(IEnumerable<Ticket> tickets)

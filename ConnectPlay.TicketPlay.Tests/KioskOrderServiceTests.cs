@@ -2,6 +2,7 @@
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.API.Services;
 using ConnectPlay.TicketPlay.Models;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 
 namespace ConnectPlay.TicketPlay.Tests;
@@ -70,10 +71,11 @@ public class KioskOrderServiceTests
         var seatAssignmentService = Substitute.For<ISeatAssignmentService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var priceCalculation = Substitute.For<IPriceCalculationService>();
+        var logger = Substitute.For<ILogger<KioskOrderService>>();
 
         screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns((Screening)null!);
 
-        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository, priceCalculation);
+        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository, priceCalculation, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
