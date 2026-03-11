@@ -1,0 +1,71 @@
+﻿@page "/manager/create-screening"
+@inherits CreateScreeningBase
+
+<div class="container my-4" style="max-width: 1200px;">
+    <h3 class="mb-4">Create Screening</h3>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateScreening">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Movie</label>
+                        <InputSelect class="form-select" @bind-Value="form.MovieId">
+                            <option value="0">Select a movie</option>
+                            @foreach (var m in Movies)
+                            {
+                                <option value="@m.Id">@m.Title</option>
+                            }
+                        </InputSelect>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Hall</label>
+                        <InputSelect class="form-select" @bind-Value="form.HallId">
+                            <option value="0">Select a hall</option>
+                            @foreach (var h in Halls)
+                            {
+                                <option value="@h.Id">Hall @h.HallNumber</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Date</label>
+                        <InputDate class="form-control" @bind-Value="form.TimeDate" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Hour</label>
+                        <InputSelect class="form-select" @bind-Value="form.TimeHour">
+                            @for (int h = 9; h <= 21; h++)
+                            {
+                                <option value="@h">@h:00</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
+                        Create Screening
+                    </button>
+                </div>
+                @if (showToast)
+                {
+                    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                        <div class="toast show align-items-center text-white @toastColor border-0">
+                            <div class="d-flex">
+                                <div class="toast-body">@toastMessage</div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto" @onclick="HideToast"></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </EditForm>
+        </div>
+    </div>
+</div>

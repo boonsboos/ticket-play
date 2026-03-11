@@ -61,6 +61,7 @@ public class Program
             .AddRefitClient<IMovieApi>()
             .AddRefitClient<IHallApi>()
             .AddRefitClient<IKioskApi>()
+            .AddRefitClient<IScreeningApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
 
