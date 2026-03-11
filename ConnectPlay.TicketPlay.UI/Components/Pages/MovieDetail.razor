@@ -1,12 +1,7 @@
 ﻿@page "/movie/{Id:int}"
+@rendermode InteractiveServer
 
-@if (!_hasLoaded)
-{
-    <div class="container mt-4 text-center">
-        <p>Loading movie...</p>
-    </div>
-}
-else if (Movie == null)
+@if (Movie == null)
 {
     <div class="container mt-4 text-center">
         <div class="alert alert-warning">
@@ -37,15 +32,48 @@ else
                     <p>@Movie.Description</p>
                 </div>
             </div>
-            <div class="card-footer showtime-section text-center">
+            <div class="card-footer pt-3 text-center">
                 <h5>Voorstellingen</h5>
-                <div class="d-flex justify-content-center flex-wrap gap-3 mt-2">
+
+                <div class="d-flex flex-wrap gap-3 my-2">
+                    @if (Screenings == null || !Screenings.Any())
+                    {
+                        <p>Er zijn geen voorstellingen voor deze film</p>
+                    }
+                    else
+                    {
+                        @foreach (var screening in Screenings)
+                        {
+                            <div
+                                class="card @(screening.Id == kioskService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
+                                <div class="card-body @(screening.StartTime < DateTimeOffset.Now ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
+                                     @onclick="() => SetSelectedScreening(screening)">
+                                    <h2 class="card-title">@screening.StartTime.ToString("HH:mm")</h2>
+
+                                    @if (screening.Hall?.Has3DProjector == true)
+                                    {
+                                        <div
+                                            class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                            Zaal @screening.Hall?.HallNumber
+                                            <i class="bi bi-badge-3d"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex justify-content-center align-items-center gap-2 text-body-secondary fw-bold">
+                                            Zaal @screening.Hall?.HallNumber
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </div>
     </div>
     <div class="container d-flex justify-content-between mt-3" style="max-width:1000px;">
-        <button class="btn btn-outline-primary">← Ga terug</button>
-        <button class="btn btn-purple">Volgende →</button>
+        <button class="btn btn-outline-primary" @onclick="ToOverview">← Ga terug</button>
+        <button class="btn btn-purple" @onclick="ToTickets">Volgende →</button>
     </div>
 }

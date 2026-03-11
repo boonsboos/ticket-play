@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.Abstract.Repositories;
-using System.Threading.Tasks;
+using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.UI.Services;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages;
 
-public partial class MovieDetail : ComponentBase
+public partial class MovieDetail(KioskService kioskService, NavigationManager navigationManager) : ComponentBase
 {
     [Parameter] public int Id { get; set; }
 
@@ -38,4 +39,20 @@ public partial class MovieDetail : ComponentBase
             }
         }
     }
+
+    public void SetSelectedScreening(Screening screening)
+    {
+        // Toggle selection if the same screening is clicked again
+        if (kioskService.SelectedScreening?.Id == screening.Id)
+        {
+            kioskService.SelectedScreening = null;
+            return;
+        }
+        // Only allow selection of screenings that haven't started yet
+        if (screening.StartTime >= DateTime.Now)
+            kioskService.SelectedScreening = screening;
+    }
+
+    protected void ToOverview() => navigationManager.NavigateTo("/");
+    protected void ToTickets() => navigationManager.NavigateTo("/kiosk/tickets");
 }

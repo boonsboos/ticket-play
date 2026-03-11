@@ -3,7 +3,7 @@ using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages;
+namespace ConnectPlay.TicketPlay.UI.Components.Pages.Kiosk;
 
 public partial class OrderOverview : ComponentBase
 {
@@ -37,8 +37,7 @@ public partial class OrderOverview : ComponentBase
     }
 
     private void ToPayment() => navigationManager.NavigateTo("/payment/pin");
-
-    protected void ToMovie() => navigationManager.NavigateTo("/movie/" + (Movie?.Id ?? -1));
+    private void ToTickets() => navigationManager.NavigateTo("/kiosk/tickets");
 
     private float CalculateTotal()
     {
@@ -46,22 +45,11 @@ public partial class OrderOverview : ComponentBase
 
         foreach (var ticket in Tickets)
         {
-            total += GetPrice(ticket);
+            total += kioskService.GetPrice(ticket);
         }
 
         if (Is3D) total += 2.50f;
 
         return total;
     }
-
-    private float GetPrice(TicketType ticketType)
-    {
-        // everyone except regular gets €1,50 off
-        return ticketType switch {
-            TicketType.Regular => RegularPrice(),
-            _ => RegularPrice() - 1.5f,
-        };
-    }
-
-    private float RegularPrice() => (Movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;
 }
