@@ -5,10 +5,11 @@
 
         <h1>Veel plezier!</h1>
 
+        <h2>@KioskService.Movie?.Title</h2>
+
         <p>Vergeet niet je kaartjes mee te nemen.</p>
 
-        @* TODO: add the movie poster for the img *@
-        <img class="tickets" src="https://picsum.photos/300/450" alt="Film poster" />
+        <img class="tickets" src="@KioskService.Movie?.PosterUrl" alt="Film poster" />
 
     </div>
 </div>

@@ -69,6 +69,22 @@ public class KioskService
         }
     }
 
+    public async Task PayOrder()
+    {
+        ArgumentNullException.ThrowIfNull(currentOrder);
+        
+        var orderId = currentOrder.Id;
+
+        var payResponse = await kioskApi.PayOrderAsync(orderId);
+
+
+        // if the response is not OK (200)
+        if (!payResponse.IsSuccessStatusCode)
+        {
+            logger.LogError("Paying the order faild {OrderId}", orderId);
+        }
+    }
+
     /// <summary>
     /// Call after payment is finished and the tickets can be printed
     /// </summary>

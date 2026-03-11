@@ -22,9 +22,6 @@ public partial class PaymentPin
         }
     }
 
-    // TODO(): Call the a method in de KioskServcei to cancel order and reset the state
-    // KioskService call the api to set order status to canceled
-    // Kioskcontroller deletes the current tickets of specified order
     public async Task CancelPayment()
     {
         EnteredPin = string.Empty;
@@ -40,10 +37,11 @@ public partial class PaymentPin
         }
     }
 
-    public void PaymentSuccessful()
+    public async Task PaymentSuccessful()
     {
         if (EnteredPin == "1234" || EnteredPin == "9874")
         {
+            await KioskService.PayOrder();
             NavigationManager.NavigateTo("/payment/success");
         }
         else

@@ -55,7 +55,21 @@ public class KioskController : ControllerBase
             logger.LogError(argException, "Cant cancel {OrderId}", orderId);
             return BadRequest(); // 400 code
         }
+    }
 
-        
+    [HttpPut]
+    [Route("{orderId}/pay")]
+    public async Task<IActionResult> PayOrderAsync([FromRoute] int orderId)
+    {
+        try
+        {
+            await orderProcessingService.PayAsync(orderId); // Set the order status to paid
+            return Ok();
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant pay {OrderId}", orderId);
+            return BadRequest();
+        }
     }
 }

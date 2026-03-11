@@ -2,6 +2,7 @@
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Contracts.Kiosk;
 using ConnectPlay.TicketPlay.Models;
+using System.Data;
 using System.Runtime.CompilerServices;
 
 namespace ConnectPlay.TicketPlay.API.Services;
@@ -80,5 +81,12 @@ public class KioskOrderService : IKioskOrderService
         }
 
         return await ticketRepository.ReserveTicketsAsync(tickets);
+    }
+
+    public async Task PayAsync(int orderId)
+    {
+        var order = await orderRepository.GetOrderByIdAsync(orderId) ?? throw new ArgumentException("Order does not exist");
+
+        await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Paid);
     }
 }

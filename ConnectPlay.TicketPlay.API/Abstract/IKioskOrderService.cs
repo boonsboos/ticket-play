@@ -6,4 +6,5 @@ public interface IKioskOrderService
 {
     public Task<Order> ReserveAsync(int screeningId, IEnumerable<TicketType> tickets);
     public Task CancelAsync(int orderId);
+    public Task PayAsync(int orderId);
 }
