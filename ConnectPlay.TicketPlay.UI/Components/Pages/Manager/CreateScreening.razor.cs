@@ -26,8 +26,15 @@ public class CreateScreeningBase : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        var movies = await MovieApi.GetCurrentMoviesAsync();
-        Movies = movies.Select(m => new MovieListItemDto
+        var currentMovies = await MovieApi.GetCurrentMoviesAsync();
+        var newMovies = await MovieApi.GetNewMoviesAsync();
+        var allMovies = currentMovies
+            .Concat(newMovies)
+            .GroupBy(m => m.Id)
+            .Select(g => g.First())
+            .OrderBy(m => m.Title);
+
+        Movies = allMovies.Select(m => new MovieListItemDto
         {
             Id = m.Id,
             Title = m.Title
