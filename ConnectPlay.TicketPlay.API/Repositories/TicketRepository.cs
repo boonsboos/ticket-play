@@ -31,4 +31,22 @@ public class TicketRepository : ITicketRepository
 
         return tickets;
     }
+
+    public async Task DeleteTicketsByOrderIdAsync(int orderId) // use task only for no return value
+    {
+        // create new databse connection
+        // dbContext is the object where you can acces the database
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync(); 
+
+        var tickets = await dbContext.Tickets
+            .Where(ticket => ticket.OrderId == orderId)
+            .ToListAsync();
+
+        // RemoveRange() is a EF method that removes all the tickets in the list
+        // But it only marks the tickets
+        dbContext.Tickets.RemoveRange(tickets);
+
+        // This wil actually remove the tickets from the database because it saves the chagnes 
+        await dbContext.SaveChangesAsync();
+    }
 }

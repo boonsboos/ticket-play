@@ -9,7 +9,7 @@ public record Order
     [Key]
     public int Id { get; set; }
     public required ICollection<Ticket> Tickets { get; init; } = [];
-    public OrderStatus Status { get; init; } = OrderStatus.Pending;
+    public OrderStatus Status { get; set; } = OrderStatus.Pending; // change to set beacuse we need to update the status and with init it cant be changed 
     public required float Total { get; set; }
     public string OrderCode
     {

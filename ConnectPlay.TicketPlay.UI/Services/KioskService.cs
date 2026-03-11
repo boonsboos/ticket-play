@@ -13,7 +13,7 @@ public class KioskService
     public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
     public Movie? Movie { get => currentOrder?.Tickets.First()?.Screening.Movie; }
-
+    public int? CurrentOrderId { get => currentOrder?.Id; } // Onyl get the order id if ther is a current order
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [];
 

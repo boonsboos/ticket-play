@@ -31,3 +31,62 @@
     border-top: 1px solid #e0e0e0;
     padding-top: 1rem;
 }
+
+.showtime-card {
+    width: 130px;
+    min-height: 110px;
+    background: #f3f3f3;
+    border: 1px solid #d9d9d9;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12px 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.showtime-time {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1;
+    color: #111;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.showtime-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+}
+
+.showtime-left {
+    min-width: 28px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.showtime-center {
+    display: flex;
+    justify-content: center;
+}
+
+.showtime-hall {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    text-align: right;
+    flex: 1;
+}
+
+.showtime-badge {
+    font-size: 0.7rem;
+    line-height: 1;
+    color: #666;
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 2px 4px;
+    background: #fff;
+}

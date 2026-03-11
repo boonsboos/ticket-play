@@ -51,7 +51,8 @@ public class Program
 
     private static void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IMovieRepository, MovieRepository>();
+        services.AddScoped<IMovieRepository, MovieRepository>();
+        services.AddScoped<IScreeningRepository, ScreeningRepository>();
         services.AddScoped<KioskService>();
     }
 
@@ -59,6 +60,7 @@ public class Program
     {
         services
             .AddRefitClient<IMovieApi>()
+            .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
             .AddRefitClient<IKioskApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));

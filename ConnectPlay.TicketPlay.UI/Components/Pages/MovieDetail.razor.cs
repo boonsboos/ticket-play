@@ -11,32 +11,35 @@ public partial class MovieDetail(KioskService kioskService, NavigationManager na
     [Parameter] public int Id { get; set; }
 
     [Inject] protected IMovieRepository MovieRepository { get; set; } = default!;
+    [Inject] protected IScreeningRepository ScreeningRepository { get; set; } = default!;
     [Inject] protected ILogger<MovieDetail> Logger { get; set; } = default!;
 
     protected MovieDetailDto? Movie { get; set; }
+    protected IEnumerable<Screening>? Screenings { get; set; }
 
-    private bool _hasLoaded = false;
+    private int? _loadedId;
 
     protected override async Task OnParametersSetAsync()
     {
-        if (!_hasLoaded && Id != 0)
+
+        if (Id == 0 || _loadedId == Id)
         {
-            _hasLoaded = true;
+            return;
+        }
 
-            try
-            {
-                Movie = await MovieRepository.GetMovieByIdAsync(Id);
+        _loadedId = Id;
 
-                if (Movie is null)
-                {
-                    Logger.LogWarning("Movie with Id {MovieId} not found.", Id);
-                }
-            }
-            catch (Exception ex)
-            {
-                Movie = null;
-                Logger.LogError(ex, "Error fetching movie with Id {MovieId}", Id);
-            }
+        try
+        {
+            Movie = await MovieRepository.GetMovieByIdAsync(Id);
+
+            Screenings = await ScreeningRepository.GetTodayScreeningsFromMovieAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            Movie = null;
+            Screenings = null;
+            Logger.LogError(ex, "Error fetching movie with Id {MovieId}", Id);
         }
     }
 

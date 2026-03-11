@@ -13,5 +13,4 @@ public interface IKioskApi
 
     [Put("/kiosk/{id}/pay")]
     Task<ApiResponse<object>> PayOrderAsync([AliasAs("id")] int orderId);
-
 }
