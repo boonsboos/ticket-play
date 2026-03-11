@@ -1,12 +1,7 @@
 ﻿@page "/movie/{Id:int}"
 
-@if (!_hasLoaded)
-{
-    <div class="container mt-4 text-center">
-        <p>Loading movie...</p>
-    </div>
-}
-else if (Movie == null)
+
+@if (Movie == null)
 {
     <div class="container mt-4 text-center">
         <div class="alert alert-warning">
@@ -39,7 +34,38 @@ else
             </div>
             <div class="card-footer showtime-section text-center">
                 <h5>Voorstellingen</h5>
-                <div class="d-flex justify-content-center flex-wrap gap-3 mt-2">
+                <div class="d-flex flex-wrap gap-3 my-2">
+                    @if (Screenings == null || !Screenings.Any())
+                    {
+                        <p>Er zijn geen voorstellingen voor deze film</p>
+                    }
+                    else
+                    {
+                        @foreach (var screening in Screenings)
+                        {
+                            <div class="showtime-card">
+                                <div class="showtime-time">@screening.StartTime.ToString("HH:mm")</div>
+
+                                <div class="showtime-meta">
+                                    @if (screening.Hall?.Has3DProjector == true)
+                                    {
+                                    <div class="showtime-left">
+                                        <div class="showtime-hall">
+                                            Zaal @screening.Hall?.HallNumber
+                                        </div>
+                                        <div class="showtime-badge">3D</div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="showtime-hall showtime-center">
+                                            Zaal @screening.Hall?.HallNumber
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </div>
