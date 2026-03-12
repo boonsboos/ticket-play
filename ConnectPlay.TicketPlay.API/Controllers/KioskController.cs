@@ -1,4 +1,5 @@
-﻿using ConnectPlay.TicketPlay.API.Abstract;
+﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ public class KioskController : ControllerBase
 {
     private readonly IKioskOrderService kioskOrderService;
     private readonly ILogger<KioskController> logger;
+    private readonly IOrderRepository orderRepository;
 
-    public KioskController(IKioskOrderService kioskOrderService, ILogger<KioskController> logger)
+    public KioskController(IKioskOrderService kioskOrderService, IOrderRepository orderRepository, ILogger<KioskController> logger)
     {
         this.kioskOrderService = kioskOrderService;
+        this.orderRepository = orderRepository;
         this.logger = logger;
     }
 
@@ -91,5 +94,16 @@ public class KioskController : ControllerBase
             logger.LogError(invalidOpException, "Unable to print tickets for order {OrderId}", orderId);
             return BadRequest(invalidOpException.Message);
         }
+    }
+
+    [HttpGet]
+    [Route("{orderCode}")]
+    public async Task<IActionResult> GetOrderByOrderCodeAsync([FromRoute] string orderCode)
+    {
+        var order = await orderRepository.GetOrderByOrderCodeAsync(orderCode);
+
+        if (order is null) return NotFound();
+
+        return Ok(order);
     }
 }

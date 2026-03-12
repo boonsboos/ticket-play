@@ -39,6 +39,15 @@ public class OrderRepository : IOrderRepository
             .FirstOrDefaultAsync(o => o.Id == orderId); // Because orderId is the primary key there will only be one Order with this Id
     }
 
+    public async Task<Order?> GetOrderByOrderCodeAsync(string orderCode)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Orders
+            .Where(order => order.OrderCode == orderCode)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
