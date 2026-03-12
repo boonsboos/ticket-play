@@ -11,5 +11,14 @@
 
         <img class="tickets" src="@KioskService.Movie?.PosterUrl" alt="Film poster" />
 
+        @if (KioskService.CurrentOrderId is not null)
+        {
+            <a class="btn btn-primary mt-3"
+                   href="@($"/kiosk/{KioskService.CurrentOrderId}/pdf")"
+                   target="_blank">
+                Print tickets
+            </a>
+        }
+
     </div>
 </div>
