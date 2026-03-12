@@ -9,10 +9,17 @@ public class PriceCalculationService : IPriceCalculationService
     public float CalculatePrices(Screening screening, IEnumerable<TicketType> ticketTypes)
     {
         var total = 0f;
+
         foreach (TicketType ticketType in ticketTypes)
         {
-            CalculatePrice(screening, ticketType);
+            total += CalculatePrice(screening, ticketType);
         }
+
+        if (screening.Hall.Has3DProjector)
+        {
+            total += 2.50f; // 3D fee
+        }
+
         return total;
     }
 
@@ -26,11 +33,6 @@ public class PriceCalculationService : IPriceCalculationService
             TicketType.Student => CalculateStudentPrice(screening),
             _ => throw new NotImplementedException($"Invalid TicketType {ticketType}"),
         };
-
-        if (screening.Hall.Has3DProjector)
-        {
-            price += 2.50f; // 3D fee
-        }
 
         return price;
     }

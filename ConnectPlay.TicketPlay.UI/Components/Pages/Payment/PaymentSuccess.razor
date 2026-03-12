@@ -1,15 +1,25 @@
 ﻿@page "/payment/success"
 
-<div class="d-flex justify-content-center align-items-center vh-100">
+<div class="d-flex justify-content-center align-items-center vh-100 flex-column">
     <div class="text-center">
 
         <h1>Veel plezier!</h1>
 
-        <h2>@KioskService.Movie?.Title</h2>
+        <h2>@kioskService.Movie?.Title</h2>
 
         <p>Vergeet niet je kaartjes mee te nemen.</p>
 
-        <img class="tickets" src="@KioskService.Movie?.PosterUrl" alt="Film poster" />
-
+        <img class="tickets" src="@kioskService.Movie?.PosterUrl" alt="Film poster" />
     </div>
+
+    @if (kioskService.CurrentOrderId is not null)
+    {
+        <div class="row">
+            <a class="btn btn-primary mt-3"
+                    href="@GetTicketFileUrl()"
+                    target="_blank">
+                <i class="bi bi-printer"></i>&nbsp;Print tickets
+            </a>
+        </div>
+    }
 </div>
