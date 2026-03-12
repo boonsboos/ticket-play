@@ -10,7 +10,7 @@ namespace ConnectPlay.TicketPlay.Tests;
 [TestClass]
 public class KioskOrderServiceTests
 {
-    private readonly Screening WheelchairInaccessible2DProjectorScreening = new Screening
+    private readonly Screening WheelchairInaccessible2DProjectorScreening = new()
     {
         Movie = new Movie
         {
@@ -36,7 +36,7 @@ public class KioskOrderServiceTests
         HasBreak = false,
     };
 
-    private readonly Screening WheelchairAccessible3DProjectorScreening = new Screening
+    private readonly Screening WheelchairAccessible3DProjectorScreening = new()
     {
         Movie = new Movie
         {
@@ -71,11 +71,12 @@ public class KioskOrderServiceTests
         var seatAssignmentService = Substitute.For<ISeatAssignmentService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var priceCalculation = Substitute.For<IPriceCalculationService>();
+        var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var logger = Substitute.For<ILogger<KioskOrderService>>();
 
-        screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns((Screening)null!);
+        screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns(null as Screening);
 
-        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository, priceCalculation, logger);
+        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository, priceCalculation, ticketPrintingService, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(

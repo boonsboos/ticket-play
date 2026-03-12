@@ -80,7 +80,7 @@ public class KioskController : ControllerBase
         try
         {
             var pdfStream = await kioskOrderService.PrintAsync(orderId);
-            return File(pdfStream, "application/pdf", $"{orderId}.pdf");
+            return File(pdfStream, "application/pdf", $"TicketPlay_Order-{orderId}-Tickets.pdf");
         }
         catch (ArgumentException argException)
         {

@@ -1,11 +1,23 @@
-﻿using ConnectPlay.TicketPlay.UI.Services;
-using Microsoft.AspNetCore.Components;
+﻿using ConnectPlay.TicketPlay.UI.Configuration;
+using ConnectPlay.TicketPlay.UI.Services;
+using Microsoft.Extensions.Options;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages.Payment;
 
 public partial class PaymentSuccess
 {
-    // Add kioskService object so we can use it on this page
-    [Inject]
-    public KioskService KioskService { get; set; } = default!;
+    private readonly ApiConfiguration options;
+
+    private readonly KioskService kioskService;
+
+    public PaymentSuccess(KioskService kioskService, IOptions<ApiConfiguration> options)
+    {
+        this.kioskService = kioskService;
+        this.options = options.Value;
+    }
+
+    private string GetTicketFileUrl()
+    {
+        return options.BaseUrl + $"/kiosk/{kioskService.CurrentOrderId}/pdf";
+    }
 }
