@@ -4,13 +4,10 @@ using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages.Movies;
+namespace ConnectPlay.TicketPlay.UI.Components.Pages.Manager;
 
-public partial class CreateMovieBase : ComponentBase
+public partial class CreateMovie(IMovieApi movieApi) : ComponentBase
 {
-    [Inject]
-    protected IMovieApi MovieApi { get; set; } = default!;
-
     protected CreateMovieFormModel model = new();
 
     protected bool isSubmitting;
@@ -46,7 +43,7 @@ public partial class CreateMovieBase : ComponentBase
                 Tags = tags
             };
 
-            await MovieApi.CreateMovieAsync(dto);
+            await movieApi.CreateMovieAsync(dto);
 
             successMessage = "Movie has been created successfully";
             model = new();
@@ -90,7 +87,7 @@ public partial class CreateMovieBase : ComponentBase
         public string? Language { get; set; }
 
         [Required]
-        [Range(0,18)]
+        [Range(0, 18)]
         public MinimumAgeRating? MinimumAge { get; set; }
 
         [Required, StringLength(50)]

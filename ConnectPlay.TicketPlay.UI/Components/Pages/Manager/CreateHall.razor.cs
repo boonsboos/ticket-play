@@ -5,10 +5,8 @@ using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages.Manager;
 
-public partial class CreateHall : ComponentBase
+public partial class CreateHall(IHallApi hallApi) : ComponentBase
 {
-    [Inject] public required IHallApi HallApi { get; set; }
-
     private readonly CreateHallFormModel form = new();
     private CreateHallRequest request = new();
 
@@ -57,7 +55,7 @@ public partial class CreateHall : ComponentBase
                 Rows = [.. form.Rows]
             };
 
-            var response = await HallApi.CreateNewHallAsync(request);
+            var response = await hallApi.CreateNewHallAsync(request);
             // Handle response and show appropriate toast message
             if (response.IsSuccessStatusCode)
             {
