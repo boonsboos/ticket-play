@@ -38,8 +38,14 @@ public partial class Home : ComponentBase
             return;
         }
 
-        orderDoesNotExist = false;
         var order = orderResponse.Content;
+
+        if (order is null) {
+            orderDoesNotExist = true;
+            return;
+        }
+
+        orderDoesNotExist = false;
 
         this.navigationManager.NavigateTo(options.BaseUrl + $"/kiosk/{order.Id}/pdf");
     }
