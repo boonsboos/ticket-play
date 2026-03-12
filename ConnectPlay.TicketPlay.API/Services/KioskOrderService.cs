@@ -14,6 +14,7 @@ public class KioskOrderService : IKioskOrderService
     private readonly ISeatAssignmentService seatAssignmentService;
     private readonly IOrderRepository orderRepository;
     private readonly IPriceCalculationService priceCalculationService;
+    private readonly ITicketPrintingService ticketPrintingService;
     private readonly ILogger<KioskOrderService> logger;
 
     public KioskOrderService(
@@ -22,6 +23,7 @@ public class KioskOrderService : IKioskOrderService
         ISeatAssignmentService seatAssignmentService,
         IOrderRepository orderRepository,
         IPriceCalculationService priceCalculationService,
+        ITicketPrintingService ticketPrintingService,
         ILogger<KioskOrderService> logger)
     {
         this.screeningRepository = screeningRepository;
@@ -29,6 +31,7 @@ public class KioskOrderService : IKioskOrderService
         this.seatAssignmentService = seatAssignmentService;
         this.orderRepository = orderRepository;
         this.priceCalculationService = priceCalculationService;
+        this.ticketPrintingService = ticketPrintingService;
         this.logger = logger;
     }
 
@@ -65,7 +68,6 @@ public class KioskOrderService : IKioskOrderService
 
         order.Status = OrderStatus.Cancelled; // change the status of the order to cancelled
 
-
         await ticketRepository.DeleteTicketsByOrderIdAsync(orderId);
 
         await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Cancelled);
@@ -94,5 +96,28 @@ public class KioskOrderService : IKioskOrderService
         var order = await orderRepository.GetOrderByIdAsync(orderId) ?? throw new ArgumentException("Order does not exist");
 
         await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Paid);
+    }
+
+    public async Task<Stream> PrintAsync(int orderId)
+    {
+        var order = await orderRepository.GetOrderByIdAsync(orderId)
+            ?? throw new ArgumentException("Order does not exist");
+
+        if (order.Status == OrderStatus.Redeemed)
+        {
+            throw new InvalidOperationException($"Order {orderId} has already been redeemed");
+        }
+
+        // if order has already been redeemed, do not let the user print the tickets again
+        if (order.Status != OrderStatus.Paid)
+        {
+            throw new InvalidOperationException($"Order {orderId} has not been paid yet");
+        }
+
+        logger.LogInformation("Updating status of order {OrderId} to Redeemed", orderId);
+
+        await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Redeemed);
+
+        return await ticketPrintingService.PrintTicketsAsync(order);
     }
 }

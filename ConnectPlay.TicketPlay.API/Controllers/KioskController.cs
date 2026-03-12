@@ -8,12 +8,12 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 [Route("[controller]")]
 public class KioskController : ControllerBase
 {
-    private readonly IKioskOrderService orderProcessingService;
+    private readonly IKioskOrderService kioskOrderService;
     private readonly ILogger<KioskController> logger;
 
-    public KioskController(IKioskOrderService orderProcessingService, ILogger<KioskController> logger)
+    public KioskController(IKioskOrderService kioskOrderService, ILogger<KioskController> logger)
     {
-        this.orderProcessingService = orderProcessingService;
+        this.kioskOrderService = kioskOrderService;
         this.logger = logger;
     }
 
@@ -25,7 +25,7 @@ public class KioskController : ControllerBase
 
         try
         {
-            var order = await orderProcessingService.ReserveAsync(screeningId, tickets);
+            var order = await kioskOrderService.ReserveAsync(screeningId, tickets);
 
             return Ok(order);
         }
@@ -47,7 +47,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            await orderProcessingService.CancelAsync(orderId); // Controller call the service to cancel the order
+            await kioskOrderService.CancelAsync(orderId); // Controller call the service to cancel the order
             return Ok(); // 200 code
         }
         catch (ArgumentException argException)
@@ -63,12 +63,32 @@ public class KioskController : ControllerBase
     {
         try
         {
-            await orderProcessingService.PayAsync(orderId); // Set the order status to paid
+            await kioskOrderService.PayAsync(orderId); // Set the order status to paid
             return Ok();
         }
         catch (ArgumentException argException)
         {
             logger.LogError(argException, "Cant pay {OrderId}", orderId);
+            return BadRequest();
+        }
+    }
+
+    [HttpGet]
+    [Route("{orderId}/pdf")]
+    public async Task<IActionResult> PrintTicketsAsync([FromRoute] int orderId)
+    {
+        try
+        {
+            var pdfStream = await kioskOrderService.PrintAsync(orderId);
+            return File(pdfStream, "application/pdf", $"{orderId}.pdf");
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant print tickets for order {OrderId}", orderId);
+            return BadRequest();
+        } catch (InvalidOperationException invalidOpException)
+        {
+            logger.LogError(invalidOpException, "Unable to print tickets for order {OrderId}", orderId);
             return BadRequest();
         }
     }
