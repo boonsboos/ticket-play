@@ -1,38 +1,24 @@
 ﻿@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
 <h1>Home</h1>
+<a href="/movie/today">Naar films</a>
 <hr />
 
-<!-- We have some variables. Where do they come from? Take a look in Home.razor.cs -->
 
-<h2>Showing now</h2>
+<h2>Online al besteld? Print hier je tickets!</h2>
 
-@if (currentMovies.Count() == 0)
-{
-    <p><i>No movies currently showing in the cinema...</i></p>
-} 
-else
-{
-    @foreach(var movie in currentMovies)
+<div class="d-flex flex-column gap-2">
+    @if (orderDoesNotExist)
     {
-        <p>@movie.Title</p>
+        <div class="alert alert-danger" role="alert">
+            <p>Bestelling niet gevonden. Zorg ervoor dat je de bestelcode goed in hebt gevuld!</p>
+        </div>
     }
-}
-
-<hr />
-
-<h2>New arrivals</h2>
-
-@if (newMovies.Count() == 0)
-{
-    <p><i>No new movies coming soon...</i></p>
-}
-else
-{
-    @foreach (var movie in newMovies)
-    {
-        <p>@movie.Title</p>
-    }
-}
+    <div class="d-flex flex-row gap-2">
+        <InputText @bind-Value="orderCode" class="form-control" placeholder="Bestelcode..." />
+        <button class="btn btn-primary" disabled="@(!IsOrderCodeValid())" @onclick="TryPrintAsync"><i class="bi bi-printer"></i>Print tickets</button>
+    </div>
+</div>
