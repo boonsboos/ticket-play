@@ -25,7 +25,6 @@ public class ScreeningRepository : IScreeningRepository
         catch (Refit.ApiException ex)
         {
             _logger.LogError(ex, "Error creating screening via Screening API: {Content}", ex.Content);
-            throw;
         }
     }
 

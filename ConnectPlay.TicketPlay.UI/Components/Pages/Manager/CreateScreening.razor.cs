@@ -1,4 +1,5 @@
-﻿using ConnectPlay.TicketPlay.Models;
+﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
@@ -10,6 +11,9 @@ namespace ConnectPlay.TicketPlay.UI.Components.Pages.Manager;
 // Handles loading movies/halls and submitting the form
 public class CreateScreeningBase : ComponentBase
 {
+    private readonly IMovieRepository _movieRepository;
+    private readonly IHallRepository _HallRepository;
+    private readonly IScreeningRepository _screenRepository
     [Inject] public required IScreeningApi ScreeningApi { get; set; }
     [Inject] public required IMovieApi MovieApi { get; set; }
     [Inject] public required IHallApi HallApi { get; set; }
@@ -21,7 +25,7 @@ public class CreateScreeningBase : ComponentBase
     protected string toastColor = "bg-success";
     protected bool showToast = false;
 
-    protected IEnumerable<MovieListItemDto> Movies = Array.Empty<MovieListItemDto>();
+    protected IEnumerable<MovieListItemDto> Movies = [];
     protected IEnumerable<Hall> Halls = Array.Empty<Hall>();
 
     protected override async Task OnInitializedAsync()
@@ -52,8 +56,11 @@ public class CreateScreeningBase : ComponentBase
                 throw new InvalidOperationException("Selecteer film en zaal.");
 
             var startTime = new DateTimeOffset(
-                form.TimeDate.Year, form.TimeDate.Month, form.TimeDate.Day,
-                form.TimeHour, 0, 0, TimeSpan.Zero);
+                form.TimeDate.Year,
+                form.TimeDate.Month,
+                form.TimeDate.Day,
+                form.TimeHour, 0, 0,
+                DateTimeOffset.Now.Offset);
 
             if (startTime < DateTimeOffset.Now)
                 throw new InvalidOperationException("Starttijd kan niet in het verleden liggen.");
@@ -99,7 +106,7 @@ public class CreateScreeningBase : ComponentBase
     }
 
     protected void HideToast() => showToast = false;
-
+    
     public sealed class CreateScreeningFormModel
     {
         public int MovieId { get; set; } = 0;

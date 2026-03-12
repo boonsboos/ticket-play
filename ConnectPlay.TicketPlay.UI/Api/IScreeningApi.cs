@@ -6,7 +6,7 @@ namespace ConnectPlay.TicketPlay.UI.Api;
 
 public interface IScreeningApi
 {
-    [Post("/api/screenings/screening/new")]
+    [Post("/screening/new")]
     Task CreateScreeningAsync([Body] CreateScreeningDto dto);
 
     [Get("/screening/today/{movieId}")]

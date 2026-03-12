@@ -74,10 +74,5 @@ public class ScreeningRepository : IScreeningRepository
 
         dbContext.Screenings.Add(screening);
         var affected = await dbContext.SaveChangesAsync();
-
-        if (affected == 0)
-            _logger.LogWarning("No rows affected when saving Screening for MovieId {MovieId} and HallId {HallId}", dto.MovieId, dto.HallId);
-        else
-            _logger.LogInformation("Screening created successfully. Id: {Id}", screening.Id);
     }
 }

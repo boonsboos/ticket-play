@@ -6,7 +6,7 @@ namespace ConnectPlay.TicketPlay.Models.Dto;
 
 public record CreateScreeningDto
 {
-    public int MovieId { get; init; }
-    public int HallId { get; init; }
-    public DateTimeOffset Time { get; init; }
+    public required int MovieId { get; init; }
+    public required int HallId { get; init; }
+    public required DateTimeOffset Time { get; init; }
 }

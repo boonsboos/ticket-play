@@ -6,29 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 namespace ConnectPlay.TicketPlay.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class ScreeningsController : ControllerBase
+[Route("[controller]")]
+public class ScreeningController : ControllerBase
 {
-    private readonly IScreeningRepository _repository;
     private readonly IScreeningRepository _screeningRepository;
 
-    public ScreeningsController(IScreeningRepository repository, IScreeningRepository screeningRepository)
+    public ScreeningController(IScreeningRepository screeningRepository)
     {
-        _repository = repository;
         _screeningRepository = screeningRepository;
     }
 
-    [HttpPost("screening/new")]
+    [HttpPost("new")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateScreeningDto dto)
     {
-        if (!ModelState.IsValid)
-            return ValidationProblem(ModelState);
-
-        await _repository.CreateScreeningAsync(dto);
-
-        return CreatedAtAction(nameof(Create), new { dto.MovieId, dto.HallId, dto.Time }, dto);
+        await _screeningRepository.CreateScreeningAsync(dto);
+        return StatusCode(StatusCodes.Status201Created, dto);
     }
 
     [HttpGet]
