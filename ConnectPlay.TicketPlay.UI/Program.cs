@@ -89,6 +89,7 @@ public class Program
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
             .AddRefitClient<IKioskApi>()
+            .AddRefitClient<IOrderApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
     #endregion
