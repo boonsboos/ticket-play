@@ -85,11 +85,11 @@ public class KioskController : ControllerBase
         catch (ArgumentException argException)
         {
             logger.LogError(argException, "Cant print tickets for order {OrderId}", orderId);
-            return BadRequest();
+            return BadRequest(argException.Message);
         } catch (InvalidOperationException invalidOpException)
         {
             logger.LogError(invalidOpException, "Unable to print tickets for order {OrderId}", orderId);
-            return BadRequest();
+            return BadRequest(invalidOpException.Message);
         }
     }
 }
