@@ -22,7 +22,7 @@ public partial class CreateScreening(
     protected string toastColor = "bg-success";
     protected bool showToast = false;
 
-    protected IEnumerable<MovieListItemDto> Movies = Array.Empty<MovieListItemDto>();
+    protected IEnumerable<MovieListItemDto> Movies = [];
     protected IEnumerable<Hall> Halls = Array.Empty<Hall>();
 
     protected override async Task OnInitializedAsync()
