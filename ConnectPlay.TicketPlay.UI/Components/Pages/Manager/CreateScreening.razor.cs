@@ -1,5 +1,4 @@
-﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Models;
+﻿using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
@@ -7,16 +6,14 @@ using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages.Manager;
 
-// Base class for the Create Screening page
-// Handles loading movies/halls and submitting the form
-public class CreateScreeningBase : ComponentBase
+public partial class CreateScreening(
+    IScreeningApi screeningApi,
+    IMovieApi movieApi,
+    IHallApi hallApi) : ComponentBase
 {
-    private readonly IMovieRepository _movieRepository;
-    private readonly IHallRepository _HallRepository;
-    private readonly IScreeningRepository _screenRepository
-    [Inject] public required IScreeningApi ScreeningApi { get; set; }
-    [Inject] public required IMovieApi MovieApi { get; set; }
-    [Inject] public required IHallApi HallApi { get; set; }
+    private readonly IScreeningApi _screeningApi = screeningApi;
+    private readonly IMovieApi _movieApi = movieApi;
+    private readonly IHallApi _hallApi = hallApi;
 
     protected CreateScreeningFormModel form = new();
     protected bool isSubmitting = false;
@@ -25,13 +22,13 @@ public class CreateScreeningBase : ComponentBase
     protected string toastColor = "bg-success";
     protected bool showToast = false;
 
-    protected IEnumerable<MovieListItemDto> Movies = [];
+    protected IEnumerable<MovieListItemDto> Movies = Array.Empty<MovieListItemDto>();
     protected IEnumerable<Hall> Halls = Array.Empty<Hall>();
 
     protected override async Task OnInitializedAsync()
     {
-        var currentMovies = await MovieApi.GetCurrentMoviesAsync();
-        var newMovies = await MovieApi.GetNewMoviesAsync();
+        var currentMovies = await _movieApi.GetCurrentMoviesAsync();
+        var newMovies = await _movieApi.GetNewMoviesAsync();
         var allMovies = currentMovies
             .Concat(newMovies)
             .GroupBy(m => m.Id)
@@ -44,7 +41,7 @@ public class CreateScreeningBase : ComponentBase
             Title = m.Title
         }).ToList();
 
-        Halls = await HallApi.GetHallsAsync();
+        Halls = await _hallApi.GetHallsAsync();
     }
 
     protected async Task HandleSubmit()
@@ -72,7 +69,7 @@ public class CreateScreeningBase : ComponentBase
                 Time = startTime
             };
 
-            await ScreeningApi.CreateScreeningAsync(dto);
+            await _screeningApi.CreateScreeningAsync(dto);
 
             ShowSuccess("Voorstelling succesvol toegevoegd!");
             form = new CreateScreeningFormModel();
@@ -106,7 +103,7 @@ public class CreateScreeningBase : ComponentBase
     }
 
     protected void HideToast() => showToast = false;
-    
+
     public sealed class CreateScreeningFormModel
     {
         public int MovieId { get; set; } = 0;

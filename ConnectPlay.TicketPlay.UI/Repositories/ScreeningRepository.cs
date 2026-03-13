@@ -18,14 +18,7 @@ public class ScreeningRepository : IScreeningRepository
 
     public async Task CreateScreeningAsync(CreateScreeningDto dto)
     {
-        try
-        {
             await _screeningApi.CreateScreeningAsync(dto);
-        }
-        catch (Refit.ApiException ex)
-        {
-            _logger.LogError(ex, "Error creating screening via Screening API: {Content}", ex.Content);
-        }
     }
 
     public Task<Screening?> GetScreeningAsync(int id)

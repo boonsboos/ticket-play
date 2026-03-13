@@ -1,6 +1,5 @@
 ﻿@page "/manager/create-screening"
 @rendermode InteractiveServer
-@inherits CreateScreeningBase
 
 <div class="container my-4" style="max-width: 1200px;">
     <h3 class="mb-4">Voeg voorstelling toe</h3>
@@ -55,6 +54,7 @@
                         Voeg toe
                     </button>
                 </div>
+
                 @if (showToast)
                 {
                     <div class="toast-container position-fixed bottom-0 end-0 p-3">
