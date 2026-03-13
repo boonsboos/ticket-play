@@ -1,4 +1,5 @@
-﻿using ConnectPlay.TicketPlay.API.Abstract;
+﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +9,14 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 [Route("[controller]")]
 public class KioskController : ControllerBase
 {
-    private readonly IKioskOrderService orderProcessingService;
+    private readonly IKioskOrderService kioskOrderService;
     private readonly ILogger<KioskController> logger;
+    private readonly IOrderRepository orderRepository;
 
-    public KioskController(IKioskOrderService orderProcessingService, ILogger<KioskController> logger)
+    public KioskController(IKioskOrderService kioskOrderService, IOrderRepository orderRepository, ILogger<KioskController> logger)
     {
-        this.orderProcessingService = orderProcessingService;
+        this.kioskOrderService = kioskOrderService;
+        this.orderRepository = orderRepository;
         this.logger = logger;
     }
 
@@ -25,19 +28,19 @@ public class KioskController : ControllerBase
 
         try
         {
-            var order = await orderProcessingService.ReserveAsync(screeningId, tickets);
+            var order = await kioskOrderService.ReserveAsync(screeningId, tickets);
 
             return Ok(order);
         }
         catch (ArgumentException argException)
         {
             logger.LogError(argException, "Failed to fullfill tickets");
-            return BadRequest([]);
+            return BadRequest();
         }
         catch (InvalidOperationException invalidOpException)
         {
             logger.LogError(invalidOpException, "Unable to fullfill tickets");
-            return BadRequest([]);
+            return BadRequest();
         }
     }
 
@@ -47,7 +50,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            await orderProcessingService.CancelAsync(orderId); // Controller call the service to cancel the order
+            await kioskOrderService.CancelAsync(orderId); // Controller call the service to cancel the order
             return Ok(); // 200 code
         }
         catch (ArgumentException argException)
@@ -63,7 +66,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            await orderProcessingService.PayAsync(orderId); // Set the order status to paid
+            await kioskOrderService.PayAsync(orderId); // Set the order status to paid
             return Ok();
         }
         catch (ArgumentException argException)
@@ -71,5 +74,36 @@ public class KioskController : ControllerBase
             logger.LogError(argException, "Cant pay {OrderId}", orderId);
             return BadRequest();
         }
+    }
+
+    [HttpGet]
+    [Route("{orderId}/pdf")]
+    public async Task<IActionResult> PrintTicketsAsync([FromRoute] int orderId)
+    {
+        try
+        {
+            var pdfStream = await kioskOrderService.PrintAsync(orderId);
+            return File(pdfStream, "application/pdf", $"TicketPlay_Order-{orderId}-Tickets.pdf");
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant print tickets for order {OrderId}", orderId);
+            return BadRequest(argException.Message);
+        } catch (InvalidOperationException invalidOpException)
+        {
+            logger.LogError(invalidOpException, "Unable to print tickets for order {OrderId}", orderId);
+            return BadRequest(invalidOpException.Message);
+        }
+    }
+
+    [HttpGet]
+    [Route("{orderCode}")]
+    public async Task<IActionResult> GetOrderByOrderCodeAsync([FromRoute] string orderCode)
+    {
+        var order = await orderRepository.GetOrderByOrderCodeAsync(orderCode);
+
+        if (order is null) return NotFound();
+
+        return Ok(order);
     }
 }

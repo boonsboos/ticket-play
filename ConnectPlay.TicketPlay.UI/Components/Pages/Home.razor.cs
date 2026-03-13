@@ -1,25 +1,52 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.UI.Configuration;
+using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Options;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages;
 
 public partial class Home : ComponentBase
 {
-    private readonly IMovieRepository movieRepository;
+    private readonly NavigationManager navigationManager;
+    private readonly ApiConfiguration options;
+    private readonly IOrderApi orderApi;
 
-    private IEnumerable<Movie> currentMovies = [];
-    private IEnumerable<Movie> newMovies = [];
+    private string orderCode = string.Empty;
+    private bool orderDoesNotExist = false;
 
-    // Get dependency injected MovieRepository instance
-    public Home(IMovieRepository movieRepository)
+    public Home(NavigationManager navigationManager, IOrderApi orderApi, IOptions<ApiConfiguration> options)
     {
-        this.movieRepository = movieRepository;
+        this.navigationManager = navigationManager;
+        this.options = options.Value;
+        this.orderApi = orderApi;
     }
 
-    protected override async Task OnInitializedAsync()
+    private bool IsOrderCodeValid()
     {
-        currentMovies = await movieRepository.GetCurrentMoviesAsync();
-        newMovies = await movieRepository.GetNewMoviesAsync();
+        return orderCode.Length == 8;
+    }
+
+    private async Task TryPrintAsync()
+    {
+        var orderResponse = await orderApi.GetOrderByOrderCodeAsync(orderCode.ToUpperInvariant());
+
+        if (!orderResponse.IsSuccessStatusCode)
+        {
+            orderDoesNotExist = true;
+            return;
+        }
+
+        var order = orderResponse.Content;
+
+        if (order is null) {
+            orderDoesNotExist = true;
+            return;
+        }
+
+        orderDoesNotExist = false;
+
+        this.navigationManager.NavigateTo(options.BaseUrl + $"/kiosk/{order.Id}/pdf");
     }
 }

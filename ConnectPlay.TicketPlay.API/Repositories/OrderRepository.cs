@@ -32,7 +32,20 @@ public class OrderRepository : IOrderRepository
         // Retunr the order with all the tickets connected to this order
         return await dbContext.Orders
             .Include(order => order.Tickets) // Include the tickets so we only need one query to get the order and the tickets
+            .ThenInclude(ticket => ticket.Seat) // include the seat for each ticket so we can show the seat numbers in the kiosk
+            .Include(order => order.Tickets) // Because we need to include the tickets again to include the screening for each ticket, because we need the screening details in the kiosk
+            .ThenInclude(ticket => ticket.Screening) // include the screening for each ticket so we can show the screening details in the kiosk
+            .ThenInclude(screening => screening.Movie) // include the movie for each screening so we can show the movie title in the kiosk
             .FirstOrDefaultAsync(o => o.Id == orderId); // Because orderId is the primary key there will only be one Order with this Id
+    }
+
+    public async Task<Order?> GetOrderByOrderCodeAsync(string orderCode)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Orders
+            .Where(order => order.OrderCode == orderCode)
+            .FirstOrDefaultAsync();
     }
 
     public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)

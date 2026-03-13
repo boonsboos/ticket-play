@@ -1,8 +1,10 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.Components;
+using ConnectPlay.TicketPlay.UI.Configuration;
 using ConnectPlay.TicketPlay.UI.Repositories;
 using ConnectPlay.TicketPlay.UI.Services;
+using Microsoft.Extensions.Options;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI;
@@ -13,13 +15,29 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var baseUrl = builder.Configuration.GetConnectionString("BaseUrl") ?? throw new InvalidOperationException("API base URL is empty!");
+
         // Add services
-        ConfigureApi(builder.Services, builder.Configuration.GetConnectionString("BaseUrl") ?? throw new InvalidOperationException("API base URL is empty!"));
+        ConfigureApi(builder.Services, baseUrl);
         ConfigureServices(builder.Services);
 
         builder.Services.AddRazorComponents()
             .AddInteractiveWebAssemblyComponents()
             .AddInteractiveServerComponents();
+
+        // configure the ability to download files from the browser
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(
+                name: "_ticketplayCors",
+                policy =>
+                {
+                    policy.WithOrigins(baseUrl)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }
+            );
+        });
 
         var app = builder.Build();
 
@@ -36,6 +54,7 @@ public class Program
 
         app.UseAntiforgery();
 
+        app.UseCors("_ticketplayCors");
         app.UseStaticFiles();
 
         // Map stuff to endpoints
@@ -58,14 +77,21 @@ public class Program
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)
     {
+        services.AddSingleton<IOptions<ApiConfiguration>>(
+            Options.Create<ApiConfiguration>(new()
+            {
+                BaseUrl = baseUrl
+            })
+        );
+        
         services
             .AddRefitClient<IMovieApi>()
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
             .AddRefitClient<IKioskApi>()
             .AddRefitClient<IScreeningApi>()
+            .AddRefitClient<IOrderApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
-
     #endregion
 }

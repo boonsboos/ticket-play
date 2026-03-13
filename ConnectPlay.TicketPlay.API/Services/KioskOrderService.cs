@@ -14,19 +14,25 @@ public class KioskOrderService : IKioskOrderService
     private readonly ISeatAssignmentService seatAssignmentService;
     private readonly IOrderRepository orderRepository;
     private readonly IPriceCalculationService priceCalculationService;
+    private readonly ITicketPrintingService ticketPrintingService;
+    private readonly ILogger<KioskOrderService> logger;
 
     public KioskOrderService(
         IScreeningRepository screeningRepository,
         ITicketRepository ticketRepository,
         ISeatAssignmentService seatAssignmentService,
         IOrderRepository orderRepository,
-        IPriceCalculationService priceCalculationService)
+        IPriceCalculationService priceCalculationService,
+        ITicketPrintingService ticketPrintingService,
+        ILogger<KioskOrderService> logger)
     {
         this.screeningRepository = screeningRepository;
         this.ticketRepository = ticketRepository;
         this.seatAssignmentService = seatAssignmentService;
         this.orderRepository = orderRepository;
         this.priceCalculationService = priceCalculationService;
+        this.ticketPrintingService = ticketPrintingService;
+        this.logger = logger;
     }
 
     public async Task<Order> ReserveAsync(int screeningId, IEnumerable<TicketType> reservation)
@@ -41,14 +47,19 @@ public class KioskOrderService : IKioskOrderService
         // assign seats
         var assignedSeats = await seatAssignmentService.AssignAsync(screening, reservation);
 
-        // save the order associated with the tickets
-        var tickets = await SaveTicketsAsync(screening, reservation, assignedSeats);
+        var tickets = await CreateTicketsAsync(screening, reservation, assignedSeats);
 
-        return await orderRepository.CreateOrderAsync(new Order()
+        // create the order object first (tickets are empty for now)
+        var order = new Order
         {
-            Tickets = tickets.ToList(),
             Total = total,
-        });
+            Status = OrderStatus.Pending,
+            // save the order associated with the tickets
+            Tickets = tickets,
+        };
+
+        await orderRepository.CreateOrderAsync(order);
+        return await orderRepository.GetOrderByIdAsync(order.Id) ?? throw new InvalidOperationException("Failed to retrieve order after creation");
     }
 
     // We use await because the methods are async and we want to ensuse that the order is only cancelled
@@ -59,34 +70,63 @@ public class KioskOrderService : IKioskOrderService
 
         order.Status = OrderStatus.Cancelled; // change the status of the order to cancelled
 
-        
         await ticketRepository.DeleteTicketsByOrderIdAsync(orderId);
 
         await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Cancelled);
     }
 
-    private async Task<IEnumerable<Ticket>> SaveTicketsAsync(Screening screening, IEnumerable<TicketType> reservation, IEnumerable<Seat> assignedSeats)
+    private static async Task<List<Ticket>> CreateTicketsAsync(Screening screening, IEnumerable<TicketType> reservation, IEnumerable<Seat> assignedSeats)
     {
         List<Ticket> tickets = [];
         for (int i = 0; i < reservation.Count(); i++)
         {
             var t = new Ticket
             {
-                Screening = screening,
-                Seat = assignedSeats.ElementAt(i),
+                ScreeningId = screening.Id,
+                SeatId = assignedSeats.ElementAt(i).Id,
                 TicketType = reservation.ElementAt(i),
-                OrderId = 0
+                OrderId = null,
             };
             tickets.Add(t);
         }
 
-        return await ticketRepository.ReserveTicketsAsync(tickets);
+        return tickets;
     }
 
     public async Task PayAsync(int orderId)
     {
-        var order = await orderRepository.GetOrderByIdAsync(orderId) ?? throw new ArgumentException("Order does not exist");
+        var order = await orderRepository.GetOrderByIdAsync(orderId)
+            ?? throw new ArgumentException("Order does not exist");
+
+        if (order.Status == OrderStatus.Paid)
+        {
+            logger.LogInformation("Order {OrderId} has already been paid", orderId);
+            return;
+        }
 
         await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Paid);
+    }
+
+    public async Task<Stream> PrintAsync(int orderId)
+    {
+        var order = await orderRepository.GetOrderByIdAsync(orderId)
+            ?? throw new ArgumentException("Order does not exist");
+
+        if (order.Status == OrderStatus.Redeemed)
+        {
+            throw new InvalidOperationException($"Order {orderId} has already been redeemed");
+        }
+
+        // if order has already been redeemed, do not let the user print the tickets again
+        if (order.Status != OrderStatus.Paid)
+        {
+            throw new InvalidOperationException($"Order {orderId} has not been paid yet");
+        }
+
+        logger.LogInformation("Updating status of order {OrderId} to Redeemed", orderId);
+
+        await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Redeemed);
+
+        return await ticketPrintingService.PrintTicketsAsync(order);
     }
 }

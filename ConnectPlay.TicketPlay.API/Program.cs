@@ -1,9 +1,13 @@
+using QuestPDF.Infrastructure;
+
 namespace ConnectPlay.TicketPlay.API;
 
 public class Program
 {
     public static void Main(string[] args)
     {
+        QuestPDF.Settings.License = LicenseType.Community;
+
         var builder = Host
             .CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>

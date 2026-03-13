@@ -10,13 +10,9 @@ public class KioskService
 
     private Order? currentOrder = null;
 
-    public IEnumerable<Seat> Seats {
-        get {
-            return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? [];
-        }
-    }
+    public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
-    public Movie? Movie { get => currentOrder?.Tickets.First()?.Screening.Movie; }
+    public Movie? Movie => currentOrder?.Tickets.First()?.Screening.Movie;
     public int? CurrentOrderId { get => currentOrder?.Id; } // Onyl get the order id if ther is a current order
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [];
@@ -41,12 +37,13 @@ public class KioskService
         if (response.IsSuccessStatusCode)
         {
             currentOrder = response.Content;
-        } else
+        }
+        else
         {
             logger.LogError("Received {Response} from API: {Error}", response.StatusCode, response.Error);
         }
     }
-    
+
     public async Task CancelOrder()
     {
         // Ensure that there is a current order id to cancel else trow exception
@@ -97,4 +94,18 @@ public class KioskService
         Tickets = [];
         currentOrder = null;
     }
+
+    public float GetPrice(TicketType ticketType)
+    {
+        var movie = Movie ?? SelectedScreening?.Movie;
+        if (movie == null) return 0;
+        // everyone except regular gets €1,50 off
+        return ticketType switch
+        {
+            TicketType.Regular => RegularPrice(Movie ?? SelectedScreening?.Movie),
+            _ => RegularPrice(Movie ?? SelectedScreening?.Movie) - 1.5f,
+        };
+    }
+
+    private float RegularPrice(Movie? movie) => (movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;
 }

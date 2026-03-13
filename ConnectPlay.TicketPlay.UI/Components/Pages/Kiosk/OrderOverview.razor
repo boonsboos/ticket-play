@@ -41,7 +41,8 @@
                 <div class="d-flex flex-row justify-content-between">
                     <p><b>@ticketType</b></p>
                     <p>
-                        @amount x @(GetPrice(ticketType).ToString("C")) = @((amount * GetPrice(ticketType)).ToString("C"))
+                        @amount x @(kioskService.GetPrice(ticketType).ToString("C")) = @((amount *
+                        kioskService.GetPrice(ticketType)).ToString("C"))
                     </p>
                 </div>
             }
@@ -62,12 +63,12 @@
                 <p><b>Totaal</b></p>
                 <p>@(CalculateTotal().ToString("C"))</p>
             </div>
-            
+
         </div>
     </div>
 </div>
 
 <div class="container d-flex justify-content-between mt-3">
-    <button class="btn btn-outline-primary" @onclick="ToMovie">Terug</button>
+    <button class="btn btn-outline-primary" @onclick="ToTickets">Terug</button>
     <button class="btn btn-primary" @onclick="ToPayment">Verder</button>
 </div>

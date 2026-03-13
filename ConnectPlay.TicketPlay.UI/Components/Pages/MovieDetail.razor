@@ -1,5 +1,5 @@
 ﻿@page "/movie/{Id:int}"
-
+@rendermode InteractiveServer
 
 @if (Movie == null)
 {
@@ -32,7 +32,7 @@ else
                     <p>@Movie.Description</p>
                 </div>
             </div>
-            <div class="card-footer showtime-section text-center">
+            <div class="card-footer pt-3">
                 <h5>Voorstellingen</h5>
                 <div class="d-flex flex-wrap gap-3 my-2">
                     @if (Screenings == null || !Screenings.Any())
@@ -43,22 +43,23 @@ else
                     {
                         @foreach (var screening in Screenings)
                         {
-                            <div class="showtime-card">
-                                <div class="showtime-time">@screening.StartTime.ToString("HH:mm")</div>
+                            <div
+                                class="card @(screening.Id == kioskService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
+                                <div class="card-body @(screening.StartTime < DateTimeOffset.Now ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
+                                     @onclick="() => SetSelectedScreening(screening)">
+                                    <h2 class="card-title">@screening.StartTime.ToString("HH:mm")</h2>
 
-                                <div class="showtime-meta">
                                     @if (screening.Hall?.Has3DProjector == true)
                                     {
-                                    <div class="showtime-left">
-                                        <div class="showtime-hall">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
                                             Zaal @screening.Hall?.HallNumber
-                                        </div>
-                                        <div class="showtime-badge">3D</div>
+                                            <i class="bi bi-badge-3d"></i>
                                         </div>
                                     }
                                     else
                                     {
-                                        <div class="showtime-hall showtime-center">
+                                        <div class="d-flex justify-content-center align-items-center gap-2 text-body-secondary fw-bold">
                                             Zaal @screening.Hall?.HallNumber
                                         </div>
                                     }
@@ -71,7 +72,7 @@ else
         </div>
     </div>
     <div class="container d-flex justify-content-between mt-3" style="max-width:1000px;">
-        <button class="btn btn-outline-primary">← Ga terug</button>
-        <button class="btn btn-purple">Volgende →</button>
+        <button class="btn btn-outline-primary" @onclick="ToOverview">← Ga terug</button>
+        <button class="btn btn-purple" @onclick="ToTickets">Volgende →</button>
     </div>
 }

@@ -39,10 +39,22 @@ public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogge
             return false;
         }
     }
+
     public async Task<IEnumerable<Hall>> GetHallsAsync()
     {
         using var dbContext = await context.CreateDbContextAsync();
 
         return await dbContext.Halls.ToListAsync();
+    }
+
+    public async Task<Hall> GetHallAsync(Screening screening)
+    {
+        await using var dbContext = await context.CreateDbContextAsync();
+
+        var fetchedScreening = await dbContext.Screenings
+            .Include(screening => screening.Hall)
+            .FirstOrDefaultAsync(s => s.Id == screening.Id);
+
+        return fetchedScreening!.Hall;
     }
 }

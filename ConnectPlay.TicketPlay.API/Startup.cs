@@ -50,7 +50,7 @@ public class Startup(IConfiguration configuration)
     private void ConfigureRepositories(IServiceCollection services)
     {
         services.AddScoped<IMovieRepository, MovieRepository>()
-            .AddScoped<IHallRepository, HallRepository>()
+            .AddSingleton<IHallRepository, HallRepository>()
             .AddScoped<IScreeningRepository, ScreeningRepository>()
             .AddScoped<ISeatRepository, SeatRepository>()
             .AddScoped<ITicketRepository, TicketRepository>()
@@ -62,5 +62,6 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<ISeatAssignmentService, SeatAssignmentService>();
         services.AddScoped<IKioskOrderService, KioskOrderService>();
         services.AddSingleton<IPriceCalculationService, PriceCalculationService>();
+        services.AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
     }
 }
