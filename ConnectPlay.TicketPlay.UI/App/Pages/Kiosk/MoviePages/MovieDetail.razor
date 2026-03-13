@@ -1,5 +1,6 @@
-﻿@page "/movie/{Id:int}"
+﻿@page "/kiosk/movies/{Id:int}"
 @rendermode InteractiveServer
+@layout KioskLayout
 
 @if (Movie == null)
 {
@@ -72,7 +73,7 @@ else
         </div>
     </div>
     <div class="container d-flex justify-content-between mt-3" style="max-width:1000px;">
-        <button class="btn btn-outline-primary" @onclick="ToOverview">← Ga terug</button>
+        <button class="btn btn-outline-primary" @onclick="Back">← Ga terug</button>
         <button class="btn btn-purple" @onclick="ToTickets">Volgende →</button>
     </div>
 }

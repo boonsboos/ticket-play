@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using NSubstitute.Core;
 
-namespace ConnectPlay.TicketPlay.UI.App.Pages.Payment;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Kiosk.Payment;
 
 public partial class PaymentPin
 {
@@ -41,7 +41,7 @@ public partial class PaymentPin
         if (EnteredPin == "1234" || EnteredPin == "9874")
         {
             await KioskService.PayOrder();
-            NavigationManager.NavigateTo("/payment/success");
+            NavigationManager.NavigateTo("/kiosk/payment/success");
         }
         else
         {

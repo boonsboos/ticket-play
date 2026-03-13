@@ -4,7 +4,7 @@ using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Services;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 
-namespace ConnectPlay.TicketPlay.UI.App.Pages;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Kiosk.MoviePages;
 
 public partial class MovieDetail(KioskService kioskService, NavigationManager navigationManager) : ComponentBase
 {
@@ -56,6 +56,6 @@ public partial class MovieDetail(KioskService kioskService, NavigationManager na
             kioskService.SelectedScreening = screening;
     }
 
-    protected void ToOverview() => navigationManager.NavigateTo("/");
+    protected void Back() => navigationManager.NavigateTo("/kiosk/movies");
     protected void ToTickets() => navigationManager.NavigateTo("/kiosk/tickets");
 }

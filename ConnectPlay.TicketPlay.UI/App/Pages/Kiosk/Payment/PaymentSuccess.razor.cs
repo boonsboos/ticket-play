@@ -2,7 +2,7 @@
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.Extensions.Options;
 
-namespace ConnectPlay.TicketPlay.UI.App.Pages.Payment;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Kiosk.Payment;
 
 public partial class PaymentSuccess
 {

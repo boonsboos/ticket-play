@@ -1,4 +1,5 @@
-﻿@page "/payment/pin"
+﻿@page "/kiosk/payment/pin"
+@layout KioskLayout
 
 <div class="d-flex justify-content-center align-items-center">
     <div class="text-center">
@@ -7,7 +8,7 @@
 
         <div class="pin-panel shadow">
             <input type="password" maxlength="4" class="form-control text-center mb-3" value="@EnteredPin" readonly />
-            
+
             <div class="pin-buttons">
                 <button class="btn btn-secondary" @onclick="() => AddPinNumber(1)">1</button>
                 <button class="btn btn-secondary" @onclick="() => AddPinNumber(2)">2</button>

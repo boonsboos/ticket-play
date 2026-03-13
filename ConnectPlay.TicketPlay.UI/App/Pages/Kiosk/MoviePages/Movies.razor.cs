@@ -3,19 +3,19 @@ using ConnectPlay.TicketPlay.Contracts.Movie;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.App.Pages;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Kiosk.MoviePages;
 
-public partial class Today
+public partial class Movies : ComponentBase
 {
     private readonly IMovieRepository _movieRepository; // dependency injection of the movieRepo to get the movies of today from the API
-    private ILogger<Today> _logger;
+    private ILogger<Movies> _logger;
     private NavigationManager _navigationManager;
 
     private IEnumerable<MovieListItemResponse> movies = [];
     private bool isLoading = true; // the page starts in a loading state
     private string? errorMessage;
 
-    public Today(IMovieRepository movieRepository, ILogger<Today> logger, NavigationManager navigationManager)
+    public Movies(IMovieRepository movieRepository, ILogger<Movies> logger, NavigationManager navigationManager)
     {
         _movieRepository = movieRepository;
         _logger = logger;
@@ -39,5 +39,5 @@ public partial class Today
         }
     }
 
-    private void ToMovie(string movieId) => _navigationManager.NavigateTo("/movie/" + movieId);
+    private void ToMovie(string movieId) => _navigationManager.NavigateTo("/kiosk/movies/" + movieId);
 }

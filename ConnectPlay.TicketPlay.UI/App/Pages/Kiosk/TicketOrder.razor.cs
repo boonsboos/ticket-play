@@ -13,7 +13,7 @@ public partial class TicketOrder(KioskService kioskService, NavigationManager na
     {
         if (kioskService.SelectedScreening == null)
         {
-            navigationManager.NavigateTo("/movie/today");
+            navigationManager.NavigateTo("/kiosk/today");
             return;
         }
 

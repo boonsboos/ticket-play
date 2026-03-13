@@ -1,5 +1,4 @@
-﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Models;
+﻿using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -36,7 +35,7 @@ public partial class OrderOverview : ComponentBase
         base.OnInitialized();
     }
 
-    private void ToPayment() => navigationManager.NavigateTo("/payment/pin");
+    private void ToPayment() => navigationManager.NavigateTo("/kiosk/payment/pin");
     private void ToTickets() => navigationManager.NavigateTo("/kiosk/tickets");
 
     private float CalculateTotal()

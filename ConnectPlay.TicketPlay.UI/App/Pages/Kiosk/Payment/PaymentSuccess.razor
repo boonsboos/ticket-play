@@ -1,4 +1,5 @@
-﻿@page "/payment/success"
+﻿@page "/kiosk/payment/success"
+@layout KioskLayout
 
 <div class="d-flex justify-content-center align-items-center vh-100 flex-column">
     <div class="text-center">
@@ -15,9 +16,7 @@
     @if (kioskService.CurrentOrderId is not null)
     {
         <div class="row">
-            <a class="btn btn-primary mt-3"
-                    href="@GetTicketFileUrl()"
-                    target="_blank">
+            <a class="btn btn-primary mt-3" href="@GetTicketFileUrl()" target="_blank">
                 <i class="bi bi-printer"></i>&nbsp;Print tickets
             </a>
         </div>

@@ -1,11 +1,9 @@
-﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.UI.Api;
+﻿using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.Configuration;
-using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 
-namespace ConnectPlay.TicketPlay.UI.App.Pages;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Kiosk;
 
 public partial class Home : ComponentBase
 {
