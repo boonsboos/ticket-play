@@ -1,4 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.API.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -78,5 +79,10 @@ public class HallController(IHallRepository hallRepository) : ControllerBase
             HallNumber = createdHall.HallNumber,
             Capacity = createdHall.Capacity
         });
+    }
+    [HttpGet("all")]
+    public async Task<IEnumerable<Hall>> GetHallsAsync()
+    {
+        return await hallRepository.GetHallsAsync();
     }
 }

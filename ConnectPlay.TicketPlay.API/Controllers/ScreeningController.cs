@@ -1,5 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -13,6 +14,15 @@ public class ScreeningController : ControllerBase
     public ScreeningController(IScreeningRepository screeningRepository)
     {
         _screeningRepository = screeningRepository;
+    }
+
+    [HttpPost("new")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create([FromBody] CreateScreeningDto dto)
+    {
+        await _screeningRepository.CreateScreeningAsync(dto);
+        return StatusCode(StatusCodes.Status201Created, dto);
     }
 
     [HttpGet]
