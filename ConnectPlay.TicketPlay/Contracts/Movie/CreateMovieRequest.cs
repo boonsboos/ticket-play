@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ConnectPlay.TicketPlay.Models.Dto;
+namespace ConnectPlay.TicketPlay.Contracts.Movie;
 
-public record CreateMovieDto
+public record CreateMovieRequest
 {
     [StringLength(255)]
     public required string Title { get; init; }

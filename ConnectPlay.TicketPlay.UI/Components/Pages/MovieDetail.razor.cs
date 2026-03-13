@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Services;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 
 namespace ConnectPlay.TicketPlay.UI.Components.Pages;
 
@@ -14,7 +14,7 @@ public partial class MovieDetail(KioskService kioskService, NavigationManager na
     [Inject] protected IScreeningRepository ScreeningRepository { get; set; } = default!;
     [Inject] protected ILogger<MovieDetail> Logger { get; set; } = default!;
 
-    protected MovieDetailDto? Movie { get; set; }
+    protected MovieDetailResponse? Movie { get; set; }
     protected IEnumerable<Screening>? Screenings { get; set; }
 
     private int? _loadedId;

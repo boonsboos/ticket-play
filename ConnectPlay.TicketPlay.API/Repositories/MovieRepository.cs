@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
@@ -33,12 +33,12 @@ public class MovieRepository : IMovieRepository
     }
 
 
-    public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
+    public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
         return await db.Movies
                        .Where(m => m.Id == id)
-                       .Select(m => new MovieDetailDto
+                       .Select(m => new MovieDetailResponse
                        {
                            Title = m.Title,
                            Description = m.Description,
@@ -57,7 +57,7 @@ public class MovieRepository : IMovieRepository
         throw new NotImplementedException();
     }
 
-    public async Task CreateMovieAsync(CreateMovieDto dto)
+    public async Task CreateMovieAsync(CreateMovieRequest dto)
     {
         using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
@@ -79,7 +79,7 @@ public class MovieRepository : IMovieRepository
         await dbContext.SaveChangesAsync();
     }
     
-    public async Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync()
+    public async Task<IEnumerable<MovieListItemResponse>> GetTodaysMoviesAsync()
     {
         // Using "await using" so the database connection is closed when its done.
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -106,7 +106,7 @@ public class MovieRepository : IMovieRepository
                     .OrderBy(startTime => startTime)
                     .ToList(); // Create the actual list of screening times for the movies of today
 
-                return new MovieListItemDto
+                return new MovieListItemResponse
                 {
                     Id = movieGroup.Key.Id.ToString(),
                     Title = movieGroup.Key.Title,

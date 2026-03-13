@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
 
@@ -30,7 +30,7 @@ public partial class CreateMovie(IMovieApi movieApi) : ComponentBase
 
             var tags = ParseTags(model.TagsCsv);
 
-            var dto = new CreateMovieDto
+            var dto = new CreateMovieRequest
             {
                 Title = model.Title!,
                 Description = model.Description!,

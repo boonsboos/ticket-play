@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Models.Dto;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
@@ -11,7 +11,7 @@ public partial class Today
     private ILogger<Today> _logger;
     private NavigationManager _navigationManager;
 
-    private IEnumerable<MovieListItemDto> movies = [];
+    private IEnumerable<MovieListItemResponse> movies = [];
     private bool isLoading = true; // the page starts in a loading state
     private string? errorMessage;
 

@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.Api;
@@ -15,11 +15,11 @@ public interface IMovieApi
     Task<IEnumerable<Movie>> GetNewMoviesAsync();
 
     [Get("/movie/today")]
-    Task<IEnumerable<MovieListItemDto>> GetTodayMoviesAsync();
+    Task<IEnumerable<MovieListItemResponse>> GetTodayMoviesAsync();
 
     [Get("/movie/{id}")]
-    Task<MovieDetailDto> GetMovieByIdAsync(int id);
+    Task<MovieDetailResponse> GetMovieByIdAsync(int id);
 
     [Post("/movie")]
-    Task CreateMovieAsync(CreateMovieDto movie);
+    Task CreateMovieAsync(CreateMovieRequest movie);
 }

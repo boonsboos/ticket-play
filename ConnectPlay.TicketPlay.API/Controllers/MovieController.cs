@@ -1,6 +1,6 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -30,7 +30,7 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(currentMovies);
     }
 
-    [ProducesResponseType(typeof(IEnumerable<MovieListItemDto>), StatusCodes.Status200OK)] // the response is a list of MovieListItemDto
+    [ProducesResponseType(typeof(IEnumerable<MovieListItemResponse>), StatusCodes.Status200OK)] // the response is a list of MovieListItemDto
     [HttpGet] // This is the Get endpoint.
     [Route("today")] // the route will become movie/today
     public async Task<IActionResult> GetTodayAsync() // Task<IActionResult> is the standard return type for async API endpoints (200 Ok, 404 Not Found)
@@ -77,7 +77,7 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Create([FromBody] CreateMovieDto dto)
+    public async Task<IActionResult> Create([FromBody] CreateMovieRequest dto)
     {
 
         var allowedLanguages = new[] { "Nederlands", "English" };

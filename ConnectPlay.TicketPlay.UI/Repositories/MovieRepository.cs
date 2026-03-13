@@ -1,6 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.UI.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Repositories;
@@ -37,12 +37,12 @@ public class MovieRepository : IMovieRepository
         ]);
     }
 
-    public async Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync()
+    public async Task<IEnumerable<MovieListItemResponse>> GetTodaysMoviesAsync()
     {
         return await _movieApi.GetTodayMoviesAsync();
     }
 
-    public async Task<MovieDetailDto?> GetMovieByIdAsync(int id)
+    public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id)
     {
         try
         {
@@ -57,7 +57,7 @@ public class MovieRepository : IMovieRepository
     {
         throw new NotImplementedException();
     }
-    public async Task CreateMovieAsync(CreateMovieDto dto)
+    public async Task CreateMovieAsync(CreateMovieRequest dto)
     {
         await _movieApi.CreateMovieAsync(dto);
     }

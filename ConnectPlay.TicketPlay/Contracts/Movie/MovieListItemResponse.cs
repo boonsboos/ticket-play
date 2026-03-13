@@ -1,6 +1,6 @@
-﻿namespace ConnectPlay.TicketPlay.Models.Dto;
+﻿namespace ConnectPlay.TicketPlay.Contracts.Movie;
 
-public record MovieListItemDto
+public record MovieListItemResponse
 {
     public string Id { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
