@@ -30,7 +30,7 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(currentMovies);
     }
 
-    [ProducesResponseType(typeof(IEnumerable<MovieListItemResponse>), StatusCodes.Status200OK)] // the response is a list of MovieListItemDto
+    [ProducesResponseType(typeof(IEnumerable<MovieListItemResponse>), StatusCodes.Status200OK)] // the response is a list of MovieListItemResponse
     [HttpGet] // This is the Get endpoint.
     [Route("today")] // the route will become movie/today
     public async Task<IActionResult> GetTodayAsync() // Task<IActionResult> is the standard return type for async API endpoints (200 Ok, 404 Not Found)
