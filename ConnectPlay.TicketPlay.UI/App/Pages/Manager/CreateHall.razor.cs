@@ -3,7 +3,7 @@ using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages.Manager;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 
 public partial class CreateHall(IHallApi hallApi) : ComponentBase
 {

@@ -1,6 +1,5 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.UI.Api;
-using ConnectPlay.TicketPlay.UI.Components;
 using ConnectPlay.TicketPlay.UI.Configuration;
 using ConnectPlay.TicketPlay.UI.Repositories;
 using ConnectPlay.TicketPlay.UI.Services;
@@ -59,7 +58,7 @@ public class Program
 
         // Map stuff to endpoints
         app.MapStaticAssets();
-        app.MapRazorComponents<App>()
+        app.MapRazorComponents<App.App>() // Because the App component is inside the 'App' namespace, we need to specify the full namespace + component name here, so 'App.App' instead of just 'App' 
             .AddInteractiveWebAssemblyRenderMode()
             .AddInteractiveServerRenderMode();
 
@@ -83,7 +82,7 @@ public class Program
                 BaseUrl = baseUrl
             })
         );
-        
+
         services
             .AddRefitClient<IMovieApi>()
             .AddRefitClient<IScreeningApi>()

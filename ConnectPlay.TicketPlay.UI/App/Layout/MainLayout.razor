@@ -1,17 +1,14 @@
-﻿@inherits LayoutComponentBase
+﻿@* This is the main layout for the website *@
+@inherits LayoutComponentBase
 
 <div>
-
-    <div class="banner text-white text-center py-4 shadow">
-        <h1 class="mb-0">Ticket & Play</h1>
-    </div>
+    <WebsiteHeader />
 
     <main>
         <article class="content px-4 mt-4">
             @Body
         </article>
     </main>
-
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>

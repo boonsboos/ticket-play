@@ -5,7 +5,7 @@ using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages;
+namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
 public partial class Home : ComponentBase
 {
@@ -40,7 +40,8 @@ public partial class Home : ComponentBase
 
         var order = orderResponse.Content;
 
-        if (order is null) {
+        if (order is null)
+        {
             orderDoesNotExist = true;
             return;
         }

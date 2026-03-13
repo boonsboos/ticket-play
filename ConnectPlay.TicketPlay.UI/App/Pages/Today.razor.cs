@@ -3,7 +3,7 @@ using ConnectPlay.TicketPlay.Contracts.Movie;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages;
+namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
 public partial class Today
 {

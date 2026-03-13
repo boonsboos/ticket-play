@@ -4,7 +4,7 @@ using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Services;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages;
+namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
 public partial class MovieDetail(KioskService kioskService, NavigationManager navigationManager) : ComponentBase
 {

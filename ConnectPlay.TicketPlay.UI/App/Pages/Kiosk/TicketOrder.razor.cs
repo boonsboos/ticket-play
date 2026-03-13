@@ -2,7 +2,7 @@ using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages.Kiosk;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Kiosk;
 
 public partial class TicketOrder(KioskService kioskService, NavigationManager navigationManager, ILogger<TicketOrder> logger) : ComponentBase
 {

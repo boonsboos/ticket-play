@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using NSubstitute.Core;
 
-namespace ConnectPlay.TicketPlay.UI.Components.Pages.Payment;
+namespace ConnectPlay.TicketPlay.UI.App.Pages.Payment;
 
 public partial class PaymentPin
 {
@@ -30,7 +30,7 @@ public partial class PaymentPin
 
     public void RemoveLastNumber()
     {
-        if(EnteredPin.Length > 0)
+        if (EnteredPin.Length > 0)
         {
             EnteredPin = EnteredPin.Substring(0, EnteredPin.Length - 1);
         }

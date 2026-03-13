@@ -1,5 +1,7 @@
 ﻿<Router AppAssembly="typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
+        @* Because all pages use the same layout except for the kiosk pages *@
+        @* we can just set the default layout to MainLayout here, and set the KioskLayout in all kiosk pages *@
         <RouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)" />
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
