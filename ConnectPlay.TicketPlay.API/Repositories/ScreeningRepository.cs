@@ -1,21 +1,23 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
+using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
 public class ScreeningRepository : IScreeningRepository
 {
     private readonly IDbContextFactory<TicketPlayContext> _dbContextFactory;
+    private readonly ILogger<ScreeningRepository> _logger;
 
     /// <summary>
     /// Dependency-injected constructor.
     /// </summary>
-    public ScreeningRepository(IDbContextFactory<TicketPlayContext> dbContextFactory)
+    public ScreeningRepository(IDbContextFactory<TicketPlayContext> dbContextFactory, ILogger<ScreeningRepository> logger)
     {
         _dbContextFactory = dbContextFactory;
+        _logger = logger;
     }
 
     public async Task<Screening?> GetScreeningAsync(int id)
@@ -44,5 +46,31 @@ public class ScreeningRepository : IScreeningRepository
                 screening.StartTime >= today &&
                 screening.StartTime < tomorrow)
             .ToArrayAsync();
+    }
+
+    public async Task CreateScreeningAsync(CreateScreeningRequest dto)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var movie = await dbContext.Movies.FindAsync(dto.MovieId);
+        var hall = await dbContext.Halls.FindAsync(dto.HallId);
+
+        if (movie is null || hall is null)
+        {
+            _logger.LogError("Movie or Hall not found. MovieId: {MovieId}, HallId: {HallId}", dto.MovieId, dto.HallId);
+            return;
+        }
+
+        // Create the Screening entity
+        var screening = new Screening
+        {
+            Movie = movie,
+            Hall = hall,
+            StartTime = dto.Time,
+            HasBreak = dto.Time.Hour < 21
+        };
+
+        dbContext.Screenings.Add(screening);
+        var affected = await dbContext.SaveChangesAsync();
     }
 }

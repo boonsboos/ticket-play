@@ -40,6 +40,13 @@ public class HallRepository(IDbContextFactory<TicketPlayContext> context, ILogge
         }
     }
 
+    public async Task<IEnumerable<Hall>> GetHallsAsync()
+    {
+        using var dbContext = await context.CreateDbContextAsync();
+
+        return await dbContext.Halls.ToListAsync();
+    }
+
     public async Task<Hall> GetHallAsync(Screening screening)
     {
         await using var dbContext = await context.CreateDbContextAsync();

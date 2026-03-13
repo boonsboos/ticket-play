@@ -1,4 +1,5 @@
-﻿using ConnectPlay.TicketPlay.Models;
+﻿using ConnectPlay.TicketPlay.Contracts.Screening;
+using ConnectPlay.TicketPlay.Models;
 
 namespace ConnectPlay.TicketPlay.Abstract.Repositories;
 
@@ -6,5 +7,7 @@ public interface IScreeningRepository
 {
     public Task<Screening?> GetScreeningAsync(int id);
 
+    public Task CreateScreeningAsync(CreateScreeningRequest dto);
     public Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId);
+
 }
