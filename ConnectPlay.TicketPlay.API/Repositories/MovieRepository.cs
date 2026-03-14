@@ -91,7 +91,7 @@ public class MovieRepository : IMovieRepository
         var screenings = await dbContext.Screenings
             // Include, Where, OrderBy are to build up the query
             .Include(screening => screening.Movie) // Ef will automatically join the Movie table
-            .Where(screening => screening.StartTime >= now && screening.StartTime < startNextDay)
+            .Where(screening => screening.StartTime >= startOfDay && screening.StartTime < startNextDay)
             .OrderBy(screening => screening.StartTime)
             .ToListAsync(); // Excute the query and get the screenings for today that have not yet started
 
