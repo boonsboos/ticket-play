@@ -29,7 +29,7 @@ public partial class OrderOverview : ComponentBase
         this.Tickets = websiteService.Tickets;
         this.Screening = websiteService.SelectedScreening;
 
-        this.StartTime = Screening?.StartTime.TimeOfDay.ToString(@"hh\:mm") ?? "??:??";
+        this.StartTime = Screening?.StartTime.ToLocalTime().ToString("HH:mm") ?? "??:??";
         this.Is3D = Screening?.Hall.Has3DProjector ?? false;
 
         base.OnInitialized();

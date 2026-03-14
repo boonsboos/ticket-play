@@ -50,7 +50,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center">
             <p class="fw-semibold mb-0">Tijd:</p>
-            <p class="text-muted mb-0">@Screening.StartTime.ToString("HH:mm")</p>
+            <p class="text-muted mb-0">@Screening.StartTime.ToLocalTime().ToString("HH:mm")</p>
         </div>
         @if (Screening.Hall.Has3DProjector)
         {

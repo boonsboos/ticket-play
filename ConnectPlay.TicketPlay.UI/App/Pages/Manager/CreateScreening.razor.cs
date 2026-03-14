@@ -57,7 +57,7 @@ public partial class CreateScreening(
                 form.TimeDate.Month,
                 form.TimeDate.Day,
                 form.TimeHour, 0, 0,
-                DateTimeOffset.Now.Offset);
+                TimeSpan.Zero);
 
             if (startTime < DateTimeOffset.Now)
                 throw new InvalidOperationException("Starttijd kan niet in het verleden liggen.");
