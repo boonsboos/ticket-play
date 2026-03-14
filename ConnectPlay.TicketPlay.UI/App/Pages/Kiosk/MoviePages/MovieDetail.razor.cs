@@ -52,7 +52,7 @@ public partial class MovieDetail(KioskService kioskService, NavigationManager na
             return;
         }
         // Only allow selection of screenings that haven't started yet
-        if (screening.StartTime >= DateTime.Now)
+        if (screening.StartTime >= DateTimeOffset.Now)
             kioskService.SelectedScreening = screening;
     }
 
