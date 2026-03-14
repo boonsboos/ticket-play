@@ -67,6 +67,6 @@ public partial class MovieDetail : ComponentBase
             websiteService.SelectedScreening = screening;
     }
 
-    protected void Back() => navigationManager.NavigateTo("/movies");
+    protected void Back() => navigationManager.NavigateTo("/");
     protected void ToTickets() => navigationManager.NavigateTo("/order/tickets");
 }
