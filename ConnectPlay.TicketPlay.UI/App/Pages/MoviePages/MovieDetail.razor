@@ -12,8 +12,8 @@
 }
 else
 {
-    <div class="container mt-4 d-flex justify-content-center">
-        <div class="card movie-card mb-4 w-100" style="max-width:1000px;">
+    <div class="container mt-4 d-flex flex-column align-items-center">
+        <div class="card movie-card mb-4 col-lg-10 col-md-12">
             <div class="row g-0 align-items-start">
                 <div class="col-md-4 d-flex justify-content-center p-3">
                     <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid rounded" />
@@ -69,9 +69,9 @@ else
                 </div>
             </div>
         </div>
-    </div>
-    <div class="container d-flex justify-content-between mt-3" style="max-width:1000px;">
-        <button class="btn btn-outline-primary" @onclick="Back">← Ga terug</button>
-        <button class="btn btn-purple" @onclick="ToTickets">Volgende →</button>
+        <div class="container d-flex justify-content-between col-lg-10 col-md-12 m-3">
+            <button class="btn btn-outline-primary" @onclick="Back">← Ga terug</button>
+            <button class="btn btn-primary" @onclick="ToTickets">Volgende →</button>
+        </div>
     </div>
 }
