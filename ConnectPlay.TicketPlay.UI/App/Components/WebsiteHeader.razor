@@ -1,1 +1,29 @@
 @* This Is is where the website header content goes *@
+<header>
+    <nav class="navbar navbar-dark bg-dark ">
+        <div class="container-fluid">
+
+            <a class="navbar-brand" href="/">Ticket & Play</a>
+
+            <ul class="navbar-nav flex-row me-auto">
+
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="/movie/today">Vandaag</a>
+                </li>
+
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="/movies">Films</a>
+                </li>
+
+                <li class="nav-item me-3">
+                    <a class="nav-link" href="/contact">Contact</a>
+                </li>
+            </ul>
+
+            <a class="nav-link text-white-50" role="button" @onclick="ToggleLanguage">
+                @Language
+            </a>
+
+        </div>
+    </nav>
+</header>
