@@ -18,7 +18,7 @@ public partial class TicketOrder : ComponentBase
     }
 
     protected Screening Screening { get; set; } = null!;
-    protected List<KioskTicket> Tickets { get; set; } = [];
+    protected List<WebsiteTicket> Tickets { get; set; } = [];
 
     protected override void OnInitialized()
     {
@@ -56,7 +56,7 @@ public partial class TicketOrder : ComponentBase
         }
         else
         {
-            Tickets.Add(new KioskTicket { Type = ticketType, Count = 1 });
+            Tickets.Add(new WebsiteTicket { Type = ticketType, Count = 1 });
         }
     }
 
@@ -73,9 +73,9 @@ public partial class TicketOrder : ComponentBase
         }
     }
 
-    protected void ToMovie() => navigationManager.NavigateTo("/movie/" + Screening.Movie.Id);
+    protected void ToMovie() => navigationManager.NavigateTo("/movies/" + Screening.Movie.Id);
 
-    protected class KioskTicket
+    protected class WebsiteTicket
     {
         public required TicketType Type { get; set; }
         public required int Count { get; set; } = 0;

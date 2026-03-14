@@ -7,12 +7,11 @@
     <h2 class="text-center">Kies uw kaartjes</h2>
 
     <div class="d-flex flex-column gap-3 mt-4 w-100">
-        @for (var i = 0; i < Enum.GetValues<TicketType>().Length; i++)
+        @foreach (var ticketType in Enum.GetValues<TicketType>())
         {
-            var ticketType = (TicketType)i;
             <div class="border border-secondary-subtle rounded p-3 d-flex">
                 <div class="d-flex flex-column align-items-start justify-content-center">
-                    <h4 class="fw-semibold text-body mb-0" for="@ticketType">
+                    <h4 class="fw-semibold text-body mb-0">
                         @(ticketType switch
                         {
                             TicketType.Regular => "Volwassenen",

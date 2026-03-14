@@ -16,9 +16,9 @@ public partial class OrderOverview : ComponentBase
     protected IEnumerable<TicketType> Tickets { get; set; } = [];
     protected bool Is3D { get; set; }
 
-    public OrderOverview(WebsiteService kioskService, NavigationManager navigationManager)
+    public OrderOverview(WebsiteService websiteService, NavigationManager navigationManager)
     {
-        this.websiteService = kioskService;
+        this.websiteService = websiteService;
         this.navigationManager = navigationManager;
     }
 
@@ -29,7 +29,7 @@ public partial class OrderOverview : ComponentBase
         this.Tickets = websiteService.Tickets;
         this.Screening = websiteService.SelectedScreening;
 
-        this.StartTime = Screening?.StartTime.TimeOfDay.ToString(@"hh\:mm") ?? "??:??";
+        this.StartTime = Screening?.StartTime.TimeOfDay.ToString("HH:mm") ?? "??:??";
         this.Is3D = Screening?.Hall.Has3DProjector ?? false;
 
         base.OnInitialized();
