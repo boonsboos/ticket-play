@@ -93,14 +93,14 @@ public class MovieRepository : IMovieRepository
             .Include(screening => screening.Movie) // Ef will automatically join the Movie table
             .Where(screening => screening.StartTime >= startOfDay && screening.StartTime < startNextDay)
             .OrderBy(screening => screening.StartTime)
-            .ToListAsync(); // Excute the query and get the screenings for today that have not yet started
+            .ToListAsync(); // Execute the query and get all screenings for today
 
         var todayMoviesWithScreenings = screenings
             .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
             .OrderBy(movieGroup => movieGroup.Key.Title)
             .Select(movieGroup =>
             {
-                // Create the list of screening times for the movies of today (only future screenings were fetched)
+                // Create the list of screening times for the movies of today
                 var todaysScreeningTimes = movieGroup
                     .Select(screening => screening.StartTime)
                     .OrderBy(startTime => startTime)
@@ -115,7 +115,7 @@ public class MovieRepository : IMovieRepository
                     ScreeningTimes = todaysScreeningTimes
                 };
             })
-            .Where(movieListItem => movieListItem.ScreeningTimes.Any()) // Filter out movies that only had screenings that already started, Any() stops if found 
+            .Where(movieListItem => movieListItem.ScreeningTimes.Any()) // Ensure only movies with at least one screening time are included
             .ToList();
         return todayMoviesWithScreenings;
     }
