@@ -68,5 +68,5 @@ public partial class MovieDetail : ComponentBase
     }
 
     protected void Back() => navigationManager.NavigateTo("/movies");
-    protected void ToTickets() => navigationManager.NavigateTo("/tickets");
+    protected void ToTickets() => navigationManager.NavigateTo("/order/tickets");
 }
