@@ -99,13 +99,14 @@ public class KioskService
     {
         var movie = Movie ?? SelectedScreening?.Movie;
         if (movie == null) return 0;
+
         // everyone except regular gets €1,50 off
         return ticketType switch
         {
-            TicketType.Regular => RegularPrice(Movie ?? SelectedScreening?.Movie),
-            _ => RegularPrice(Movie ?? SelectedScreening?.Movie) - 1.5f,
+            TicketType.Regular => RegularPrice(movie),
+            _ => RegularPrice(movie) - 1.5f,
         };
     }
 
-    private float RegularPrice(Movie? movie) => (movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;
+    private float RegularPrice(Movie movie) => movie.Duration > 120 ? 9.00f : 8.50f;
 }
