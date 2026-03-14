@@ -72,6 +72,7 @@ public class Program
         services.AddScoped<IMovieRepository, MovieRepository>();
         services.AddScoped<IScreeningRepository, ScreeningRepository>();
         services.AddScoped<KioskService>();
+        services.AddScoped<WebsiteService>();
     }
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)

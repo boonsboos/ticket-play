@@ -1,0 +1,77 @@
+﻿@page "/movies/{Id:int}"
+
+@rendermode InteractiveServer
+
+@if (movie == null)
+{
+    <div class="container mt-4 text-center">
+        <div class="alert alert-warning">
+            <p>Film niet gevonden.</p>
+        </div>
+    </div>
+}
+else
+{
+    <div class="container mt-4 d-flex flex-column align-items-center">
+        <div class="card movie-card mb-4 col-lg-10 col-md-12">
+            <div class="row g-0 align-items-start">
+                <div class="col-md-4 d-flex justify-content-center p-3">
+                    <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid rounded" />
+                </div>
+                <div class="col-md-8 p-4 d-flex flex-column">
+                    <h2>@movie.Title</h2>
+                    <p class="text-muted">@movie.Genre • @movie.Duration min • @movie.ReleaseDate • @movie.MinimumAge+</p>
+                    @if (!string.IsNullOrWhiteSpace(movie.Tags))
+                    {
+                        <div class="mb-3">
+                            @foreach (var tag in movie.Tags.Split(','))
+                            {
+                                <span class="badge rounded-pill bg-purple me-1">@tag.Trim()</span>
+                            }
+                        </div>
+                    }
+                    <p>@movie.Description</p>
+                </div>
+            </div>
+            <div class="card-footer pt-3">
+                <h5>Voorstellingen</h5>
+                <div class="d-flex flex-wrap gap-3 my-2">
+                    @if (!screenings.Any())
+                    {
+                        <p>Er zijn geen voorstellingen voor deze film</p>
+                    }
+                    else
+                    {
+                        @foreach (var screening in screenings)
+                        {
+                            <div class="card @(screening.Id == websiteService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
+                                <div class="card-body @(screening.StartTime < DateTimeOffset.Now ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
+                                     @onclick="() => SetSelectedScreening(screening)">
+                                    <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
+
+                                    @if (screening.Hall?.Has3DProjector == true)
+                                    {
+                                        <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                            Zaal @screening.Hall?.HallNumber
+                                            <i class="bi bi-badge-3d"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex justify-content-center align-items-center gap-2 text-body-secondary fw-bold">
+                                            Zaal @screening.Hall?.HallNumber
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="container d-flex justify-content-between col-lg-10 col-md-12 m-3">
+            <button class="btn btn-outline-primary" @onclick="Back">← Ga terug</button>
+            <button class="btn btn-primary" @onclick="ToTickets">Volgende →</button>
+        </div>
+    </div>
+}

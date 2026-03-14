@@ -3,21 +3,21 @@ using ConnectPlay.TicketPlay.UI.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Services;
 
-public class KioskService
+public class WebsiteService
 {
     private readonly IKioskApi kioskApi;
-    private readonly ILogger<KioskService> logger;
+    private readonly ILogger<WebsiteService> logger;
 
     private Order? currentOrder = null;
 
     public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
-    public Movie? Movie => currentOrder?.Tickets.First()?.Screening.Movie;
-    public int? CurrentOrderId { get => currentOrder?.Id; } // Onyl get the order id if ther is a current order
+    public Movie? Movie => currentOrder?.Tickets.FirstOrDefault()?.Screening.Movie;
+    public int? CurrentOrderId { get => currentOrder?.Id; } // Only get the order id if there is a current order
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [];
 
-    public KioskService(IKioskApi kioskApi, ILogger<KioskService> logger)
+    public WebsiteService(IKioskApi kioskApi, ILogger<WebsiteService> logger)
     {
         this.kioskApi = kioskApi;
         this.logger = logger;
@@ -40,27 +40,25 @@ public class KioskService
         }
         else
         {
-            logger.LogError("Received {Response} from API: {Error}", response.StatusCode, response.Error);
+            logger.LogError("Received error {Response} from API while placing order: {Error}", response.StatusCode, response.Error);
         }
     }
 
     public async Task CancelOrder()
     {
-        // Ensure that there is a current order id to cancel else trow exception
-        var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
+        // Ensure that there is a current order
+        var orderId = CurrentOrderId ?? throw new InvalidOperationException("Cannot cancel order when there is none");
 
-        // kioskApi is the API Client injected into the service
-        // CancelOrderAsync() send a resuqest to the API to cancel the order
-        // With await we wait for the respone frome the api
+        // Call the api to cancel the order
         var cancelResponse = await kioskApi.CancelOrderAsync(orderId);
 
         if (cancelResponse.IsSuccessStatusCode)
         {
-            Cleanup(); // clean the kioskservice 
+            Cleanup(); // clean the service for the next order
         }
         else
         {
-            logger.LogError("Canceling order faild {OrderId}", orderId);
+            logger.LogError("Canceling order {OrderId} failed: {StatusCode} - {Reason}", orderId, cancelResponse.StatusCode, cancelResponse.Error);
         }
     }
 
@@ -70,26 +68,16 @@ public class KioskService
 
         var payResponse = await kioskApi.PayOrderAsync(orderId);
 
-
         // if the response is not OK (200)
         if (!payResponse.IsSuccessStatusCode)
         {
-            logger.LogError("Paying the order faild {OrderId}", orderId);
+            logger.LogError("Could not process payment for order {OrderId}: {StatusCode} - {Reason}", orderId, payResponse.StatusCode, payResponse.Error);
         }
-    }
-
-    /// <summary>
-    /// Call after payment is finished and the tickets can be printed
-    /// </summary>
-    /// <returns></returns>
-    public async Task PrintTickets()
-    {
-        Cleanup();
     }
 
     private void Cleanup()
     {
-        logger.LogInformation("Resetting KioskService for use in next order");
+        logger.LogInformation("Resetting state for use in next order");
         SelectedScreening = null;
         Tickets = [];
         currentOrder = null;
@@ -98,15 +86,16 @@ public class KioskService
     public float GetPrice(TicketType ticketType)
     {
         var movie = Movie ?? SelectedScreening?.Movie;
-        if (movie == null) return 0;
+
+        if (movie == null) return 0f;
 
         // everyone except regular gets €1,50 off
         return ticketType switch
         {
-            TicketType.Regular => RegularPrice(movie),
-            _ => RegularPrice(movie) - 1.5f,
+            TicketType.Regular => RegularPrice(Movie ?? SelectedScreening?.Movie),
+            _ => RegularPrice(Movie ?? SelectedScreening?.Movie) - 1.5f,
         };
     }
 
-    private float RegularPrice(Movie movie) => movie.Duration > 120 ? 9.00f : 8.50f;
+    private static float RegularPrice(Movie? movie) => (movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;
 }
