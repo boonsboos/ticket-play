@@ -23,7 +23,7 @@ public partial class CreateScreening(
     protected bool showToast = false;
 
     protected IEnumerable<MovieListItemDto> Movies = [];
-    protected IEnumerable<Hall> Halls = Array.Empty<Hall>();
+    protected IEnumerable<Hall> Halls = [];
 
     protected override async Task OnInitializedAsync()
     {
