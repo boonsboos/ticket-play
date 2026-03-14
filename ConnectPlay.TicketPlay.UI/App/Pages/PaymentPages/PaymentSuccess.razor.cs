@@ -18,6 +18,6 @@ public partial class PaymentSuccess
 
     private string GetTicketFileUrl()
     {
-        return options.BaseUrl + $"/{websiteService.CurrentOrderId}/pdf";
+        return options.BaseUrl + $"/kiosk/{websiteService.CurrentOrderId}/pdf";
     }
 }
