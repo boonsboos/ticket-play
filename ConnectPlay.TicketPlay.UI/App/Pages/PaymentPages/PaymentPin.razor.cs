@@ -40,6 +40,15 @@ public partial class PaymentPin
 
     public async Task PaymentSuccessful()
     {
+        // Ensure there is a current order before attempting to pay
+        if (WebsiteService.CurrentOrderId == null)
+        {
+            EnteredPin = string.Empty;
+            Title = "Er is geen bestelling om te betalen.";
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         if (EnteredPin == "1234" || EnteredPin == "9874")
         {
             await WebsiteService.PayOrder();
