@@ -1,6 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
 using ConnectPlay.TicketPlay.UI.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Repositories;
@@ -16,9 +16,9 @@ public class ScreeningRepository : IScreeningRepository
         _logger = logger;
     }
 
-    public async Task CreateScreeningAsync(CreateScreeningDto dto)
+    public async Task CreateScreeningAsync(CreateScreeningRequest dto)
     {
-            await _screeningApi.CreateScreeningAsync(dto);
+        await _screeningApi.CreateScreeningAsync(dto);
     }
 
     public Task<Screening?> GetScreeningAsync(int id)

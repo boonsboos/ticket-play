@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
+using ConnectPlay.TicketPlay.Contracts.Movie;
 
 namespace ConnectPlay.TicketPlay.Abstract.Repositories;
 
@@ -7,8 +7,8 @@ public interface IMovieRepository
 {
     public Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
     public Task<IEnumerable<Movie>> GetNewMoviesAsync();
-    public Task<MovieDetailDto?> GetMovieByIdAsync(int id);
+    public Task<MovieDetailResponse?> GetMovieByIdAsync(int id);
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters);
-    public Task CreateMovieAsync(CreateMovieDto movie);
-    public Task<IEnumerable<MovieListItemDto>> GetTodaysMoviesAsync();
+    public Task CreateMovieAsync(CreateMovieRequest movie);
+    public Task<IEnumerable<MovieListItemResponse>> GetTodaysMoviesAsync();
 }

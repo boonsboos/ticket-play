@@ -1,5 +1,5 @@
+using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.Api;
@@ -7,7 +7,7 @@ namespace ConnectPlay.TicketPlay.UI.Api;
 public interface IScreeningApi
 {
     [Post("/screening/new")]
-    Task CreateScreeningAsync([Body] CreateScreeningDto dto);
+    Task CreateScreeningAsync([Body] CreateScreeningRequest dto);
 
     [Get("/screening/today/{movieId}")]
     Task<IEnumerable<Screening>> GetTodayByMovieIdAsync(int movieId);

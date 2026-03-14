@@ -1,10 +1,8 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
+using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.Models.Dto;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
@@ -50,7 +48,7 @@ public class ScreeningRepository : IScreeningRepository
             .ToArrayAsync();
     }
 
-    public async Task CreateScreeningAsync(CreateScreeningDto dto)
+    public async Task CreateScreeningAsync(CreateScreeningRequest dto)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
