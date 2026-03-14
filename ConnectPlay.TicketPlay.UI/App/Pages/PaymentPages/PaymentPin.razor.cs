@@ -23,7 +23,10 @@ public partial class PaymentPin
     public async Task CancelPayment()
     {
         EnteredPin = string.Empty;
-        await WebsiteService.CancelOrder(); // call the method in the WebsiteService to cancel the order and reset the state
+        if (WebsiteService.CurrentOrderId is not null)
+        {
+            await WebsiteService.CancelOrder(); // call the method in the WebsiteService to cancel the order and reset the state
+        }
         NavigationManager.NavigateTo("/");
     }
 
