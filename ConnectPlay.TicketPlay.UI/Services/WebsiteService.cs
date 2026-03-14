@@ -58,7 +58,7 @@ public class WebsiteService
         }
         else
         {
-            logger.LogError("Canceling order {OrderId} failed", orderId);
+            logger.LogError("Canceling order {OrderId} failed: {StatusCode} - {Reason}", orderId, cancelResponse.StatusCode, cancelResponse.Error);
         }
     }
 
@@ -71,7 +71,7 @@ public class WebsiteService
         // if the response is not OK (200)
         if (!payResponse.IsSuccessStatusCode)
         {
-            logger.LogError("Could not process payment for order {OrderId}", orderId);
+            logger.LogError("Could not process payment for order {OrderId}: {StatusCode} - {Reason}", orderId, payResponse.StatusCode, payResponse.Error);
         }
     }
 
