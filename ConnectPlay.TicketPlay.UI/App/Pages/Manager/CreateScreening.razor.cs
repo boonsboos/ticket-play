@@ -23,7 +23,7 @@ public partial class CreateScreening(
     protected bool showToast = false;
 
     protected IEnumerable<MovieListItemDto> Movies = [];
-    protected IEnumerable<Hall> Halls = Array.Empty<Hall>();
+    protected IEnumerable<Hall> Halls = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,7 +57,7 @@ public partial class CreateScreening(
                 form.TimeDate.Month,
                 form.TimeDate.Day,
                 form.TimeHour, 0, 0,
-                DateTimeOffset.Now.Offset);
+                TimeSpan.Zero);
 
             if (startTime < DateTimeOffset.Now)
                 throw new InvalidOperationException("Starttijd kan niet in het verleden liggen.");
