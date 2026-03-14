@@ -13,4 +13,5 @@ public record Screening
     public required Hall Hall { get; init; }
     public required bool HasBreak { get; init; }
     public DateTimeOffset StartTime { get; init; } // use a DateTimeOffset to be compatible with daylight savings
+    public bool SneakPreview { get; init; } = false;
 }

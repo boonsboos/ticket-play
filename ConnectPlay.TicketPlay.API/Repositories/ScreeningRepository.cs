@@ -67,7 +67,8 @@ public class ScreeningRepository : IScreeningRepository
             Movie = movie,
             Hall = hall,
             StartTime = dto.Time,
-            HasBreak = dto.Time.Hour < 21
+            HasBreak = dto.Time.Hour < 21,
+            SneakPreview = dto.SneakPreview
         };
 
         dbContext.Screenings.Add(screening);
