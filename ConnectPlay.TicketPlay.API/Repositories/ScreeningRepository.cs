@@ -70,8 +70,8 @@ public class ScreeningRepository : IScreeningRepository
                 .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             var hasBlockedTag = tags.Any(tag =>
-                string.Equals(tag, "new", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(tag, "current", StringComparison.OrdinalIgnoreCase));
+                string.Equals(tag, ReservedTags.New, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(tag, ReservedTags.Current, StringComparison.OrdinalIgnoreCase));
 
             if (hasBlockedTag)
             {
