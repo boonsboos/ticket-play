@@ -6,13 +6,14 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateScreening">
+
                 <DataAnnotationsValidator />
                 <ValidationSummary />
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label">Film</label>
-                        <InputSelect class="form-select" @bind-Value="form.MovieId">
+                        <InputSelect class="form-select" @bind-Value="SelectedMovieId">
                             <option value="0">Selecteer een film</option>
                             @foreach (var m in Movies)
                             {
@@ -49,7 +50,24 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-2">
+                        <label for="sneakPreview" class="form-label mb-0">Sneak Preview</label>
+                        @if (IsSneakPreviewDisabled)
+                        {
+                            <span class="sneak-preview-blocked"
+                                  title="Het is niet mogelijk om actuele of nieuwe films als Sneak Preview in te stellen.">
+                                ✕
+                            </span>
+                        }
+                        else
+                        {
+                            <InputCheckbox id="sneakPreview"
+                                           class="form-check-input mt-0"
+                                           @bind-Value="form.SneakPreview" />
+                        }
+                    </div>
+
                     <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
                         Voeg toe
                     </button>

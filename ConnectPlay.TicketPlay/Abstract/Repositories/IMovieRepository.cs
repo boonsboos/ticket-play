@@ -5,6 +5,7 @@ namespace ConnectPlay.TicketPlay.Abstract.Repositories;
 
 public interface IMovieRepository
 {
+    public Task<IEnumerable<Movie>> GetAllMoviesAsync();
     public Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
     public Task<IEnumerable<Movie>> GetNewMoviesAsync();
     public Task<MovieDetailResponse?> GetMovieByIdAsync(int id);

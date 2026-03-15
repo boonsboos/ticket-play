@@ -61,6 +61,23 @@ public class ScreeningRepository : IScreeningRepository
             return;
         }
 
+        // Only older movies may be marked as Sneak Preview
+        // Movies tagged as 'new' or 'current' are not eligible
+        if (dto.SneakPreview && !string.IsNullOrWhiteSpace(movie.Tags))
+        {
+            var tags = movie.Tags
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            var hasBlockedTag = tags.Any(tag =>
+                string.Equals(tag, "new", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(tag, "current", StringComparison.OrdinalIgnoreCase));
+
+            if (hasBlockedTag)
+            {
+                throw new InvalidOperationException("Het is niet mogelijk om actuele of nieuwe films als Sneak Preview in te stellen.");
+            }
+        }
+
         // Create the Screening entity
         var screening = new Screening
         {
