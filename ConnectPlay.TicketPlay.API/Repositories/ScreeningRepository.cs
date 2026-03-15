@@ -3,6 +3,7 @@ using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
@@ -74,7 +75,7 @@ public class ScreeningRepository : IScreeningRepository
 
             if (hasBlockedTag)
             {
-                throw new InvalidOperationException("Het is niet mogelijk om actuele of nieuwe films als Sneak Preview in te stellen.");
+                throw new ValidationException("Het is niet mogelijk om actuele of nieuwe films als Sneak Preview in te stellen.");
             }
         }
 
