@@ -13,7 +13,7 @@
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <label class="form-label">Film</label>
-                        <InputSelect class="form-select" @bind-Value="SelectedMovieId">
+                        <InputSelect class="form-select" @bind-Value="form.MovieId">
                             <option value="0">Selecteer een film</option>
                             @foreach (var m in Movies)
                             {
