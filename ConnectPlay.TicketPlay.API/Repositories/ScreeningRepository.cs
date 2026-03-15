@@ -58,7 +58,7 @@ public class ScreeningRepository : IScreeningRepository
         if (movie is null || hall is null)
         {
             _logger.LogError("Movie or Hall not found. MovieId: {MovieId}, HallId: {HallId}", dto.MovieId, dto.HallId);
-            return;
+            throw new KeyNotFoundException($"Movie or Hall not found. MovieId: {dto.MovieId}, HallId: {dto.HallId}");
         }
 
         // Only older movies may be marked as Sneak Preview
