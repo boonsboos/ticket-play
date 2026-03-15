@@ -18,6 +18,13 @@ public class MovieRepository : IMovieRepository
         _dbContextFactory = dbContextFactory;
     }
 
+    public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Movies.ToListAsync();
+    }
+
     public async Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
     {
         using var dbContext = await _dbContextFactory.CreateDbContextAsync();

@@ -8,6 +8,9 @@ namespace ConnectPlay.TicketPlay.UI.Api;
 
 public interface IMovieApi
 {
+    [Get("/movie/all")]
+    Task<IEnumerable<Movie>> GetAllMoviesAsync();
+
     [Get("/movie/current")]
     Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
 

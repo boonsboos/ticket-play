@@ -21,6 +21,18 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     // ProducesResponseType is not required, but is useful for API documentation and tools like Swagger to understand what this endpoint returns.
     [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)] // Document that this endpoint returns a list of movies on HTTP OK
     [HttpGet] // Register a GET endpoint
+    [Route("all")] // At route /movie/all
+    public async Task<IActionResult> GetAllAsync() // Always suffix async methods with "Async"
+    {
+        var movies = await _movieRepository.GetAllMoviesAsync();
+
+        // HTTP OK
+        return Ok(movies);
+    }
+
+    // ProducesResponseType is not required, but is useful for API documentation and tools like Swagger to understand what this endpoint returns.
+    [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)] // Document that this endpoint returns a list of movies on HTTP OK
+    [HttpGet] // Register a GET endpoint
     [Route("current")] // At route /movie/current
     public async Task<IActionResult> GetCurrentAsync() // Always suffix async methods with "Async"
     {

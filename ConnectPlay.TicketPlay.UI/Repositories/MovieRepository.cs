@@ -14,6 +14,11 @@ public class MovieRepository : IMovieRepository
         _movieApi = movieApi;
     }
 
+    public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
+    {
+        return await _movieApi.GetAllMoviesAsync();
+    }
+
     public Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
     {
         return Task.FromResult<IEnumerable<Movie>>([]);
