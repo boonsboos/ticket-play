@@ -26,7 +26,7 @@ public partial class MovieOverview : ComponentBase
     {
         try
         {
-            movies = await _movieRepository.GetTodaysMoviesAsync(); // Does the GET request to the API endpoint
+            movies = await _movieRepository.GetWeekOverviewAsync().GroupBy(); // Does the GET request to the API endpoint
         }
         catch (ApiException e)
         {

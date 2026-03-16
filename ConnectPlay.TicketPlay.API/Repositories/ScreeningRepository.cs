@@ -92,4 +92,11 @@ public class ScreeningRepository : IScreeningRepository
         dbContext.Screenings.Add(screening);
         var affected = await dbContext.SaveChangesAsync();
     }
+
+    public Task<IEnumerable<Screening>> GetWeekOverviewAsync()
+    {
+        // TODO: select only up to next wednesday
+
+        throw new NotImplementedException();
+    }
 }
