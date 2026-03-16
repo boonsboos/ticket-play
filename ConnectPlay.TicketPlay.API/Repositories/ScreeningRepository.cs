@@ -3,6 +3,7 @@ using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
@@ -58,7 +59,24 @@ public class ScreeningRepository : IScreeningRepository
         if (movie is null || hall is null)
         {
             _logger.LogError("Movie or Hall not found. MovieId: {MovieId}, HallId: {HallId}", dto.MovieId, dto.HallId);
-            return;
+            throw new KeyNotFoundException($"Movie or Hall not found. MovieId: {dto.MovieId}, HallId: {dto.HallId}");
+        }
+
+        // Only older movies may be marked as Sneak Preview
+        // Movies tagged as 'new' or 'current' are not eligible
+        if (dto.SneakPreview && !string.IsNullOrWhiteSpace(movie.Tags))
+        {
+            var tags = movie.Tags
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            var hasBlockedTag = tags.Any(tag =>
+                string.Equals(tag, ReservedTags.New, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(tag, ReservedTags.Current, StringComparison.OrdinalIgnoreCase));
+
+            if (hasBlockedTag)
+            {
+                throw new ValidationException("Het is niet mogelijk om actuele of nieuwe films als Sneak Preview in te stellen.");
+            }
         }
 
         // Create the Screening entity

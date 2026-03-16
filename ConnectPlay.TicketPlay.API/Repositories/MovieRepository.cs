@@ -18,16 +18,23 @@ public class MovieRepository : IMovieRepository
         _dbContextFactory = dbContextFactory;
     }
 
+    public async Task<IEnumerable<Movie>> GetAllMoviesAsync()
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Movies.ToListAsync();
+    }
+
     public async Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
         return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.Current)).ToListAsync();
     }
 
     public async Task<IEnumerable<Movie>> GetNewMoviesAsync()
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
         return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.New)).ToListAsync();
     }
@@ -59,7 +66,7 @@ public class MovieRepository : IMovieRepository
 
     public async Task CreateMovieAsync(CreateMovieRequest dto)
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
         var movie = new Movie
         {

@@ -27,18 +27,14 @@ public partial class CreateScreening(
 
     protected override async Task OnInitializedAsync()
     {
-        var currentMovies = await _movieApi.GetCurrentMoviesAsync();
-        var newMovies = await _movieApi.GetNewMoviesAsync();
-        var allMovies = currentMovies
-            .Concat(newMovies)
-            .GroupBy(m => m.Id)
-            .Select(g => g.First())
-            .OrderBy(m => m.Title);
+        var allMovies = await _movieApi.GetAllMoviesAsync();
+
 
         Movies = allMovies.Select(m => new MovieListItemDto
         {
             Id = m.Id,
-            Title = m.Title
+            Title = m.Title,
+            Tags = m.Tags ?? string.Empty
         }).ToList();
 
         Halls = await _hallApi.GetHallsAsync();
@@ -66,7 +62,8 @@ public partial class CreateScreening(
             {
                 MovieId = form.MovieId,
                 HallId = form.HallId,
-                Time = startTime
+                Time = startTime,
+                SneakPreview = form.SneakPreview,
             };
 
             await _screeningApi.CreateScreeningAsync(dto);
@@ -104,17 +101,52 @@ public partial class CreateScreening(
 
     protected void HideToast() => showToast = false;
 
+    // Disabled the SneakPreview when a movie is selected with 'current' or 'new'
+    protected bool IsSneakPreviewDisabled
+    {
+        get
+        {
+            var selectedMovie = Movies.FirstOrDefault(m => m.Id == form.MovieId);
+            if (selectedMovie is null || string.IsNullOrWhiteSpace(selectedMovie.Tags))
+                return false;
+
+            var tags = selectedMovie.Tags
+                .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+            return tags.Any(tag =>
+                string.Equals(tag, "new", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(tag, "current", StringComparison.OrdinalIgnoreCase));
+        }
+    }
+
+    // Sets SneakPreview to false if a movie is selected with 'current' or 'new' tag
+    protected int SelectedMovieId
+    {
+        get => form.MovieId;
+        set
+        {
+            form.MovieId = value;
+
+            if (IsSneakPreviewDisabled)
+            {
+                form.SneakPreview = false;
+            }
+        }
+    }
+
     public sealed class CreateScreeningFormModel
     {
         public int MovieId { get; set; } = 0;
         public int HallId { get; set; } = 0;
         public DateOnly TimeDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
         public int TimeHour { get; set; } = 9;
+        public bool SneakPreview { get; set; } = false;
     }
 
     public sealed class MovieListItemDto
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public string Tags { get; set; } = string.Empty;
     }
 }
