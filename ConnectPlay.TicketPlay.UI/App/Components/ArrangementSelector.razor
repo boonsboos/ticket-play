@@ -1,0 +1,65 @@
+﻿@namespace ConnectPlay.TicketPlay.UI.App.Components
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="mb-4">Arrangements</h5>
+
+        <h6>Popcorn</h6>
+        @foreach (var item in PopcornOptions)
+        {
+            <div class="row g-3 mb-2 align-items-center">
+                <div class="col-md-4">@item.Name</div>
+                <div class="col-md-2">€@item.Price</div>
+                <div class="col-md-2">
+                    <InputNumber class="form-control" min="0" max="10" @bind-Value="item.Quantity" />
+                </div>
+                <div class="col-md-2">Subtotal: €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</div>
+            </div>
+        }
+
+        <h6 class="mt-3">Dranken</h6>
+        @foreach (var item in DrinkOptions)
+        {
+            <div class="row g-3 mb-2 align-items-center">
+                <div class="col-md-4">@item.Name</div>
+                <div class="col-md-2">€@item.Price</div>
+                <div class="col-md-2">
+                    <InputNumber class="form-control" min="0" max="10" @bind-Value="item.Quantity" />
+                </div>
+                <div class="col-md-2">Subtotal: €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</div>
+            </div>
+        }
+
+        <h6 class="mt-3">Combi (Medium Popcorn + Drink, 10% korting)</h6>
+        @foreach (var combo in ComboSelections)
+        {
+            <div class="row g-3 mb-2 align-items-center">
+                <div class="col-md-4">Medium Popcorn + @combo.Drink.Name</div>
+                <div class="col-md-2">€@combo.PriceWithDiscount</div>
+                <div class="col-md-2">
+                    <InputNumber class="form-control" min="0" max="10" @bind-Value="combo.Quantity" />
+                </div>
+                <div class="col-md-2">Subtotal: €@(Math.Round((combo.Quantity ?? 0) * combo.PriceWithDiscount, 2))</div>
+            </div>
+        }
+
+        <div class="alert alert-light border mt-4">
+            <h6 class="mb-3">Totaal overzicht</h6>
+            <ul class="list-unstyled">
+                @foreach (var item in PopcornOptions.Where(p => (p.Quantity ?? 0) > 0))
+                {
+                    <li>@item.Name x @item.Quantity = €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</li>
+                }
+                @foreach (var item in DrinkOptions.Where(d => (d.Quantity ?? 0) > 0))
+                {
+                    <li>@item.Name x @item.Quantity = €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</li>
+                }
+                @foreach (var combo in ComboSelections.Where(c => (c.Quantity ?? 0) > 0))
+                {
+                    <li>Medium Popcorn + @combo.Drink.Name x @combo.Quantity = €@(Math.Round((combo.Quantity ?? 0) * combo.PriceWithDiscount, 2))</li>
+                }
+            </ul>
+            <strong>Totaal: €@TotalPrice</strong>
+        </div>
+    </div>
+</div>
