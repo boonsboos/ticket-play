@@ -11,6 +11,7 @@ public class TicketPlayContext : DbContext
     public DbSet<Ticket> Tickets { get; set; }
     public DbSet<Screening> Screenings { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
 
     public TicketPlayContext(DbContextOptions options) : base(options)
     {
