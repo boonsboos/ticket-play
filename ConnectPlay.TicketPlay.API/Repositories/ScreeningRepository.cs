@@ -93,10 +93,30 @@ public class ScreeningRepository : IScreeningRepository
         var affected = await dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<Screening>> GetWeekOverviewAsync()
+    public async Task<IEnumerable<Screening>> GetWeekOverviewAsync()
     {
-        // TODO: select only up to next wednesday
+        var today = DateTimeOffset.UtcNow;
+        var thursday = GetNextThursday();
 
-        throw new NotImplementedException();
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Screenings
+            .Include(screening => screening.Movie)
+            .Where(screening => 
+                screening.StartTime.Date >= today.Date && screening.StartTime.Date <= thursday.Date
+            )
+            .ToListAsync();
+    }
+
+    private static DateTimeOffset GetNextThursday()
+    {
+        DateTimeOffset nextThursday = DateTimeOffset.UtcNow;
+
+        // will add another day if today is thursday, then loop until the next thursday
+        do
+        {
+            nextThursday.AddDays(1);
+        } while (nextThursday.DayOfWeek != DayOfWeek.Thursday);
+        return nextThursday;
     }
 }

@@ -86,7 +86,7 @@ public class MovieRepository : IMovieRepository
         await dbContext.SaveChangesAsync();
     }
     
-    public async Task<IEnumerable<MovieListItemResponse>> GetTodaysMoviesAsync()
+    public async Task<IEnumerable<ApiMovie>> GetTodaysMoviesAsync()
     {
         // Using "await using" so the database connection is closed when its done.
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -113,7 +113,7 @@ public class MovieRepository : IMovieRepository
                     .OrderBy(startTime => startTime)
                     .ToList(); // Create the actual list of screening times for the movies of today
 
-                return new MovieListItemResponse
+                return new ApiMovie
                 {
                     Id = movieGroup.Key.Id.ToString(),
                     Title = movieGroup.Key.Title,

@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Contracts.Movie;
+using ConnectPlay.TicketPlay.Contracts.Overview;
+using ConnectPlay.TicketPlay.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
 
@@ -6,14 +10,55 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 [Route("[controller]")]
 public class WebsiteController : ControllerBase
 {
+    private const string SneakPreviewUrl = "https://dummyimage.com/300x450/000/fff&text=Sneak%20Preview";
+
+    private readonly IMovieRepository movieRepository;
+    private readonly IScreeningRepository screeningRepository;
+
+    public WebsiteController(IMovieRepository movieRepository, IScreeningRepository screeningRepository)
+    {
+        this.movieRepository = movieRepository;
+        this.screeningRepository = screeningRepository;
+    }
+
     [HttpGet]
     [Route("overview")]
     public async Task<IActionResult> GetOverviewAsync()
     {
-        // Get all screenings for this week
-        // Fetch the movies that belong with them
-        // Group both by day in a style of [{day, [{movie, [screening}]]}] where movie is set to random stuff for the sneak preview.
+        var screenings = await screeningRepository.GetWeekOverviewAsync();
 
-        return Ok();
+        var overview = GetMovieOverview(screenings);
+
+        return Ok(overview);
+    }
+
+    private IEnumerable<OverviewMovieDay> GetMovieOverview(IEnumerable<Screening> screenings)
+    {
+        return screenings
+            .GroupBy(screening => screening.StartTime.Date) // by day
+            .AsParallel() // run the select on each day separately
+            .Select(
+                grouping => new OverviewMovieDay
+                {
+                    Day = grouping.Key,
+                    Offerings = grouping
+                        .GroupBy(day => day.Movie) // all movies on that day
+                        .Select(dayScreenings => {
+                            var apiMovie = new ApiMovie(dayScreenings.Key, dayScreenings);
+                            
+                            // handle sneak preview screenings
+                            if (dayScreenings.Any(screening => screening.SneakPreview))
+                            {
+                                apiMovie = apiMovie with
+                                {
+                                    PosterUrl = SneakPreviewUrl,
+                                    Title = "Sneak Preview",
+                                };
+                            }
+
+                            return apiMovie;
+                        })
+                }
+            ).ToList();
     }
 }
