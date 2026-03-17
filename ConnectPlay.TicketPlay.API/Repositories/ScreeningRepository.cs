@@ -115,7 +115,7 @@ public class ScreeningRepository : IScreeningRepository
         // will add another day if today is thursday, then loop until the next thursday
         do
         {
-            nextThursday.AddDays(1);
+            nextThursday = nextThursday.AddDays(1);
         } while (nextThursday.DayOfWeek != DayOfWeek.Thursday);
         return nextThursday;
     }

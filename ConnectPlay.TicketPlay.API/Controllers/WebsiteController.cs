@@ -30,15 +30,14 @@ public class WebsiteController : ControllerBase
         return Ok(overview);
     }
 
-    private IEnumerable<OverviewMovieDay> GetMovieOverview(IEnumerable<Screening> screenings)
+    private static IEnumerable<OverviewMovieDay> GetMovieOverview(IEnumerable<Screening> screenings)
     {
         return screenings
             .GroupBy(screening => screening.StartTime.Date) // by day
-            .AsParallel() // run the select on each day separately
             .Select(
                 grouping => new OverviewMovieDay
                 {
-                    Day = grouping.Key,
+                    Day = new DateTimeOffset(grouping.Key),
                     Offerings = grouping
                         .GroupBy(day => day.Movie) // all movies on that day
                         .Select(dayScreenings => {
