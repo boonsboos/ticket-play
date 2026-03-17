@@ -21,7 +21,7 @@ public partial class ArrangementSelector
         new() { Name = "Ice Tea", Price = 3.00m }
     };
 
-    protected List<ComboItem> ComboSelections;
+    protected List<CombiItem> CombiSelections;
 
     protected List<string> SavedSelections = new();
     protected string ToastMessage = string.Empty;
@@ -30,20 +30,20 @@ public partial class ArrangementSelector
 
     public ArrangementSelector()
     {
-        ComboSelections = DrinkOptions
-            .Select(d => new ComboItem { Drink = d, Quantity = 0 })
+        CombiSelections = DrinkOptions
+            .Select(d => new CombiItem { Drink = d, Quantity = 0 })
             .ToList();
     }
 
     protected decimal TotalPrice => Math.Round(
         PopcornOptions.Sum(p => (p.Quantity ?? 0) * p.Price) +
         DrinkOptions.Sum(d => (d.Quantity ?? 0) * d.Price) +
-        ComboSelections.Sum(c => (c.Quantity ?? 0) * c.PriceWithDiscount), 2);
+        CombiSelections.Sum(c => (c.Quantity ?? 0) * c.PriceWithDiscount), 2);
 
     protected bool HasSelection =>
         PopcornOptions.Any(p => (p.Quantity ?? 0) > 0) ||
         DrinkOptions.Any(d => (d.Quantity ?? 0) > 0) ||
-        ComboSelections.Any(c => (c.Quantity ?? 0) > 0);
+        CombiSelections.Any(c => (c.Quantity ?? 0) > 0);
 
     protected void SaveSelection()
     {
@@ -51,7 +51,7 @@ public partial class ArrangementSelector
 
         var selectedPopcorn = PopcornOptions.Where(p => (p.Quantity ?? 0) > 0);
         var selectedDrinks = DrinkOptions.Where(d => (d.Quantity ?? 0) > 0);
-        var selectedCombos = ComboSelections.Where(c => (c.Quantity ?? 0) > 0);
+        var selectedCombos = CombiSelections.Where(c => (c.Quantity ?? 0) > 0);
 
         if (!selectedPopcorn.Any() && !selectedDrinks.Any() && !selectedCombos.Any())
         {
@@ -86,7 +86,7 @@ public partial class ArrangementSelector
             p.Quantity = 0;
         foreach (var d in DrinkOptions)
             d.Quantity = 0;
-        foreach (var c in ComboSelections)
+        foreach (var c in CombiSelections)
             c.Quantity = 0;
     }
 
@@ -97,7 +97,7 @@ public partial class ArrangementSelector
         public int? Quantity { get; set; } = 0;
     }
 
-    public class ComboItem
+    public class CombiItem
     {
         public ArrangementItem Drink { get; set; } = new();
         public int? Quantity { get; set; } = 0;

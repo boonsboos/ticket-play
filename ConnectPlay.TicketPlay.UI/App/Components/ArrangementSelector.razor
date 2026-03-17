@@ -1,7 +1,7 @@
 ﻿@namespace ConnectPlay.TicketPlay.UI.App.Components
 
 <div class="d-flex justify-content-center mt-5">
-    <div class="card shadow-sm" style="max-width: 600px; width: 100%;">
+    <div class="card shadow-sm" style="max-width: 700px; width: 100%;">
         <div class="card-body text-center">
             <h5 class="mb-4 fw-bold">Arrangementen</h5>
 
@@ -31,8 +31,8 @@
                 </div>
             }
 
-            <h6 class="mt-4 mb-3 text-start fw-bold">Combi (Medium Popcorn + Drin, 10% korting)</h6>
-            @foreach (var combi in ComboSelections)
+            <h6 class="mt-4 mb-3 text-start fw-bold">Combi (Medium Popcorn + Drink, 10% korting)</h6>
+            @foreach (var combi in CombiSelections)
             {
                 <div class="row g-3 mb-3 align-items-center justify-content-center">
                     <div class="col-5 text-start">Medium Popcorn + @combi.Drink.Name</div>
@@ -55,7 +55,7 @@
                     {
                         <li>@item.Name x @item.Quantity = €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</li>
                     }
-                    @foreach (var combi in ComboSelections.Where(c => (c.Quantity ?? 0) > 0))
+                    @foreach (var combi in CombiSelections.Where(c => (c.Quantity ?? 0) > 0))
                     {
                         <li>Medium Popcorn + @combi.Drink.Name x @combi.Quantity = €@(Math.Round((combi.Quantity ?? 0) * combi.PriceWithDiscount, 2))</li>
                     }
