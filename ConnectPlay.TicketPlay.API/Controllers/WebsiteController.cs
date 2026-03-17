@@ -12,12 +12,10 @@ public class WebsiteController : ControllerBase
 {
     private const string SneakPreviewUrl = "https://dummyimage.com/300x450/000/fff&text=Sneak%20Preview";
 
-    private readonly IMovieRepository movieRepository;
     private readonly IScreeningRepository screeningRepository;
 
-    public WebsiteController(IMovieRepository movieRepository, IScreeningRepository screeningRepository)
+    public WebsiteController(IScreeningRepository screeningRepository)
     {
-        this.movieRepository = movieRepository;
         this.screeningRepository = screeningRepository;
     }
 
