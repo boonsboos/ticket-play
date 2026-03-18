@@ -11,7 +11,7 @@ public partial class MovieOverview : ComponentBase
     private ILogger<MovieOverview> _logger;
     private NavigationManager _navigationManager;
 
-    private IEnumerable<MovieListItemResponse> movies = [];
+    private IEnumerable<OverviewMovie> movies = [];
     private bool isLoading = true; // the page starts in a loading state
     private string? errorMessage;
 
@@ -26,7 +26,7 @@ public partial class MovieOverview : ComponentBase
     {
         try
         {
-            movies = await _movieRepository.GetTodaysMoviesAsync(); // Does the GET request to the API endpoint
+           // TODO: load data
         }
         catch (ApiException e)
         {
