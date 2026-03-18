@@ -11,5 +11,5 @@ public interface IMovieRepository
     public Task<MovieDetailResponse?> GetMovieByIdAsync(int id);
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters);
     public Task CreateMovieAsync(CreateMovieRequest movie);
-    public Task<IEnumerable<ApiMovie>> GetTodaysMoviesAsync();
+    public Task<IEnumerable<MovieDto>> GetTodaysMoviesAsync();
 }

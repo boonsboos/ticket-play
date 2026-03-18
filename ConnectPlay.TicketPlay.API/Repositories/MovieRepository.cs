@@ -86,7 +86,7 @@ public class MovieRepository : IMovieRepository
         await dbContext.SaveChangesAsync();
     }
     
-    public async Task<IEnumerable<ApiMovie>> GetTodaysMoviesAsync()
+    public async Task<IEnumerable<MovieDto>> GetTodaysMoviesAsync()
     {
         // Using "await using" so the database connection is closed when its done.
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -106,7 +106,7 @@ public class MovieRepository : IMovieRepository
             screenings
                 .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
                 .OrderBy(screeningGroup => screeningGroup.Key.Title) // Create the list of screening times for the movies of today
-                .Select(screeningGroup => new ApiMovie(screeningGroup.Key, [.. screeningGroup.OrderBy(startTime => startTime)])) // Map the grouping to ApiMovie
+                .Select(screeningGroup => new MovieDto(screeningGroup.Key, [.. screeningGroup.OrderBy(startTime => startTime)])) // Map the grouping to ApiMovie
         ];
     }
 }

@@ -11,7 +11,7 @@ public partial class Movies : ComponentBase
     private ILogger<Movies> _logger;
     private NavigationManager _navigationManager;
 
-    private IEnumerable<ApiMovie> movies = [];
+    private IEnumerable<MovieDto> movies = [];
     private bool isLoading = true; // the page starts in a loading state
     private string? errorMessage;
 
