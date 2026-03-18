@@ -42,7 +42,7 @@ public class MovieRepository : IMovieRepository
         ]);
     }
 
-    public async Task<IEnumerable<MovieDto>> GetTodaysMoviesAsync()
+    public async Task<IEnumerable<OverviewMovie>> GetTodaysMoviesAsync()
     {
         return await _movieApi.GetTodayMoviesAsync();
     }
