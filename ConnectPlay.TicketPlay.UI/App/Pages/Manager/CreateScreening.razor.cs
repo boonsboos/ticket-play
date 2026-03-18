@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
-using Microsoft.AspNetCore.Components;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
@@ -9,7 +9,7 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 public partial class CreateScreening(
     IScreeningApi screeningApi,
     IMovieApi movieApi,
-    IHallApi hallApi) : ComponentBase
+    IHallApi hallApi) : TranslatableComponent
 {
     private readonly IScreeningApi _screeningApi = screeningApi;
     private readonly IMovieApi _movieApi = movieApi;

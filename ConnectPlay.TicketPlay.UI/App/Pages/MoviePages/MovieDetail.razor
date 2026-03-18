@@ -1,12 +1,18 @@
 ﻿@page "/movies/{Id:int}"
 
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
 @rendermode InteractiveServer
+
+<PageTitle>@T["movieDetail.pageTitle"]</PageTitle>
 
 @if (movie == null)
 {
     <div class="container mt-4 text-center">
         <div class="alert alert-warning">
-            <p>Film niet gevonden.</p>
+            <p>@T["movieDetail.movieNotFound"]</p>
         </div>
     </div>
 }
@@ -34,11 +40,11 @@ else
                 </div>
             </div>
             <div class="card-footer pt-3">
-                <h5>Voorstellingen</h5>
+                <h5>@T["movieDetail.screenings"]</h5>
                 <div class="d-flex flex-wrap gap-3 my-2">
                     @if (!screenings.Any())
                     {
-                        <p>Er zijn geen voorstellingen voor deze film</p>
+                        <p>@T["movieDetail.noScreenings"]</p>
                     }
                     else
                     {
@@ -52,14 +58,14 @@ else
                                     @if (screening.Hall?.Has3DProjector == true)
                                     {
                                         <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
-                                            Zaal @screening.Hall?.HallNumber
+                                            @T["movieDetail.hall"] @screening.Hall?.HallNumber
                                             <i class="bi bi-badge-3d"></i>
                                         </div>
                                     }
                                     else
                                     {
                                         <div class="d-flex justify-content-center align-items-center gap-2 text-body-secondary fw-bold">
-                                            Zaal @screening.Hall?.HallNumber
+                                            @T["movieDetail.hall"] @screening.Hall?.HallNumber
                                         </div>
                                     }
                                 </div>
@@ -70,8 +76,8 @@ else
             </div>
         </div>
         <div class="container d-flex justify-content-between col-lg-10 col-md-12 m-3">
-            <button class="btn btn-outline-primary" @onclick="Back">← Ga terug</button>
-            <button class="btn btn-primary" @onclick="ToTickets">Volgende →</button>
+            <button class="btn btn-outline-primary" @onclick="Back">← @T["movieDetail.back"]</button>
+            <button class="btn btn-primary" @onclick="ToTickets">@T["movieDetail.next"] →</button>
         </div>
     </div>
 }

@@ -1,8 +1,13 @@
 ﻿@page "/manager/create-movie"
+
 @using ConnectPlay.TicketPlay.Models
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
 @rendermode InteractiveServer
 
-<PageTitle>Create Movie</PageTitle>
+@inherits TranslatableComponent;
+
+<PageTitle>@T["createMovie.pageTitle"]</PageTitle>
 
 @if (!string.IsNullOrWhiteSpace(successMessage))
 {
@@ -26,7 +31,7 @@
 }
 
 <div class="container my-4 col-8">
-    <h3 class="mb-4">Create Movie</h3>
+    <h3 class="mb-4">@T["createMovie.title"]</h3>
     <div class="card shadow-sm">
         <div class="card-body">
             <EditForm Model="model" OnValidSubmit="HandleValidSubmit" FormName="CreateMovieForm">
@@ -34,52 +39,52 @@
                 <ValidationSummary />
 
                 <div class="mb-3">
-                    <label class="form-label">Title</label>
+                    <label class="form-label">@T["createMovie.movieTitle"]</label>
                     <InputText class="form-control" @bind-Value="model.Title" />
                     <ValidationMessage For="@(() => model.Title)" />
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Description</label>
+                    <label class="form-label">@T["createMovie.description"]</label>
                     <InputTextArea class="form-control" @bind-Value="model.Description" />
                     <ValidationMessage For="@(() => model.Description)" />
                 </div>
 
                 <div class="row">
                     <div class="mb-3 col-md-6">
-                        <label class="form-label">Duration (minutes)</label>
+                        <label class="form-label">@T["createMovie.duration"]</label>
                         <InputNumber class="form-control" @bind-Value="model.Duration" />
                         <ValidationMessage For="@(() => model.Duration)" />
                     </div>
 
                     <div class="mb-3 col-md-6">
-                        <label class="form-label">Release date</label>
+                        <label class="form-label">@T["createMovie.releaseDate"]</label>
                         <InputDate class="form-control" @bind-Value="model.ReleaseDate" />
                         <ValidationMessage For="@(() => model.ReleaseDate)" />
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Poster URL</label>
+                    <label class="form-label">@T["createMovie.posterUrl"]</label>
                     <InputText class="form-control" @bind-Value="model.PosterUrl" />
                     <ValidationMessage For="@(() => model.PosterUrl)" />
                 </div>
 
                 <div class="row">
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Language</label>
+                        <label class="form-label">@T["createMovie.language"]</label>
                         <InputSelect class="form-control" @bind-Value="model.Language">
-                            <option value="">Select language</option>
-                            <option value="Nederlands">Nederlands</option>
-                            <option value="English">English</option>
+                            <option value="">@T["createMovie.selectLanguage"]</option>
+                            <option value="Nederlands">@T["createMovie.languageDutch"]</option>
+                            <option value="English">@T["createMovie.languageEnglish"]</option>
                         </InputSelect>
                         <ValidationMessage For="@(() => model.Language)" />
                     </div>
 
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Minimum age</label>
+                        <label class="form-label">@T["createMovie.minimumAge"]</label>
                         <InputSelect class="form-control" @bind-Value="model.MinimumAge">
-                            <option value="">Select minimum age</option>
+                            <option value="">@T["createMovie.selectMinimumAge"]</option>
                             <option value="@MinimumAgeRating.AL">AL</option>
                             <option value="@MinimumAgeRating.Age6">6</option>
                             <option value="@MinimumAgeRating.Age9">9</option>
@@ -92,20 +97,20 @@
                     </div>
 
                     <div class="mb-3 col-md-4">
-                        <label class="form-label">Genre</label>
+                        <label class="form-label">@T["createMovie.genre"]</label>
                         <InputText class="form-control" @bind-Value="model.Genre" />
                         <ValidationMessage For="@(() => model.Genre)" />
                     </div>
                 </div>
 
                 <div class="mb-3">
-                    <label class="form-label">Tags (comma separated)</label>
+                    <label class="form-label">@T["createMovie.tags"]</label>
                     <InputText class="form-control" @bind-Value="model.TagsCsv" />
                     <ValidationMessage For="@(() => model.TagsCsv)" />
                 </div>
 
                 <button class="btn btn-primary" type="submit" disabled="@isSubmitting">
-                    @(isSubmitting ? "Saving..." : "Create")
+                    @(isSubmitting? @T["createMovie.saving"] : @T["createMovie.submit"])
                 </button>
             </EditForm>
         </div>

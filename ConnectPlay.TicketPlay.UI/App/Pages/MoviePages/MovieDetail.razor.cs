@@ -1,12 +1,13 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.MoviePages;
 
-public partial class MovieDetail : ComponentBase
+public partial class MovieDetail : TranslatableComponent
 {
     [Parameter] public int Id { get; set; }
 

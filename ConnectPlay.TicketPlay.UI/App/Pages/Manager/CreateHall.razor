@@ -1,8 +1,15 @@
 ﻿@page "/manager/create-hall"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
 @rendermode InteractiveServer
 
+<PageTitle>@T["createHall.pageTitle"]</PageTitle>
+
 <div class="container my-4 col-8">
-    <h3 class="mb-4">Create Hall</h3>
+    <h3 class="mb-4">@T["createHall.title"]</h3>
     <div class="card shadow-sm">
         <div class="card-body">
             <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateHallForm">
@@ -10,7 +17,7 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-9">
-                        <label class="form-label">Hall Number</label>
+                        <label class="form-label">@T["createHall.hallNumber"]</label>
                         <InputNumber class="form-control" @bind-Value="form.HallNumber" />
                     </div>
 
@@ -18,17 +25,17 @@
                         <div class="form-check">
                             <InputCheckbox class="form-check-input" @bind-Value="form.Has3DProjector" />
                             <label class="form-check-label">
-                                Has 3D Projector
+                                @T["createHall.has3DProjector"]
                             </label>
                         </div>
                     </div>
                 </div>
 
                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom">
-                    <h5 class="">Rows configuration</h5>
+                    <h5 class="">@T["createHall.rowsConfiguration"]</h5>
 
                     <button type="button" class="btn btn-sm btn-outline-primary mb-2" @onclick="AddRow">
-                        + Add row
+                        + @T["createHall.addRow"]
                     </button>
                 </div>
 
@@ -39,15 +46,15 @@
 
                         <div class="border rounded p-3 bg-light-subtle">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <strong>Row @(rowIndex + 1)</strong>
+                                <strong>@T["createHall.row"] @(rowIndex + 1)</strong>
 
                                 <button type="button" class="btn btn-sm btn-outline-danger"
                                         disabled="@(form.Rows.Count == 1)" @onclick="() => RemoveRow(rowIndex)">
-                                    Remove
+                                    @T["createHall.remove"]
                                 </button>
                             </div>
 
-                            <label class="form-label">Seats in this row</label>
+                            <label class="form-label">@T["createHall.seatsInRow"]</label>
                             <InputNumber class="form-control" @bind-Value="form.Rows[rowIndex]"
                                          @bind-Value:after="EnsureWheelchairSelectionValid" min="1" />
                         </div>
@@ -55,19 +62,19 @@
                 </div>
 
                 <hr />
-                <h5 class="mb-3 border-bottom pb-2">Wheelchair seat</h5>
+                <h5 class="mb-3 border-bottom pb-2">@T["createHall.wheelchairSeat"]</h5>
                 <div class="card bg-light border-0 mb-4">
                     <div class="card-body">
                         <p class="text-muted small mb-3">
-                            Select a wheelchair seat if this hall has one.
+                            @T["createHall.wheelchairHelp"]
                         </p>
 
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label">Row</label>
+                                <label class="form-label">@T["createHall.row"]</label>
                                 <InputSelect class="form-select" @bind-Value="form.WheelchairRow"
                                              @bind-Value:after="EnsureWheelchairSelectionValid">
-                                    <option value="0">Select row</option>
+                                    <option value="0">@T["createHall.selectRow"]</option>
                                     @for (var r = 1; r <= form.Rows.Count; r++)
                                     {
                                         <option value="@r">@r</option>
@@ -76,9 +83,9 @@
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label">Seat</label>
+                                <label class="form-label">@T["createHall.seat"]</label>
                                 <InputSelect class="form-select" @bind-Value="form.WheelchairSeat">
-                                    <option value="0">Select seat</option>
+                                    <option value="0">@T["createHall.selectSeat"]</option>
                                     @{
                                         var maxSeat = SeatsInSelectedWheelchairRow();
                                         for (var s = 1; s <= maxSeat; s++)
@@ -93,7 +100,7 @@
                 </div>
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
-                        Create Hall
+                        @T["createHall.submit"]
                     </button>
                 </div>
             </EditForm>

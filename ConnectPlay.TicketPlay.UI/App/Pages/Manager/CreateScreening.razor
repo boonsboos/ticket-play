@@ -1,8 +1,15 @@
 ﻿@page "/manager/create-screening"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
 @rendermode InteractiveServer
 
+<PageTitle>@T["createScreening.pageTitle"]</PageTitle>
+
 <div class="container my-4" style="max-width: 1200px;">
-    <h3 class="mb-4">Voeg voorstelling toe</h3>
+    <h3 class="mb-4">@T["createScreening.title"]</h3>
     <div class="card shadow-sm">
         <div class="card-body">
             <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateScreening">
@@ -12,9 +19,9 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label">Film</label>
+                        <label class="form-label">@T["createScreening.movie"]</label>
                         <InputSelect class="form-select" @bind-Value="form.MovieId">
-                            <option value="0">Selecteer een film</option>
+                            <option value="0">@T["createScreening.selectMovie"]</option>
                             @foreach (var m in Movies)
                             {
                                 <option value="@m.Id">@m.Title</option>
@@ -23,12 +30,12 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">Zaal</label>
+                        <label class="form-label">@T["createScreening.hall"]</label>
                         <InputSelect class="form-select" @bind-Value="form.HallId">
-                            <option value="0">Selecteer een zaal</option>
+                            <option value="0">@T["createScreening.selectHall"]</option>
                             @foreach (var h in Halls)
                             {
-                                <option value="@h.Id">Hall @h.HallNumber</option>
+                                <option value="@h.Id">@T["createScreening.hallOption"] @h.HallNumber</option>
                             }
                         </InputSelect>
                     </div>
@@ -36,11 +43,11 @@
 
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
-                        <label class="form-label">Datum</label>
+                        <label class="form-label">@T["createScreening.Date"]</label>
                         <InputDate class="form-control" @bind-Value="form.TimeDate" />
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Tijd</label>
+                        <label class="form-label">@T["createScreening.time"]</label>
                         <InputSelect class="form-select" @bind-Value="form.TimeHour">
                             @for (int h = 9; h <= 21; h++)
                             {
@@ -52,11 +59,11 @@
 
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center gap-2">
-                        <label for="sneakPreview" class="form-label mb-0">Sneak Preview</label>
+                        <label for="sneakPreview" class="form-label mb-0">@T["createScreening.sneakPreview"]</label>
                         @if (IsSneakPreviewDisabled)
                         {
                             <span class="sneak-preview-blocked"
-                                  title="Het is niet mogelijk om actuele of nieuwe films als Sneak Preview in te stellen.">
+                                  title="@T["createScreening.sneakPreviewBlocked"]">
                                 ✕
                             </span>
                         }
@@ -69,7 +76,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
-                        Voeg toe
+                        @T["createScreening.submit"]
                     </button>
                 </div>
 
