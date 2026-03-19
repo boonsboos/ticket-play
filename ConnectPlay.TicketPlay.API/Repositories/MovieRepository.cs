@@ -102,11 +102,19 @@ public class MovieRepository : IMovieRepository
             .OrderBy(screening => screening.StartTime)
             .ToListAsync(); // Execute the query and get all screenings for today
 
-        return [.. 
+        return [..
             screenings
                 .GroupBy(screening => screening.Movie) // Group the screenings by the Movie
                 .OrderBy(screeningGroup => screeningGroup.Key.Title) // Create the list of screening times for the movies of today
-                .Select(screeningGroup => new OverviewMovie(screeningGroup.Key, [.. screeningGroup.OrderBy(startTime => startTime)])) // Map the grouping to ApiMovie
+                .Select(screeningGroup => { // Map the grouping to DTO
+                    return new OverviewMovie(){
+                        Id = screeningGroup.Key.Id.ToString(),
+                        Title = screeningGroup.Key.Title,
+                        Genre = screeningGroup.Key.Genre,
+                        PosterUrl = screeningGroup.Key.PosterUrl.AbsoluteUri,
+                        ScreeningTimes = [.. screeningGroup.OrderBy(startTime => startTime).Select(x => x.StartTime)]
+                    };
+                }) 
         ];
     }
 }
