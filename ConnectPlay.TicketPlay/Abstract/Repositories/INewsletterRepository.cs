@@ -7,5 +7,5 @@ namespace ConnectPlay.TicketPlay.Abstract.Repositories;
 
 public interface INewsletterRepository
 {
-    public Task CreateSubscriber(NewsletterSubscriber subscriber);
+    public Task CreateSubscriberAsync(NewsletterSubscriber subscriber);
 }
