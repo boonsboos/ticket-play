@@ -1,6 +1,8 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
+using ConnectPlay.TicketPlay.API.Migrations;
 using ConnectPlay.TicketPlay.Contracts.Kiosk;
+using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
 using System.Data;
 using System.Runtime.CompilerServices;
@@ -128,5 +130,40 @@ public class KioskOrderService : IKioskOrderService
         await orderRepository.UpdateOrderStatusAsync(orderId, OrderStatus.Redeemed);
 
         return await ticketPrintingService.PrintTicketsAsync(order);
+    }
+
+    /// <summary>
+    /// Gets the taken seats for a screening.
+    /// <para>We need the orderId to exclude the current order from the taken seats, otherwise the user would not see any available seats after reserving because their own reserved seats would also be shown as taken.</para>
+    /// <para>We only want to show the taken seats from orders with a status of Paid, because only those seats are actually taken.
+    /// Orders with a status of Pending should not be included because those seats are not yet taken and can still be selected by other users. Orders with a status of Cancelled should also not be included because those seats are also not taken.</para>
+    /// </summary>
+    /// <param name="screeningId"></param>
+    /// <param name="orderId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public async Task<IEnumerable<SeatResponse>> GetTakenSeatsAsync(int screeningId, int orderId)
+    {
+        var screening = await screeningRepository.GetScreeningAsync(screeningId)
+            ?? throw new ArgumentException("Screening does not exist");
+
+        var currentOrder = await orderRepository.GetOrderByIdAsync(orderId)
+            ?? throw new ArgumentException("Order does not exist");
+
+        var tickets = await ticketRepository.GetTicketsByScreeningIdAsync(screeningId);
+
+        var takenSeats = tickets
+            .Where(t => t.OrderId != orderId)
+            .Select(ticket => new SeatResponse
+            {
+                Row = ticket.Seat.Row,
+                SeatNumber = ticket.Seat.SeatNumber,
+                IsForWheelchair = ticket.Seat.IsForWheelchair,
+                IsReserved = ticket.Order?.Status == OrderStatus.Pending,
+                IsTaken = ticket.Order?.Status == OrderStatus.Paid,
+            })
+            .ToList();
+
+        return takenSeats;
     }
 }

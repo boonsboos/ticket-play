@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ConnectPlay.TicketPlay.Models;
 
@@ -13,5 +14,7 @@ public record Ticket
     public int SeatId { get; set; }
     public Seat Seat { get; set; } = null!;
     public TicketType TicketType { get; init; }
-    public int? OrderId { get; init; }
+    public int? OrderId { get; set; }
+    [JsonIgnore]
+    public Order? Order { get; set; }
 }

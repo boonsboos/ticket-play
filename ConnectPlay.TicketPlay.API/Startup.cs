@@ -59,9 +59,10 @@ public class Startup(IConfiguration configuration)
 
     private void ConfigureTicketPlayServices(IServiceCollection services)
     {
-        services.AddScoped<ISeatAssignmentService, SeatAssignmentService>();
-        services.AddScoped<IKioskOrderService, KioskOrderService>();
-        services.AddSingleton<IPriceCalculationService, PriceCalculationService>();
-        services.AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
+        services.AddScoped<ISeatAssignmentService, SeatAssignmentService>()
+            .AddScoped<IKioskOrderService, KioskOrderService>()
+            .AddScoped<IHallService, HallOrderService>()
+            .AddSingleton<IPriceCalculationService, PriceCalculationService>()
+            .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
     }
 }

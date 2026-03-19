@@ -39,7 +39,7 @@ public class TicketRepository : ITicketRepository
     {
         // create new databse connection
         // dbContext is the object where you can acces the database
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync(); 
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
         var tickets = await dbContext.Tickets
             .Where(ticket => ticket.OrderId == orderId)
@@ -51,5 +51,17 @@ public class TicketRepository : ITicketRepository
 
         // This wil actually remove the tickets from the database because it saves the chagnes 
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<IEnumerable<Ticket>> GetTicketsByScreeningIdAsync(int screeningId)
+    {
+        await using var context = await dbContextFactory.CreateDbContextAsync();
+
+        return await context.Tickets
+            .Include(ticket => ticket.Seat)
+            .Include(ticket => ticket.Screening)
+            .Include(ticket => ticket.Order)
+            .Where(ticket => ticket.Screening.Id == screeningId)
+            .ToListAsync();
     }
 }

@@ -44,14 +44,16 @@ else
                     {
                         @foreach (var screening in screenings)
                         {
-                            <div class="card @(screening.Id == websiteService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
-                                <div class="card-body @(screening.StartTime < DateTimeOffset.Now ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
+                            <div
+                                class="card @(screening.Id == websiteService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
+                                <div class="card-body @(screening.StartTime.ToLocalTime() < DateTimeOffset.Now.ToLocalTime() ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
                                      @onclick="() => SetSelectedScreening(screening)">
                                     <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
 
                                     @if (screening.Hall?.Has3DProjector == true)
                                     {
-                                        <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
                                             Zaal @screening.Hall?.HallNumber
                                             <i class="bi bi-badge-3d"></i>
                                         </div>
