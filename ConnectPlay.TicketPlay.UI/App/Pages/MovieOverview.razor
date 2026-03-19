@@ -1,22 +1,30 @@
 ﻿@* this url is the url in the header *@
 @page "/"
-@rendermode InteractiveServer
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
 @layout MainLayout
 
-<h1>Films van vandaag</h1>
+@inherits TranslatableComponent;
+
+@rendermode InteractiveServer
+
+<PageTitle>@T["home.pageTitle"]</PageTitle>
+
+<h1>@T["home.title"]</h1>
 
 @if (isLoading)
 {
-    <p>Films worden geladen!</p>
+    <p>@T["home.loading"]</p>
 }
 else if (!string.IsNullOrWhiteSpace(errorMessage))
 {
-    <p class="text-danger">@errorMessage</p>
+    <p class="text-danger">@T[errorMessage]</p>
 }
 else if (!movies.Any())
 @* Any() checks if there is minimum 1 element*@
 {
-    <p>Er zijn vandaag geen films meer gepland.</p>
+    <p>@T["home.noMovies"]</p>
 }
 else
 {
@@ -51,7 +59,7 @@ else
 
                         @if (hasMoreScreenings)
                         {
-                            <span class="badge bg-secondary">Zie meer</span>
+                            <span class="badge bg-secondary">@T["home.seeMore"]</span>
                         }
                     </div>
                 </div>

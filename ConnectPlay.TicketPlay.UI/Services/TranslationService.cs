@@ -4,7 +4,7 @@
 // configuration is used to access the translation values from the appsettings.json file
 public class TranslationService(IConfiguration configuration) 
 {
-    private string currentLanguage = "nl";
+    private string currentLanguage = "en";
 
     public event Action? OnLanguageChanged; // the event sends a signal to the UI to update the text with the new language
     public string CurrentLanguage => currentLanguage;
@@ -14,7 +14,7 @@ public class TranslationService(IConfiguration configuration)
     {
         if (language != "en" && language != "nl")
         {
-            language = "nl"; // fallback to default language
+            language = "en"; // fallback to default language
         }
 
         currentLanguage = language;

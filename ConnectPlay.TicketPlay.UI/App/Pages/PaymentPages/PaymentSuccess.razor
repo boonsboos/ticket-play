@@ -1,23 +1,30 @@
 ﻿@page "/payment/success"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
 @layout MainLayout
+
+@inherits TranslatableComponent;
+
+<PageTitle>@T["paymentSuccess.pageTitle"]</PageTitle>
 
 <div class="d-flex justify-content-center align-items-center vh-100 flex-column">
     <div class="text-center">
 
-        <h1>Veel plezier!</h1>
+        <h1>@T["paymentSuccess.title"]!</h1>
 
         <h2>@websiteService.Movie?.Title</h2>
 
-        <p>Vergeet niet je kaartjes mee te nemen.</p>
+        <p>@T["paymentSuccess.rememberTickets"]</p>
 
-        <img class="tickets" src="@websiteService.Movie?.PosterUrl" alt="Film poster" />
+        <img class="tickets" src="@websiteService.Movie?.PosterUrl" alt=@T["paymentSuccess.posterAlt"] />
     </div>
 
     @if (websiteService.CurrentOrderId is not null)
     {
         <div class="row">
             <a class="btn btn-primary mt-3" href="@GetTicketFileUrl()" target="_blank" rel="noopener noreferrer">
-                <i class="bi bi-printer"></i>&nbsp;Print tickets
+                <i class="bi bi-printer"></i>&nbsp;@T["paymentSuccess.printTickets"]
             </a>
         </div>
     }

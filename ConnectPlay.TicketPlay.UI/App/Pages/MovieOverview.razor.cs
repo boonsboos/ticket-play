@@ -1,11 +1,12 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
-public partial class MovieOverview : ComponentBase
+public partial class MovieOverview : TranslatableComponent
 {
     private readonly IMovieRepository _movieRepository; // dependency injection of the movieRepo to get the movies of today from the API
     private ILogger<MovieOverview> _logger;
@@ -30,7 +31,7 @@ public partial class MovieOverview : ComponentBase
         }
         catch (ApiException e)
         {
-            errorMessage = "Het laden van films is niet mogelijk op dit moment.";
+            errorMessage = "home.errorLoadingMovies";
             _logger.LogError(e, "Error when loading the movies of today from the API.");
         }
         finally // This will always run

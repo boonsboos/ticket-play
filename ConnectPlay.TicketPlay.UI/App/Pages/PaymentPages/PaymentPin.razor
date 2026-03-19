@@ -1,5 +1,12 @@
 ﻿@page "/payment/pin"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
 @layout MainLayout
+
+@inherits TranslatableComponent;
+
+<PageTitle>@T["paymentPin.pageTitle"]</PageTitle>
 
 <div class="d-flex justify-content-center align-items-center">
     <div class="text-center">
@@ -22,9 +29,9 @@
                 <button class="btn btn-secondary">*</button>
                 <button class="btn btn-secondary" @onclick="() => AddPinNumber(0)">0</button>
                 <button class="btn btn-secondary">#</button>
-                <button class="btn btn-danger" @onclick="CancelPayment">Annuleren</button>  
-                <button class="btn btn-warning" @onclick="RemoveLastNumber">Correctie</button>
-                <button class="btn btn-success" @onclick="PaymentSuccessful">OK</button>
+                <button class="btn btn-danger" @onclick="CancelPayment">@T["paymentPin.cancel"]</button>
+                <button class="btn btn-warning" @onclick="RemoveLastNumber">@T["paymentPin.correct"]</button>
+                <button class="btn btn-success" @onclick="PaymentSuccessful">@T["paymentPin.oke"]</button>
             </div>
         </div>
     </div>
