@@ -1,5 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
+using ConnectPlay.TicketPlay.Contracts.Overview;
+using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
@@ -10,23 +12,24 @@ public partial class MovieOverview : ComponentBase
     private readonly IMovieRepository _movieRepository; // dependency injection of the movieRepo to get the movies of today from the API
     private ILogger<MovieOverview> _logger;
     private NavigationManager _navigationManager;
-
-    private IEnumerable<OverviewMovie> movies = [];
+    private readonly IWebsiteApi websiteApi;
+    private IEnumerable<OverviewMovieDay> Overview = [];
     private bool isLoading = true; // the page starts in a loading state
     private string? errorMessage;
 
-    public MovieOverview(IMovieRepository movieRepository, ILogger<MovieOverview> logger, NavigationManager navigationManager)
+    public MovieOverview(IMovieRepository movieRepository, ILogger<MovieOverview> logger, NavigationManager navigationManager, IWebsiteApi websiteApi)
     {
         _movieRepository = movieRepository;
         _logger = logger;
         _navigationManager = navigationManager;
+        this.websiteApi = websiteApi;
     }
 
     protected override async Task OnInitializedAsync() // Starts when the page is initialized
     {
         try
         {
-           // TODO: load data
+           Overview = await websiteApi.GetWeekOverviewAsync(); // Get the overview of the week from the API
         }
         catch (ApiException e)
         {

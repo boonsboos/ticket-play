@@ -1,6 +1,6 @@
 ﻿namespace ConnectPlay.TicketPlay.Contracts.Movie;
 
-public record OverviewMovie
+public record OverviewMovie()
 {
     public string Id { get; init; } = string.Empty;
     public string Title { get; init; } = string.Empty;
@@ -8,7 +8,7 @@ public record OverviewMovie
     public string PosterUrl { get; init; } = string.Empty;
     public IEnumerable<DateTimeOffset> ScreeningTimes { get; init; } = [];
 
-    public OverviewMovie(Models.Movie movie, IEnumerable<Models.Screening> screenings)
+    public OverviewMovie(Models.Movie movie, IEnumerable<Models.Screening> screenings) : this()
     {
         Id = movie.Id.ToString();
         Title = movie.Title;
