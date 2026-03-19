@@ -11,8 +11,8 @@ public record NewsletterSubscriber
     [Required]
     [StringLength(255)]
     [EmailAddress]
-    public required string email { get; set; }
+    public required string Email { get; set; }
     [Required]
     [StringLength(255)]
-    public required string name { get; set; }
+    public required string Name { get; set; }
 }
