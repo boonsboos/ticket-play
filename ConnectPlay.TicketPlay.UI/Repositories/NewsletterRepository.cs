@@ -10,7 +10,7 @@ public class NewsletterRepository : INewsletterRepository
 
     public NewsletterRepository(INewsletterApi newsletterApi)
     {
-        _newsletterApi = newsletterApi; ;
+        _newsletterApi = newsletterApi;
     }
 
     public async Task CreateSubscriber(NewsletterSubscriber subscriber)
