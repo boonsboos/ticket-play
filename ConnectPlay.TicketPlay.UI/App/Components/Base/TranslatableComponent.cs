@@ -16,9 +16,12 @@ public class TranslatableComponent : ComponentBase, IDisposable
         T.OnLanguageChanged += UpdateUiOnLanguageChange; // listen for language changes
     }
 
-    private void UpdateUiOnLanguageChange()
+    // virtual is used to allow classes override this method
+    protected virtual void UpdateUiOnLanguageChange()
     {
-        InvokeAsync(StateHasChanged); // tells the UI to re render when the language is changed
+        // with InvokeAsync we ensure the right Blazor UI-thread is executed
+        // tells the UI to re render when the language is changed
+        InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()

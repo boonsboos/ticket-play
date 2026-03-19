@@ -26,7 +26,7 @@ else
                 </div>
                 <div class="col-md-8 p-4 d-flex flex-column">
                     <h2>@movie.Title</h2>
-                    <p class="text-muted">@movie.Genre • @movie.Duration min • @movie.ReleaseDate • @movie.MinimumAge+</p>
+                    <p class="text-muted">@T[$"genre.{movie.Genre}"] • @movie.Duration min • @movie.ReleaseDate • @movie.MinimumAge+</p>
                     @if (!string.IsNullOrWhiteSpace(movie.Tags))
                     {
                         <div class="mb-3">

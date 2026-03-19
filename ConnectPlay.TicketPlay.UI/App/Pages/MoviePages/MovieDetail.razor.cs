@@ -55,6 +55,15 @@ public partial class MovieDetail : TranslatableComponent
         }
     }
 
+    protected override void UpdateUiOnLanguageChange()
+    {
+        InvokeAsync(async () =>
+        {
+            movie = await movieRepository.GetMovieByIdAsync(Id, T.CurrentLanguage);
+            StateHasChanged();
+        });
+    }
+
     public void SetSelectedScreening(Screening screening)
     {
         // Toggle selection if the same screening is clicked again
