@@ -27,4 +27,13 @@ public class SeatRepository : ISeatRepository
             .OrderBy(seat => seat.SeatNumber)
             .ToListAsync();
     }
+
+    public async Task<Seat?> GetSeatByRowAndNumberAsync(int hallId, int row, int seatNumber, bool isForWheelchair)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Seats
+            .Where(seat => seat.Hall.Id == hallId && seat.Row == row && seat.SeatNumber == seatNumber && seat.IsForWheelchair == isForWheelchair)
+            .FirstOrDefaultAsync();
+    }
 }

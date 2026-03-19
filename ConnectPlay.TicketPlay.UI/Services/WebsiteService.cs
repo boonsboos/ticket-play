@@ -109,20 +109,35 @@ public class WebsiteService
         }
     }
 
-    public void ApplySeatSelection(List<Seat> SelectedSeats)
+    /// <summary>
+    /// Applies the selected seats to the current order. This will update the seat information for each ticket in the order based on the provided list of selected seats.
+    /// <para>It will also make an API call to update the order with the new seat selections.</para>
+    /// </summary>
+    /// <param name="SelectedSeats"></param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<bool> ApplySeatSelection(List<Seat> SelectedSeats)
     {
-        if (currentOrder is null) return;
+        if (currentOrder is null) return false;
         if (SelectedSeats.Count != currentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
 
-        var tickets = currentOrder.Tickets.ToList();
+        // Call the API to update the order with the new seat selections
+        var updateResponse = await kioskApi.UpdateOrderSeatsAsync(currentOrder.Id, SelectedSeats);
 
-        for (int i = 0; i < tickets.Count; i++)
+        if (!updateResponse.IsSuccessStatusCode)
         {
-            if (i < SelectedSeats.Count)
-            {
-                tickets[i].Seat = SelectedSeats[i];
-            }
+            logger.LogError("Failed to update seats for order {OrderId}: {StatusCode} - {Reason}", currentOrder.Id, updateResponse.StatusCode, updateResponse.Error);
+            return false;
         }
+
+        if (updateResponse.Content is null)
+        {
+            logger.LogError("Failed to update seats for order {OrderId}: API returned empty content", currentOrder.Id);
+            return false;
+        }
+
+        // Update the current order with the response from the API, which should include the updated seat information
+        currentOrder = updateResponse.Content;
+        return true;
     }
 
 

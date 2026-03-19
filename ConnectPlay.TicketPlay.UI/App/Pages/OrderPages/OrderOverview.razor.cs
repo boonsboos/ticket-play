@@ -100,9 +100,14 @@ public partial class OrderOverview : ComponentBase
         StateHasChanged(); // force UI to update
     }
 
-    private void HandleUpdateSeats()
+    private async Task HandleUpdateSeats()
     {
-        websiteService.ApplySeatSelection(SelectedSeats);
+        var isUpdated = await websiteService.ApplySeatSelection(SelectedSeats);
+        if (!isUpdated) return;
+
+        Seats = websiteService.Seats.ToList();
+        SelectedSeats.Clear();
+        SelectedSeats.AddRange(Seats);
     }
 
     private void ResetSelectedSeats()

@@ -123,4 +123,25 @@ public class KioskController : ControllerBase
             return BadRequest(argException.Message);
         }
     }
+
+    [HttpPut]
+    [Route("{orderId}/update-seats")]
+    public async Task<IActionResult> UpdateOrderSeatsAsync([FromRoute] int orderId, [FromBody] IEnumerable<Seat> seats)
+    {
+        try
+        {
+            var updatedOrder = await kioskOrderService.UpdateSeatsAsync(orderId, seats);
+            return Ok(updatedOrder);
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant update seats for order {OrderId}", orderId);
+            return BadRequest(argException.Message);
+        }
+        catch (InvalidOperationException invalidOpException)
+        {
+            logger.LogError(invalidOpException, "Unable to update seats for order {OrderId}", orderId);
+            return BadRequest(invalidOpException.Message);
+        }
+    }
 }

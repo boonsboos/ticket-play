@@ -23,7 +23,6 @@ public class HallOrderService(IHallRepository hallRepository, ILogger<HallOrderS
         {
             Layout = layout,
             WeelchairSeat = new(hall.Seats.FirstOrDefault(s => s.IsForWheelchair)?.Row ?? 0, hall.Seats.FirstOrDefault(s => s.IsForWheelchair)?.SeatNumber ?? 0),
-            TotalSeats = hall.Capacity
         };
 
         var json = System.Text.Json.JsonSerializer.Serialize(hallLayout);

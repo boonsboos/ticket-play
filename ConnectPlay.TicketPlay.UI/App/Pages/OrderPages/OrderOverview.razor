@@ -101,14 +101,10 @@
                                     {
                                         var row = i;
                                         var seatNumber = j;
-                                        var isWheelchairSeat = HallLayout.WeelchairSeat.Row == row && HallLayout.WeelchairSeat.Seat
-                            == seatNumber;
-                                        var takenSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
-                            s.IsTaken);
-                                        var reservedSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
-                            s.IsReserved);
-                                        var selectedSeat = SelectedSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
-                            s.IsForWheelchair == isWheelchairSeat);
+                                        var isWheelchairSeat = HallLayout.WeelchairSeat.Row == row && HallLayout.WeelchairSeat.Seat == seatNumber;
+                                        var takenSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsTaken);
+                                        var reservedSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsReserved);
+                                        var selectedSeat = SelectedSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsForWheelchair == isWheelchairSeat);
 
                                         <div class="seat@(selectedSeat ? " selected" : takenSeat ? " taken" : reservedSeat ? " reserved" : "")"
                                              style="@(takenSeat ? "pointer-events: none;" : "")"
@@ -160,7 +156,8 @@
                                 var selectedSeatSummary = string.Join(", ", SelectedSeats
                                     .OrderBy(s => s.Row)
                                     .ThenBy(s => s.SeatNumber)
-                                    .Select(s => $"Rij {s.Row} stoel {s.SeatNumber}{(s.IsForWheelchair ? " (rolstoel)" : string.Empty)}"));
+                                    .Select(s => $"Rij {s.Row} stoel {s.SeatNumber}{(s.IsForWheelchair ? " (rolstoel)" :
+                            string.Empty)}"));
                                 <p class="small text-secondary mb-0 mt-2">@selectedSeatSummary</p>
                             }
                             else
@@ -178,6 +175,7 @@
                         Annuleren
                     </button>
                     <button type="button" class="btn btn-primary px-4" @onclick="HandleUpdateSeats"
+                            disabled="@(!SelectedSeats.Any() || SelectedSeats.Count != Tickets.Count())"
                             data-bs-dismiss="modal">
                         Opslaan
                     </button>

@@ -10,4 +10,5 @@ public interface IKioskOrderService
     public Task PayAsync(int orderId);
     public Task<Stream> PrintAsync(int orderId);
     public Task<IEnumerable<SeatResponse>> GetTakenSeatsAsync(int screeningId, int orderId);
+    public Task<Order> UpdateSeatsAsync(int orderId, IEnumerable<Seat> seats);
 }

@@ -1,41 +1,21 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
-using ConnectPlay.TicketPlay.API.Migrations;
-using ConnectPlay.TicketPlay.Contracts.Kiosk;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
 using System.Data;
-using System.Runtime.CompilerServices;
 
 namespace ConnectPlay.TicketPlay.API.Services;
 
-public class KioskOrderService : IKioskOrderService
-{
-    private readonly IScreeningRepository screeningRepository;
-    private readonly ITicketRepository ticketRepository;
-    private readonly ISeatAssignmentService seatAssignmentService;
-    private readonly IOrderRepository orderRepository;
-    private readonly IPriceCalculationService priceCalculationService;
-    private readonly ITicketPrintingService ticketPrintingService;
-    private readonly ILogger<KioskOrderService> logger;
-
-    public KioskOrderService(
+public class KioskOrderService(
         IScreeningRepository screeningRepository,
         ITicketRepository ticketRepository,
         ISeatAssignmentService seatAssignmentService,
-        IOrderRepository orderRepository,
         IPriceCalculationService priceCalculationService,
         ITicketPrintingService ticketPrintingService,
-        ILogger<KioskOrderService> logger)
-    {
-        this.screeningRepository = screeningRepository;
-        this.ticketRepository = ticketRepository;
-        this.seatAssignmentService = seatAssignmentService;
-        this.orderRepository = orderRepository;
-        this.priceCalculationService = priceCalculationService;
-        this.ticketPrintingService = ticketPrintingService;
-        this.logger = logger;
-    }
+        IOrderRepository orderRepository,
+        ISeatRepository seatRepository,
+        ILogger<KioskOrderService> logger) : IKioskOrderService
+{
 
     public async Task<Order> ReserveAsync(int screeningId, IEnumerable<TicketType> reservation)
     {
@@ -165,5 +145,41 @@ public class KioskOrderService : IKioskOrderService
             .ToList();
 
         return takenSeats;
+    }
+
+    public async Task<Order> UpdateSeatsAsync(int orderId, IEnumerable<Seat> seats)
+    {
+        var order = await orderRepository.GetOrderByIdAsync(orderId)
+            ?? throw new ArgumentException("Order does not exist");
+
+        if (order.Status != OrderStatus.Pending)
+        {
+            throw new InvalidOperationException("Only orders with status Pending can be updated");
+        }
+
+        var tickets = order.Tickets.ToList();
+
+        if (seats.Count() != tickets.Count)
+        {
+            throw new InvalidOperationException("The number of seats must match the number of tickets in the order");
+        }
+
+        // Get the screening to access hall information
+        var screening = await screeningRepository.GetScreeningAsync(tickets[0].ScreeningId)
+            ?? throw new InvalidOperationException("Screening not found for order tickets");
+
+        for (int i = 0; i < tickets.Count; i++)
+        {
+            var seat = await seatRepository.GetSeatByRowAndNumberAsync(screening.Hall.Id, seats.ElementAt(i).Row, seats.ElementAt(i).SeatNumber, seats.ElementAt(i).IsForWheelchair)
+                ?? throw new InvalidOperationException($"Seat not found for row {seats.ElementAt(i).Row} and seat number {seats.ElementAt(i).SeatNumber}");
+
+            tickets[i].SeatId = seat.Id;
+            tickets[i].Seat = seat;
+        }
+        logger.LogInformation("Updating seats for order {OrderId} with [{seatsCount}]", orderId, tickets.Select(t => $"row {t.Seat.Row} seat {t.Seat.SeatNumber} (seatId: {t.SeatId})").Aggregate((a, b) => a + ", " + b));
+
+        await ticketRepository.UpdateTicketsAsync(tickets);
+
+        return await orderRepository.GetOrderByIdAsync(orderId) ?? throw new InvalidOperationException("Failed to retrieve order after updating seats");
     }
 }

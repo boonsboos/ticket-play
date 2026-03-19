@@ -8,10 +8,12 @@ namespace ConnectPlay.TicketPlay.API.Repositories;
 public class TicketRepository : ITicketRepository
 {
     private readonly IDbContextFactory<TicketPlayContext> dbContextFactory;
+    private readonly ILogger<TicketRepository> logger;
 
-    public TicketRepository(IDbContextFactory<TicketPlayContext> dbContextFactory)
+    public TicketRepository(IDbContextFactory<TicketPlayContext> dbContextFactory, ILogger<TicketRepository> logger)
     {
         this.dbContextFactory = dbContextFactory;
+        this.logger = logger;
     }
 
     public async Task<IEnumerable<Ticket>> GetTicketsAsync(Screening screening)
@@ -63,5 +65,14 @@ public class TicketRepository : ITicketRepository
             .Include(ticket => ticket.Order)
             .Where(ticket => ticket.Screening.Id == screeningId)
             .ToListAsync();
+    }
+
+    public async Task UpdateTicketsAsync(IEnumerable<Ticket> tickets)
+    {
+        await using var context = await dbContextFactory.CreateDbContextAsync();
+
+        context.Tickets.UpdateRange(tickets);
+
+        await context.SaveChangesAsync();
     }
 }
