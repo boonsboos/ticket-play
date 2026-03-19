@@ -2,9 +2,9 @@
 using ConnectPlay.TicketPlay.UI.Api;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.App.Components;
+namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
-public partial class WebsiteFooter(
+public partial class Contact(
     INewsletterApi newsletterApi)
 {
     private readonly INewsletterApi _newsletterApi = newsletterApi;

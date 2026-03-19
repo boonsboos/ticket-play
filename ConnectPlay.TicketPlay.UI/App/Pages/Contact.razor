@@ -1,0 +1,44 @@
+﻿@* this url is the url in the header *@
+@page "/contact"
+@rendermode InteractiveServer
+@layout MainLayout
+
+<h1>Contact</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card border-1">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">Meld je aan voor de nieuwsbrief</h5>
+                    <p class="text-muted small mb-3">
+                        Vul je naam en e-mailadres in om updates te ontvangen.
+                    </p>
+
+                    <EditForm Model="form" OnValidSubmit="HandleSubmit" FormName="CreateSubscriberForm">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-12 col-md-6">
+                                <InputText class="form-control form-control-sm"
+                                           @bind-Value="form.Name"
+                                           placeholder="Naam" />
+                            </div>
+
+                            <div class="col-12 col-md-6">
+                                <InputText class="form-control form-control-sm"
+                                           @bind-Value="form.Email"
+                                           placeholder="E-mail" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-sm" disabled="@isSubmitting">
+                            Aanmelden
+                        </button>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -54,7 +54,8 @@ public class Startup(IConfiguration configuration)
             .AddScoped<IScreeningRepository, ScreeningRepository>()
             .AddScoped<ISeatRepository, SeatRepository>()
             .AddScoped<ITicketRepository, TicketRepository>()
-            .AddScoped<IOrderRepository, OrderRepository>();
+            .AddScoped<IOrderRepository, OrderRepository>()
+            .AddScoped<INewsletterRepository, NewsletterRepository>();
     }
 
     private void ConfigureTicketPlayServices(IServiceCollection services)

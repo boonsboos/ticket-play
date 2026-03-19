@@ -7,11 +7,16 @@ namespace ConnectPlay.TicketPlay.API.Repositories;
 
 public class NewsletterRepository : INewsletterRepository
 {
-    private readonly IDbContextFactory<TicketPlayContext> _dbContextFactory;
+    private readonly IDbContextFactory<TicketPlayContext> dbContextFactory;
+
+    public NewsletterRepository(IDbContextFactory<TicketPlayContext> dbContextFactory)
+    {
+        this.dbContextFactory = dbContextFactory;
+    }
 
     public async Task CreateSubscriber(NewsletterSubscriber subscriber)
     {
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
         dbContext.NewsletterSubscribers.Add(subscriber);
 
