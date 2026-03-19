@@ -11,6 +11,17 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     [HttpPost]
     public async Task<IActionResult> CreateSubscriberAsync([FromBody] NewsletterSubscriber subscriber)
     {
+        if (subscriber is null)
+        {
+            ModelState.AddModelError(string.Empty, "Subscriber payload is required.");
+            return ValidationProblem(ModelState);
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return ValidationProblem(ModelState);
+        }
+
         await newsletterRepository.CreateSubscriber(subscriber);
 
         return StatusCode(StatusCodes.Status201Created); // "Subscriber was created", no payload given.
