@@ -1,6 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
 using Refit;
+using System.ComponentModel.DataAnnotations;
 
 namespace ConnectPlay.TicketPlay.UI.App.Components;
 
@@ -21,7 +22,7 @@ public partial class WebsiteFooter(
         isSubmitting = true;
         try
         {
-            if (form.Email == null || form.Name == null)
+            if (string.IsNullOrWhiteSpace(form.Email) || string.IsNullOrWhiteSpace(form.Name))
                 throw new InvalidOperationException("Velden mogen niet leeg zijn.");
 
             var subscriber = new NewsletterSubscriber
@@ -67,7 +68,11 @@ public partial class WebsiteFooter(
 
     public sealed class CreateSubscriberFormModel
     {
+        [Required]
+        [EmailAddress]
         public string Email { get; set; } = string.Empty;
+
+        [Required]
         public string Name { get; set; } = string.Empty;
     }
 }
