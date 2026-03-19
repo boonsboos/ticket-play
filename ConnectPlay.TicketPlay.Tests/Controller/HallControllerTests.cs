@@ -1,4 +1,5 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.API.Controllers;
 using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Models;
@@ -16,12 +17,13 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(1)
             .Returns(true);
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -44,12 +46,13 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
             .Returns(false);
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -71,12 +74,13 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
             .Returns(false);
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -98,12 +102,13 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
             .Returns(false);
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -126,12 +131,13 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
             .Returns(false);
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -154,6 +160,7 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
@@ -163,7 +170,7 @@ public class HallControllerTests
             .CreateHallAsync(Arg.Any<Hall>())
             .Returns((Hall?)null);
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -185,6 +192,7 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
@@ -194,7 +202,7 @@ public class HallControllerTests
             .CreateHallAsync(Arg.Any<Hall>())
             .Returns(callInfo => callInfo.Arg<Hall>());
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {
@@ -223,6 +231,7 @@ public class HallControllerTests
     {
         // Arrange
         var hallRepository = Substitute.For<IHallRepository>();
+        var hallService = Substitute.For<IHallService>();
 
         hallRepository
             .HallNumberExistAsync(Arg.Any<int>())
@@ -232,7 +241,7 @@ public class HallControllerTests
             .CreateHallAsync(Arg.Any<Hall>())
             .Returns(callInfo => callInfo.Arg<Hall>());
 
-        var controller = new HallController(hallRepository);
+        var controller = new HallController(hallRepository, hallService);
 
         var request = new CreateHallRequest
         {

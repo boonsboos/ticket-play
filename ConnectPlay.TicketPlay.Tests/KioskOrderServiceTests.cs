@@ -69,14 +69,15 @@ public class KioskOrderServiceTests
         var screeningRepository = Substitute.For<IScreeningRepository>();
         var ticketRepository = Substitute.For<ITicketRepository>();
         var seatAssignmentService = Substitute.For<ISeatAssignmentService>();
-        var orderRepository = Substitute.For<IOrderRepository>();
         var priceCalculation = Substitute.For<IPriceCalculationService>();
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
+        var orderRepository = Substitute.For<IOrderRepository>();
+        var seatRepository = Substitute.For<ISeatRepository>();
         var logger = Substitute.For<ILogger<KioskOrderService>>();
 
         screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns(null as Screening);
 
-        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, orderRepository, priceCalculation, ticketPrintingService, logger);
+        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
