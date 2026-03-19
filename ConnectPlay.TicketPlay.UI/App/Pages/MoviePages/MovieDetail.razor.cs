@@ -43,7 +43,7 @@ public partial class MovieDetail : TranslatableComponent
 
         try
         {
-            movie = await movieRepository.GetMovieByIdAsync(Id);
+            movie = await movieRepository.GetMovieByIdAsync(Id, T.CurrentLanguage);
 
             screenings = await screeningRepository.GetTodayScreeningsFromMovieAsync(Id);
         }

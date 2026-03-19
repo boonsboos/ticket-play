@@ -40,23 +40,24 @@ public class MovieRepository : IMovieRepository
     }
 
 
-    public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id)
+    public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id, string languageCode)
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
+
         return await db.Movies
-                       .Where(m => m.Id == id)
-                       .Select(m => new MovieDetailResponse
-                       {
-                           Title = m.Title,
-                           Description = m.Description,
-                           Genre = m.Genre,
-                           PosterUrl = m.PosterUrl.ToString(),
-                           Duration = m.Duration,
-                           ReleaseDate = m.ReleaseDate,
-                           MinimumAge = m.MinimumAge,
-                           Tags = m.Tags
-                       })
-                       .FirstOrDefaultAsync();
+            .Where(m => m.Id == id)
+            .Select(m => new MovieDetailResponse
+            {
+                Title = m.Title,
+                Description = (languageCode == "en") ? m.DescriptionEn : m.Description, // Choose the description based on the requested language
+                Genre = m.Genre,
+                PosterUrl = m.PosterUrl.ToString(),
+                Duration = m.Duration,
+                ReleaseDate = m.ReleaseDate,
+                MinimumAge = m.MinimumAge,
+                Tags = m.Tags
+            })
+            .FirstOrDefaultAsync();
     }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
@@ -72,6 +73,7 @@ public class MovieRepository : IMovieRepository
         {
             Title = dto.Title,
             Description = dto.Description,
+            DescriptionEn = dto.Description, // For now we just use the same description for English and Dutch, but in the future we might want to change this.
             Duration = dto.Duration,
             ReleaseDate = dto.ReleaseDate,
             PosterUrl = dto.PosterUrl,

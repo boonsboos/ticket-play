@@ -26,20 +26,7 @@ public class MovieRepository : IMovieRepository
 
     public Task<IEnumerable<Movie>> GetNewMoviesAsync()
     {
-        return Task.FromResult<IEnumerable<Movie>>([
-            new Movie {
-                Id = 1,
-                Title = "Glorbo's Adventures 2",
-                Description = "The thrilling sequel to Glorbo's first adventure.",
-                ReleaseDate = new DateOnly(2024, 6, 1),
-                MinimumAge = 8,
-                Duration = 120,
-                Language = "English",
-                Genre = "Adventure",
-                PosterUrl = new Uri("https://example.com/posters/glorbo2.jpg"),
-                Tags = "Family,Adventure,Sequel"
-            }
-        ]);
+        return Task.FromResult<IEnumerable<Movie>>([]);
     }
 
     public async Task<IEnumerable<OverviewMovie>> GetTodaysMoviesAsync()
@@ -47,11 +34,11 @@ public class MovieRepository : IMovieRepository
         return await _movieApi.GetTodayMoviesAsync();
     }
 
-    public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id)
+    public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id, string languageCode)
     {
         try
         {
-            return await _movieApi.GetMovieByIdAsync(id);
+            return await _movieApi.GetMovieByIdAsync(id, languageCode);
         }
         catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {
