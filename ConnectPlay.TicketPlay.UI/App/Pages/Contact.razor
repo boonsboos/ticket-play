@@ -37,6 +37,19 @@
                             Aanmelden
                         </button>
                     </EditForm>
+
+                    @if (showToast)
+                    {
+                        <div class="toast-container position-fixed top-0 end-0 p-3">
+                            <div class="toast show align-items-center text-white @toastColor border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                                <div class="d-flex">
+                                    <div class="toast-body">
+                                        @toastMessage
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
