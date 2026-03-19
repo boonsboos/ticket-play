@@ -6,9 +6,9 @@ using System.ComponentModel.DataAnnotations;
 namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
 public partial class Contact(
-    INewsletterApi newsletterApi)
+    INewsletterRepository newsletterRepository)
 {
-    private readonly INewsletterApi _newsletterApi = newsletterApi;
+    private readonly INewsletterRepository _newsletterRepository = newsletterRepository;
 
     protected CreateSubscriberFormModel form = new();
     protected bool isSubmitting = false;
@@ -31,7 +31,7 @@ public partial class Contact(
                 name = form.Name,
             };
 
-            await _newsletterApi.CreateSubscriberAsync(subscriber);
+            await _newsletterRepository.CreateSubscriberAsync(subscriber);
 
             ShowSuccess("Succesvol aangemeld!");
             form = new CreateSubscriberFormModel();
