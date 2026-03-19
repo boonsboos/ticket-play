@@ -4,7 +4,7 @@
 @layout MainLayout
 
 <div class="container-fluid">
-    <h1 class="text-center">Films van vandaag</h1>
+    <h1 class="text-center">Deze week te zien</h1>
 
     @if (isLoading)
     {
@@ -17,7 +17,7 @@
     else if (!Overview.Any())
     @* Any() checks if there is minimum 1 element*@
     {
-        <p>Er zijn vandaag geen films meer gepland.</p>
+        <p>Er zijn deze geen films meer gepland.</p>
     }
     else
     {
