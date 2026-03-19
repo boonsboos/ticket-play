@@ -27,8 +27,8 @@ public partial class Contact(
 
             var subscriber = new NewsletterSubscriber
             {
-                email = form.Email,
-                name = form.Name,
+                Email = form.Email,
+                Name = form.Name,
             };
 
             await _newsletterApi.CreateSubscriberAsync(subscriber);
