@@ -8,6 +8,11 @@ public record NewsletterSubscriber
 {
     [Key]
     public int Id { get; set; }
+    [Required]
+    [StringLength(255)]
+    [EmailAddress]
     public required string email { get; set; }
+    [Required]
+    [StringLength(255)]
     public required string name { get; set; }
 }
