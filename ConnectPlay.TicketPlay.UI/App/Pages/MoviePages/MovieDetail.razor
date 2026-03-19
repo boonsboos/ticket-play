@@ -49,14 +49,13 @@ else
                                      @onclick="() => SetSelectedScreening(screening)">
                                     <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
 
-                                        <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
-                                            Zaal @screening.Hall?.HallNumber
-                                            @if (screening.Hall?.Has3DProjector == true)
-                                            {
-                                                <i class="bi bi-badge-3d"></i>
-                                            }
-                                        </div>
- 
+                                    <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                        Zaal @screening.Hall?.HallNumber
+                                        @if (screening.Hall?.Has3DProjector == true)
+                                        {
+                                            <i class="bi bi-badge-3d"></i>
+                                        }
+                                    </div>
                                 </div>
                             </div>
                         }
