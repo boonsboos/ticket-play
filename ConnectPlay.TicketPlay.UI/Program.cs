@@ -71,7 +71,6 @@ public class Program
     {
         services.AddScoped<IMovieRepository, MovieRepository>();
         services.AddScoped<IScreeningRepository, ScreeningRepository>();
-        services.AddScoped<INewsletterRepository, NewsletterRepository>();
         services.AddScoped<KioskService>();
         services.AddScoped<WebsiteService>();
     }
