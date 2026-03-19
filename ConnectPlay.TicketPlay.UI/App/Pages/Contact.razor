@@ -40,13 +40,14 @@
 
                     @if (showToast)
                     {
-                        <div class="toast-container position-fixed top-0 end-0 p-3">
-                            <div class="toast show align-items-center text-white @toastColor border-0" role="alert" aria-live="assertive" aria-atomic="true">
-                                <div class="d-flex">
-                                    <div class="toast-body">
-                                        @toastMessage
-                                    </div>
-                                </div>
+                        <div class="position-fixed bottom-0 end-0 p-3">
+                            <div class="alert @toastColor alert-dismissible fade show mb-0" role="alert">
+                                @toastMessage
+                                <button type="button"
+                                        class="btn-close"
+                                        aria-label="Close"
+                                        @onclick="() => showToast = false">
+                                </button>
                             </div>
                         </div>
                     }

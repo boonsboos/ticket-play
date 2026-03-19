@@ -14,7 +14,7 @@ public class NewsletterRepository : INewsletterRepository
         this.dbContextFactory = dbContextFactory;
     }
 
-    public async Task CreateSubscriber(NewsletterSubscriber subscriber)
+    public async Task CreateSubscriberAsync(NewsletterSubscriber subscriber)
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 

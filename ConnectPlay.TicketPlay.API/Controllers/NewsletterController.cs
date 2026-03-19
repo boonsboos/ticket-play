@@ -22,7 +22,7 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
             return ValidationProblem(ModelState);
         }
 
-        await newsletterRepository.CreateSubscriber(subscriber);
+        await newsletterRepository.CreateSubscriberAsync(subscriber);
 
         return StatusCode(StatusCodes.Status201Created); // "Subscriber was created", no payload given.
     }
