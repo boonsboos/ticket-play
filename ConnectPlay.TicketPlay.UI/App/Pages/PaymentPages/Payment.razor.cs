@@ -53,17 +53,17 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
         /// Uses DataAnnotations for validation
         public class CreditCardModel
         {
-            [Required(ErrorMessage = "Name is required")]
+            [Required(ErrorMessage = "Naam is verplicht")]
             public string Name { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Card number is required")]
-            [CreditCard(ErrorMessage = "Invalid card number")]
+            [Required(ErrorMessage = "Kaartnummer is verplicht")]
+            [CreditCard(ErrorMessage = "Ongeldige kaartnummer")]
             public string Number { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Expiry date is required")]
+            [Required(ErrorMessage = "Vervaldatum is verplicht")]
             public string Expiry { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "CVC is required")]
+            [Required(ErrorMessage = "CVC is verplicht")]
             [RegularExpression(@"^\d{3,4}$", ErrorMessage = "CVC must be 3 or 4 digits")]
             public string CVC { get; set; } = string.Empty;
         }
