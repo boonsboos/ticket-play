@@ -58,7 +58,7 @@ public class TranslationService(IConfiguration configuration)
     /// functionally equivalent to calling the <see cref="GetTranslation"/> method with the same key.
     /// </remarks>
     /// <param name="translationKey">
-    /// The key that identifies the translation to retrieve. Cannot be null or empty.
+    /// The key that identifies the translation to retrieve.
     /// </param>
     /// <returns>
     /// The localized string corresponding to the specified translation key. Returns an empty string if the key is not found.
