@@ -110,7 +110,7 @@
                 </div>
 
                 <button class="btn btn-primary" type="submit" disabled="@isSubmitting">
-                    @(isSubmitting? @T["createMovie.saving"] : @T["createMovie.submit"])
+                    @(isSubmitting ? T["createMovie.saving"] : T["createMovie.submit"])
                 </button>
             </EditForm>
         </div>
