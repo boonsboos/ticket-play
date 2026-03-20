@@ -49,6 +49,27 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
             !string.IsNullOrWhiteSpace(_creditCardModel.Expiry) &&
             !string.IsNullOrWhiteSpace(_creditCardModel.CVC);
 
+        public class FutureOrTodayAttribute : ValidationAttribute
+        {
+            /// Overrides the base IsValid method to provide custom validation.
+            /// This method checks if a date is today or in the future.
+            public override bool IsValid(object? value)
+            {
+                // If the value is null, consider it valid.
+                // [Required] should handle empty/null validation separately.
+                if (value == null) return true;
+                // Attempt to parse the value to a DateTime object.
+                // If parsing succeeds, 'dateValue' will hold the parsed date.
+                if (DateTime.TryParse(value.ToString(), out DateTime dateValue))
+                {
+                    // Check if the parsed date is today or in the future.
+                    // Returns true if the date is today or later, false if it's in the past.
+                    return dateValue.Date >= DateTime.Today;
+                }
+                return false;
+            }
+        }
+
         /// Model representing credit card input fields
         /// Uses DataAnnotations for validation
         public class CreditCardModel
@@ -61,6 +82,7 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
             public string Number { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "Vervaldatum is verplicht")]
+            [FutureOrToday(ErrorMessage = "Vervaldatum mag niet in het verleden liggen")]
             public string Expiry { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "CVC is verplicht")]
