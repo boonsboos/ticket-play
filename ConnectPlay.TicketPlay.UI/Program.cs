@@ -73,7 +73,7 @@ public class Program
         services.AddScoped<IScreeningRepository, ScreeningRepository>();
         services.AddScoped<KioskService>();
         services.AddScoped<WebsiteService>();
-        services.AddSingleton<TranslationService>(); // We use singelton because we want only one instance of the translation service
+        services.AddScoped<TranslationService>();
     }
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)
