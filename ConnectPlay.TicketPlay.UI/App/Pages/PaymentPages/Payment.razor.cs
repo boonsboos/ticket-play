@@ -64,7 +64,7 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
             public string Expiry { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "CVC is verplicht")]
-            [RegularExpression(@"^\d{3,4}$", ErrorMessage = "CVC must be 3 or 4 digits")]
+            [RegularExpression(@"^\d{3,4}$", ErrorMessage = "CVC moet bestaan uit 3 of 4 cijfers")]
             public string CVC { get; set; } = string.Empty;
         }
     }
