@@ -36,13 +36,9 @@ public partial class WebsiteFooter(
             ShowSuccess("Succesvol aangemeld!");
             form = new CreateSubscriberFormModel();
         }
-        catch (ApiException ex)
+        catch (Exception e)
         {
-            ShowError($"API error: {ex.Content}");
-        }
-        catch (Exception ex)
-        {
-            ShowError(ex.Message);
+            ShowError("Er is iets mis gegaan: " + e);
         }
         finally
         {
