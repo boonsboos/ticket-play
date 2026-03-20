@@ -1,0 +1,79 @@
+﻿@page "/payment"
+
+<div class="container mt-5">
+    <h2 class="mb-5 text-center">Betaalpagina</h2>
+
+    <div class="mb-4 text-center">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" id="ideal" name="paymentMethod" value="iDEAL"
+                   @onchange="@(e => OnPaymentMethodChanged(e))" checked="@(_selectedMethod == "iDEAL")">
+                <label class="form-check-label fs-5" for="ideal">iDEAL</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="credit" name="paymentMethod" value="CreditCard"
+                       @onchange="@(e => OnPaymentMethodChanged(e))" checked="@(_selectedMethod == "CreditCard")">
+                    <label class="form-check-label fs-5" for="credit">Credit Card</label>
+                </div>
+            </div>
+            <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
+
+                @if (_selectedMethod == "iDEAL")
+                {
+                    <div class="mb-3">
+                        <label class="form-label fs-6">Selecteer uw bank</label>
+                        <select @bind="_selectedBank" class="form-select form-select-lg">
+                            <option value="">-- Kies uw bank --</option>
+                            <option value="Rabo">Rabo</option>
+                            <option value="ING">ING</option>
+                            <option value="SNS">SNS</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-success btn-lg w-100"
+                            @onclick="PayWithiDEAL"
+                            disabled="@string.IsNullOrEmpty(_selectedBank)">
+                        Betaal met iDEAL
+                    </button>
+                }
+                else if (_selectedMethod == "CreditCard")
+                {
+                    <EditForm Model="_creditCardModel" OnValidSubmit="PayWithCreditCard">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label class="form-label fs-6">Naam op kaart</label>
+                            <InputText @bind-Value="_creditCardModel.Name" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fs-6">Kaartnummer</label>
+                            <InputText @bind-Value="_creditCardModel.Number" class="form-control form-control-lg" />
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label fs-6">Vervaldatum (MM/YY)</label>
+                                <InputText @bind-Value="_creditCardModel.Expiry" class="form-control form-control-lg" />
+                            </div>
+                            <div class="col">
+                                <label class="form-label fs-6">CVC</label>
+                                <InputText @bind-Value="_creditCardModel.CVC" class="form-control form-control-lg" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success btn-lg w-100"
+                                disabled="@(
+                                                    string.IsNullOrWhiteSpace(_creditCardModel.Name) ||
+                                                    string.IsNullOrWhiteSpace(_creditCardModel.Number) ||
+                                                    string.IsNullOrWhiteSpace(_creditCardModel.Expiry) ||
+                                                    string.IsNullOrWhiteSpace(_creditCardModel.CVC)
+                                                                        )">
+                            Betaal met Credit Card
+                        </button>
+                    </EditForm>
+                }
+            </div>
+        </div>
+        <!-- 5500 0000 0000 0004 -->
