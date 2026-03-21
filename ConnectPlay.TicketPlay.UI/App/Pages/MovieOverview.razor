@@ -1,61 +1,37 @@
-﻿@* this url is the url in the header *@
-@page "/"
+﻿@page "/"
+@using ConnectPlay.TicketPlay.UI.App.Components.Overview
 @rendermode InteractiveServer
 @layout MainLayout
 
-<h1>Films van vandaag</h1>
+<div class="container-fluid">
+    <h1 class="text-center">Deze week te zien</h1>
 
-@if (isLoading)
-{
-    <p>Films worden geladen!</p>
-}
-else if (!string.IsNullOrWhiteSpace(errorMessage))
-{
-    <p class="text-danger">@errorMessage</p>
-}
-else if (!movies.Any())
-@* Any() checks if there is minimum 1 element*@
-{
-    <p>Er zijn vandaag geen films meer gepland.</p>
-}
-else
-{
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4 g-4">
-        @foreach (var movie in movies)
+    @if (isLoading)
+    {
+        <p>Films worden geladen!</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p class="text-danger">@errorMessage</p>
+    }
+    else if (!Overview.Any())
+    @* Any() checks if there is minimum 1 element*@
+    {
+        <p>Er zijn deze geen films meer gepland.</p>
+    }
+    else
+    {
+        @foreach (var day in Overview)
         {
-            <div class="col" @onclick="() => ToMovie(movie.Id)">
-                <div class="card h-100 p-3">
-                    <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid mb-2" />
-                    <h5 class="mb-1">@movie.Title</h5>
-                    <p class="text-muted mb-2">@movie.Genre</p>
-
-                    <div class="d-flex gap-2 flex-wrap">
-                        @{
-                            // Materialize up to 4 screening times to avoid multiple enumeration
-                            var screeningTimes = movie.ScreeningTimes.Take(4).ToList();
-                            var visibleTimes = screeningTimes.Take(3);
-                            var hasMoreScreenings = screeningTimes.Count > 3;
-                        }
-                        @foreach (var startTime in visibleTimes)
-                        {
-                            @if (startTime < DateTimeOffset.Now)
-                            {
-                                <span class="badge bg-secondary">@startTime.ToLocalTime().ToString("HH:mm")</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-primary">@startTime.ToLocalTime().ToString("HH:mm")</span>
-                            }
-                            
-                        }
-
-                        @if (hasMoreScreenings)
-                        {
-                            <span class="badge bg-secondary">Zie meer</span>
-                        }
-                    </div>
+            <div class="my-4">
+                <h2>@day.Day.ToLocalTime().Date.ToString("dd-MM-yyyy")</h2>
+                <div class="row g-4 overflow-x-scroll">
+                    @foreach (var movie in day.Offerings)
+                    {
+                        <OverviewMovieCard CardMovie="@movie" />
+                    }
                 </div>
             </div>
         }
-    </div>
-}
+    }
+</div>

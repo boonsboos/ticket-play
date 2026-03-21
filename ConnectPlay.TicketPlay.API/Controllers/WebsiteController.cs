@@ -41,7 +41,14 @@ public class WebsiteController : ControllerBase
                     Offerings = grouping
                         .GroupBy(day => day.Movie) // all movies on that day
                         .Select(dayScreenings => {
-                            var apiMovie = new OverviewMovie(dayScreenings.Key, dayScreenings);
+                            var apiMovie = new OverviewMovie()
+                            {
+                                Id = dayScreenings.Key.Id.ToString(),
+                                Title = dayScreenings.Key.Title,
+                                Genre = dayScreenings.Key.Genre,
+                                PosterUrl = dayScreenings.Key.PosterUrl.AbsoluteUri,
+                                ScreeningTimes = screenings.Select(screening => screening.StartTime)
+                            };
                             
                             // handle sneak preview screenings
                             if (dayScreenings.Any(screening => screening.SneakPreview))
