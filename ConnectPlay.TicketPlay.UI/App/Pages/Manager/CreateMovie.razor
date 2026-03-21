@@ -98,7 +98,13 @@
 
                     <div class="mb-3 col-md-4">
                         <label class="form-label">@T["createMovie.genre"]</label>
-                        <InputText class="form-control" @bind-Value="model.Genre" />
+                        <InputSelect class="form-control" @bind-Value="model.Genre">
+                            <option value="">@T["createMovie.selectGenre"]</option>
+                            <option value="@Genre.Thriller">@T["genre.thriller"]</option>
+                            <option value="@Genre.Family">@T["genre.family"]</option>
+                            <option value="@Genre.Drama">@T["genre.drama"]</option>
+                            <option value="@Genre.ScienceFiction">@T["genre.science_fiction"]</option>
+                        </InputSelect>
                         <ValidationMessage For="@(() => model.Genre)" />
                     </div>
                 </div>
