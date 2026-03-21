@@ -1,6 +1,8 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
+﻿using ConnectPlay.TicketPlay.Contracts.Overview;
+using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
 using Refit;
 
@@ -8,26 +10,24 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
 public partial class MovieOverview : TranslatableComponent
 {
-    private readonly IMovieRepository _movieRepository; // dependency injection of the movieRepo to get the movies of today from the API
-    private ILogger<MovieOverview> _logger;
-    private NavigationManager _navigationManager;
+    private readonly ILogger<MovieOverview> _logger;
+    private readonly IWebsiteApi websiteApi;
 
-    private IEnumerable<OverviewMovie> movies = [];
+    private IEnumerable<OverviewMovieDay> Overview = [];
     private bool isLoading = true; // the page starts in a loading state
     private string? errorMessage;
 
-    public MovieOverview(IMovieRepository movieRepository, ILogger<MovieOverview> logger, NavigationManager navigationManager)
+    public MovieOverview(ILogger<MovieOverview> logger, IWebsiteApi websiteApi)
     {
-        _movieRepository = movieRepository;
         _logger = logger;
-        _navigationManager = navigationManager;
+        this.websiteApi = websiteApi;
     }
 
     protected override async Task OnInitializedAsync() // Starts when the page is initialized
     {
         try
         {
-           // TODO: load data
+           Overview = await websiteApi.GetWeekOverviewAsync(); // Get the overview of the week from the API
         }
         catch (ApiException e)
         {
@@ -39,6 +39,4 @@ public partial class MovieOverview : TranslatableComponent
             isLoading = false;
         }
     }
-
-    private void ToMovie(string movieId) => _navigationManager.NavigateTo("/movies/" + movieId);
 }
