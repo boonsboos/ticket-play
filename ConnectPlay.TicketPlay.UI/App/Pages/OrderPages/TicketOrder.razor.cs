@@ -40,8 +40,16 @@ public partial class TicketOrder : TranslatableComponent
             // map tickets to the count of each ticket type so it becomes [Regular,Regular,Student,...] instead of [{Type: Regular, Count: 2}, {Type: Student, Count: 1}, ...]
             websiteService.Tickets = [.. this.Tickets.SelectMany(t => Enumerable.Repeat(t.Type, t.Count))];
             await websiteService.PlaceOrder();
+
+            var currentOrderId = websiteService.CurrentOrderId;
+            if (currentOrderId is null || currentOrderId <= 0)
+            {
+                logger.LogError("Failed to place order for screening {ScreeningId}: no valid order id returned.", Screening.Id);
+                return;
+            }
+
             await websiteService.LoadLayout(Screening.Hall.Id);
-            await websiteService.LoadTakenSeats(Screening.Id, websiteService.CurrentOrderId ?? 0);
+            await websiteService.LoadTakenSeats(Screening.Id, currentOrderId.Value);
             navigationManager.NavigateTo("/order/overview");
         }
         catch (Exception ex)
