@@ -117,6 +117,13 @@ public partial class OrderOverview : TranslatableComponent
         SelectedSeats.AddRange(websiteService.Seats);
     }
 
+    protected string FormatPlacement(Seat seat)
+    {
+        var rowWord = T["orderOverview.modal.summary.row"];
+        var seatWord = T["orderOverview.modal.summary.seat"];
+        return $"{rowWord} {seat.Row} {seatWord} {seat.SeatNumber}{(seat.IsForWheelchair ? $" ({T["orderOverview.modal.summary.wheelchair"]})" : string.Empty)}";
+    }
+
     private float CalculateTotal()
     {
         var total = 0f;
