@@ -39,7 +39,14 @@ public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
                 PosterUrl = posterUri,
                 Language = model.Language!,
                 MinimumAge = (int)model.MinimumAge!.Value,
-                Genre = model.Genre!,
+                Genre = model.Genre switch
+                {
+                    Models.Genre.Thriller => "thriller",
+                    Models.Genre.Family => "family",
+                    Models.Genre.Drama => "drama",
+                    Models.Genre.ScienceFiction => "science_fiction",
+                    _ => throw new InvalidOperationException("Invalid genre") // this is the default case for .net
+                },
                 Tags = tags
             };
 
@@ -90,8 +97,11 @@ public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
         [Range(0, 18)]
         public MinimumAgeRating? MinimumAge { get; set; }
 
-        [Required, StringLength(50)]
-        public string? Genre { get; set; }
+        /// <summary>
+        ///  now Genre isent a string but an enum so we can use a dropdown with no need to validate the input
+        /// </summary>
+        [Required]
+        public Genre? Genre { get; set; }
 
         [StringLength(500)]
         public string? TagsCsv { get; set; }
