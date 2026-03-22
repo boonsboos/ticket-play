@@ -4,6 +4,7 @@ using ConnectPlay.TicketPlay.API.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectPlay.TicketPlay.API.Migrations
 {
     [DbContext(typeof(TicketPlayContext))]
-    partial class TicketPlayContextModelSnapshot : ModelSnapshot
+    [Migration("20260319173258_EnglishDescription")]
+    partial class EnglishDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,29 +104,6 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                         .IsUnique();
 
                     b.ToTable("movies");
-                });
-
-            modelBuilder.Entity("ConnectPlay.TicketPlay.Models.NewsletterSubscriber", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("newsletter_subscribers");
                 });
 
             modelBuilder.Entity("ConnectPlay.TicketPlay.Models.Order", b =>

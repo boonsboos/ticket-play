@@ -1,21 +1,27 @@
 @page "/manager"
 
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
+<PageTitle>@T["managerDashboard.pageTitle"]</PageTitle>
+
 <div class="container mt-5">
-    <h2 class="mb-4">Manager Dashboard</h2>
+    <h2 class="mb-4">@T["managerDashboard.title"]</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div class="col">
             <a class="btn btn-primary w-100 py-4" href="/manager/create-movie">
-                Create Movie
+                @T["managerDashboard.createMovie"]
             </a>
         </div>
         <div class="col">
             <a class="btn btn-success w-100 py-4" href="/manager/create-screening">
-                Create Screening
+                @T["managerDashboard.createScreening"]
             </a>
         </div>
         <div class="col">
             <a class="btn btn-warning w-100 py-4" href="/manager/create-hall">
-                Create Hall
+                @T["managerDashboard.createHall"]
             </a>
         </div>
     </div>

@@ -1,10 +1,17 @@
 @page "/order/tickets"
+
 @using ConnectPlay.TicketPlay.Models
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
 @rendermode InteractiveServer
+
+<PageTitle>@T["orderTickets.pageTitle"]</PageTitle>
 
 <div class="container mt-4 col-6 offset-3 d-flex flex-column justify-content-center align-items-center">
 
-    <h2 class="text-center">Kies uw kaartjes</h2>
+    <h2 class="text-center">@T["orderTickets.title"]</h2>
 
     <div class="d-flex flex-column gap-3 mt-4 w-100">
         @foreach (var ticketType in Enum.GetValues<TicketType>())
@@ -14,10 +21,10 @@
                     <h4 class="fw-semibold text-body mb-0">
                         @(ticketType switch
                         {
-                            TicketType.Regular => "Volwassenen",
-                            TicketType.Child => "Kinderen",
-                            TicketType.Student => "Studenten",
-                            TicketType.Senior => "65+",
+                            TicketType.Regular => @T["orderTickets.regular"],
+                            TicketType.Child => @T["orderTickets.child"],
+                            TicketType.Student => @T["orderTickets.regular"],
+                            TicketType.Senior => @T["orderTickets.senior"],
                             _ => ticketType.ToString()
                         })
                     </h4>
@@ -41,28 +48,28 @@
     @* little screening overview *@
     <div class="border border-secondary-subtle rounded p-3 mt-5 w-25">
         <div class="d-flex justify-content-between align-items-center">
-            <p class="fw-semibold mb-0">Film:</p>
+            <p class="fw-semibold mb-0">@T["orderTickets.movie"]</p>
             <p class="text-muted mb-0">@Screening.Movie.Title</p>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-            <p class="fw-semibold mb-0">Zaal:</p>
+            <p class="fw-semibold mb-0">@T["orderTickets.hall"]</p>
             <p class="text-muted mb-0">@Screening.Hall.HallNumber</p>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-            <p class="fw-semibold mb-0">Tijd:</p>
+            <p class="fw-semibold mb-0">@T["orderTickets.time"]</p>
             <p class="text-muted mb-0">@Screening.StartTime.ToLocalTime().ToString("HH:mm")</p>
         </div>
         @if (Screening.Hall.Has3DProjector)
         {
             <div class="d-flex justify-content-between align-items-center">
                 <p class="fw-semibold mb-0">3D:</p>
-                <p class="text-muted mb-0">Ja</p>
+                <p class="text-muted mb-0">@T["orderTickets.yes"]</p>
             </div>
         }
     </div>
 
     <div class="container d-flex justify-content-between m-3">
-        <button class="btn btn-outline-primary" @onclick="ToMovie">Terug</button>
-        <button class="btn btn-primary" @onclick="HandlePlaceOrder" disabled="@(!Tickets.Any())">Verder</button>
+        <button class="btn btn-outline-primary" @onclick="ToMovie">@T["orderTickets.back"]</button>
+        <button class="btn btn-primary" @onclick="HandlePlaceOrder" disabled="@(!Tickets.Any())">@T["orderTickets.next"]</button>
     </div>
 </div>

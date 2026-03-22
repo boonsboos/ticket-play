@@ -1,22 +1,21 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.ComponentModel;
+﻿using ConnectPlay.TicketPlay.UI.App.Components.Base;
 
 namespace ConnectPlay.TicketPlay.UI.App.Components;
 
-public partial class WebsiteHeader : ComponentBase // ComponentBase is the baseclass for a Blazor component
+public partial class WebsiteHeader : TranslatableComponent
 {
     // We use protected so the WebsiteHeader.razor component can access this property
-    protected string Language { get; set; } = "NL";
+    protected string Language => T.CurrentLanguage.ToUpper();
 
     protected void ToggleLanguage()
     {
-        if (Language == "NL")
+        if (T.CurrentLanguage == "nl")
         {
-            Language = "ENG";
+            T.SetLanguage("en");
         }
         else
         {
-            Language = "NL";
+            T.SetLanguage("nl");
         }
     }
 }

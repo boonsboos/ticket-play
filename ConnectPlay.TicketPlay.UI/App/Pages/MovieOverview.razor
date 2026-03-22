@@ -1,37 +1,43 @@
 ﻿@page "/"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
 @using ConnectPlay.TicketPlay.UI.App.Components.Overview
-@rendermode InteractiveServer
+
 @layout MainLayout
 
-<div class="container-fluid">
-    <h1 class="text-center">Deze week te zien</h1>
+@inherits TranslatableComponent
 
-    @if (isLoading)
+@rendermode InteractiveServer
+
+<PageTitle>@T["home.pageTitle"]</PageTitle>
+
+<h1>@T["home.title"]</h1>
+
+@if (isLoading)
+{
+    <p>@T["home.loading"]</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p class="text-danger">@T[errorMessage]</p>
+}
+else if (!Overview.Any())
+{
+    <p>@T["home.noMovies"]</p>
+}
+else
+{
+    @foreach (var day in Overview)
     {
-        <p>Films worden geladen!</p>
-    }
-    else if (!string.IsNullOrWhiteSpace(errorMessage))
-    {
-        <p class="text-danger">@errorMessage</p>
-    }
-    else if (!Overview.Any())
-    @* Any() checks if there is minimum 1 element*@
-    {
-        <p>Er zijn deze geen films meer gepland.</p>
-    }
-    else
-    {
-        @foreach (var day in Overview)
-        {
-            <div class="my-4">
-                <h2>@day.Day.ToLocalTime().Date.ToString("dd-MM-yyyy")</h2>
-                <div class="row g-4 overflow-x-scroll">
-                    @foreach (var movie in day.Offerings)
-                    {
-                        <OverviewMovieCard CardMovie="@movie" />
-                    }
-                </div>
+        <div class="my-4">
+            <h2>@day.Day.ToLocalTime().ToString("dd-MM-yyyy")</h2>
+
+            <div class="row g-4 overflow-x-scroll">
+                @foreach (var movie in day.Offerings)
+                {
+                    <OverviewMovieCard CardMovie="@movie" />
+                }
             </div>
-        }
+        </div>
     }
-</div>
+}

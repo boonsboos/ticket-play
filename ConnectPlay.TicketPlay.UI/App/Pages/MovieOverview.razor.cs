@@ -1,3 +1,6 @@
+﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Contracts.Movie;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 ﻿using ConnectPlay.TicketPlay.Contracts.Overview;
 using ConnectPlay.TicketPlay.UI.Api;
 using Microsoft.AspNetCore.Components;
@@ -5,7 +8,7 @@ using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
-public partial class MovieOverview : ComponentBase
+public partial class MovieOverview : TranslatableComponent
 {
     private readonly ILogger<MovieOverview> _logger;
     private readonly IWebsiteApi websiteApi;
@@ -28,8 +31,8 @@ public partial class MovieOverview : ComponentBase
         }
         catch (ApiException e)
         {
-            errorMessage = "Het laden van films is niet mogelijk op dit moment.";
-            _logger.LogError(e, "Error when loading the overview from the API.");
+            errorMessage = "home.errorLoadingMovies";
+            _logger.LogError(e, "Error when loading the movies of today from the API.");
         }
         finally // This will always run
         {

@@ -1,12 +1,18 @@
 ﻿@page "/movies/{Id:int}"
 
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
 @rendermode InteractiveServer
+
+<PageTitle>@T["movieDetail.pageTitle"]</PageTitle>
 
 @if (movie == null)
 {
     <div class="container mt-4 text-center">
         <div class="alert alert-warning">
-            <p>Film niet gevonden.</p>
+            <p>@T["movieDetail.movieNotFound"]</p>
         </div>
     </div>
 }
@@ -20,7 +26,12 @@ else
                 </div>
                 <div class="col-md-8 p-4 d-flex flex-column">
                     <h2>@movie.Title</h2>
-                    <p class="text-muted">@movie.Genre • @movie.Duration min • @movie.ReleaseDate • @movie.MinimumAge+</p>
+                    @{
+                        var genreKey = $"genre.{movie.Genre}";
+                        var translatedGenre = T[genreKey];
+                        var genreText = translatedGenre == genreKey ? movie.Genre : translatedGenre;
+                    }
+                    <p class="text-muted">@genreText • @movie.Duration min • @movie.ReleaseDate • @movie.MinimumAge+</p>
                     @if (!string.IsNullOrWhiteSpace(movie.Tags))
                     {
                         <div class="mb-3">
@@ -34,11 +45,11 @@ else
                 </div>
             </div>
             <div class="card-footer pt-3">
-                <h5>Voorstellingen</h5>
+                <h5>@T["movieDetail.screenings"]</h5>
                 <div class="d-flex flex-wrap gap-3 my-2">
                     @if (!screenings.Any())
                     {
-                        <p>Er zijn geen voorstellingen voor deze film</p>
+                        <p>@T["movieDetail.noScreenings"]</p>
                     }
                     else
                     {
@@ -49,13 +60,19 @@ else
                                      @onclick="() => SetSelectedScreening(screening)">
                                     <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
 
-                                    <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
-                                        Zaal @screening.Hall?.HallNumber
-                                        @if (screening.Hall?.Has3DProjector == true)
-                                        {
+                                    @if (screening.Hall?.Has3DProjector == true)
+                                    {
+                                        <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                            @T["movieDetail.hall"] @screening.Hall?.HallNumber
                                             <i class="bi bi-badge-3d"></i>
-                                        }
-                                    </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex justify-content-center align-items-center gap-2 text-body-secondary fw-bold">
+                                            @T["movieDetail.hall"] @screening.Hall?.HallNumber
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         }
@@ -64,8 +81,8 @@ else
             </div>
         </div>
         <div class="container d-flex justify-content-between col-lg-10 col-md-12 m-3">
-            <button class="btn btn-outline-primary" @onclick="Back">← Ga terug</button>
-            <button class="btn btn-primary" @onclick="ToTickets">Volgende →</button>
+            <button class="btn btn-outline-primary" @onclick="Back">← @T["movieDetail.back"]</button>
+            <button class="btn btn-primary" @onclick="ToTickets">@T["movieDetail.next"] →</button>
         </div>
     </div>
 }

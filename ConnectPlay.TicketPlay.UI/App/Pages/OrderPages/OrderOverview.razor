@@ -1,9 +1,16 @@
 ﻿@page "/order/overview"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
 @rendermode InteractiveServer
+
+<PageTitle>@T["orderOverview.pageTitle"]</PageTitle>
 
 <div class="container mt-4 col-6 offset-3 d-flex flex-column justify-content-center">
 
-    <h2 class="text-center">Je bestelling</h2>
+    <h2 class="text-center">@T["orderOverview.title"]</h2>
 
     <div class="card d-flex justify-content-center">
         <div class="row g-0 pt-2" id="screening-details">
@@ -18,13 +25,13 @@
 
                     @if (Screening is not null)
                     {
-                        <p>In zaal @Screening.Hall.HallNumber om @StartTime</p>
+                        <p>@T["orderOverview.inHall"] @Screening.Hall.HallNumber @T["orderOverview.atTime"] @StartTime</p>
                     }
 
                     @if (Seats.Any())
                     {
                         <p>
-                            <b>Je stoelen zijn:</b><br />
+                            <b>@T["orderOverview.yourSeats"]</b><br />
                             @(string.Join(", ", Seats))
                         </p>
                     }
@@ -33,7 +40,7 @@
         </div>
         <hr />
         <div class="row p-4" id="bill">
-            <h3 class="text-center">Te betalen</h3>
+            <h3 class="text-center">@T["orderOverview.toPay"]</h3>
 
             @foreach (var (ticketType, amount) in Tickets.GroupBy(t => t).Select(group => (group.Key, group.Count())))
             {
@@ -50,7 +57,7 @@
             {
                 <hr />
                 <div class="d-flex flex-row justify-content-between">
-                    <p><b>3D Fee</b></p>
+                    <p><b>@T["orderOverview.threeDFee"]</b></p>
                     <p>
                         @(2.50f.ToString("C"))
                     </p>
@@ -59,7 +66,7 @@
 
             <hr />
             <div class="d-flex flex-row justify-content-between">
-                <p><b>Totaal</b></p>
+                <p><b>@T["orderOverview.total"]</b></p>
                 <p>@(CalculateTotal().ToString("C"))</p>
             </div>
 
@@ -67,7 +74,7 @@
     </div>
 
     <div class="container d-flex justify-content-between m-3">
-        <button class="btn btn-outline-primary" @onclick="ToTickets">Terug</button>
-        <button class="btn btn-primary" @onclick="ToPayment">Verder</button>
+        <button class="btn btn-outline-primary" @onclick="ToTickets">@T["orderOverview.back"]</button>
+        <button class="btn btn-primary" @onclick="ToPayment">@T["orderOverview.next"]</button>
     </div>
 </div>

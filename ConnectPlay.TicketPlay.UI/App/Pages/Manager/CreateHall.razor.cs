@@ -1,11 +1,11 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.UI.Api;
-using Microsoft.AspNetCore.Components;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 
-public partial class CreateHall(IHallApi hallApi) : ComponentBase
+public partial class CreateHall(IHallApi hallApi) : TranslatableComponent
 {
     private readonly CreateHallFormModel form = new();
     private CreateHallRequest request = new();

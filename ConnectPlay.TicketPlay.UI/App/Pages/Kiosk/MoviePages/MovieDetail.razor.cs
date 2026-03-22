@@ -31,7 +31,7 @@ public partial class MovieDetail(KioskService kioskService, NavigationManager na
 
         try
         {
-            Movie = await MovieRepository.GetMovieByIdAsync(Id);
+            Movie = await MovieRepository.GetMovieByIdAsync(Id, "nl");
 
             Screenings = await ScreeningRepository.GetTodayScreeningsFromMovieAsync(Id);
         }
