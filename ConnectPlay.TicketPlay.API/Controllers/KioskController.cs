@@ -119,7 +119,7 @@ public class KioskController : ControllerBase
         }
         catch (ArgumentException argException)
         {
-            logger.LogError(argException, "Cant get taken seats for screening {ScreeningId} and ticket {TicketId}", screeningId, orderId);
+            logger.LogError(argException, "Cant get taken seats for screening {ScreeningId} and order {OrderId}", screeningId, orderId);
             return BadRequest(argException.Message);
         }
     }
