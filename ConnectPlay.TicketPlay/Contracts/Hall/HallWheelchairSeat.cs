@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace ConnectPlay.TicketPlay.Contracts.Hall;
+﻿namespace ConnectPlay.TicketPlay.Contracts.Hall;
 
 public sealed record HallWheelchairSeat(int Row, int Seat)
 {
