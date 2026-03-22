@@ -73,6 +73,7 @@ public class Program
         services.AddScoped<IScreeningRepository, ScreeningRepository>();
         services.AddScoped<KioskService>();
         services.AddScoped<WebsiteService>();
+        services.AddScoped<TranslationService>();
     }
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)
@@ -89,8 +90,9 @@ public class Program
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
             .AddRefitClient<IKioskApi>()
-            .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IOrderApi>()
+            .AddRefitClient<INewsletterApi>()
+            .AddRefitClient<IWebsiteApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
     }
     #endregion

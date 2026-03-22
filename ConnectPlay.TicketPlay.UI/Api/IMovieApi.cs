@@ -21,7 +21,7 @@ public interface IMovieApi
     Task<IEnumerable<OverviewMovie>> GetTodayMoviesAsync();
 
     [Get("/movie/{id}")]
-    Task<MovieDetailResponse> GetMovieByIdAsync(int id);
+    Task<MovieDetailResponse> GetMovieByIdAsync(int id, [Query] string language);
 
     [Post("/movie")]
     Task CreateMovieAsync(CreateMovieRequest movie);

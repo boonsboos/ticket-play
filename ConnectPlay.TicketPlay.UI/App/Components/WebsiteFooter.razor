@@ -1,11 +1,17 @@
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent
+
 @* This Is is where the website footer content goes *@
 @* Bootstrap grid layout goes from container -> row -> col *@
+@rendermode InteractiveServer
+
 <footer class="text-white py-4" style="background: linear-gradient(#650096, #4B006E);">
     <div class="container">
         <div class="row justify-content-center text-center">
 
             <div class="col-md-4 text-start">
-                <strong>Adres:</strong><br>
+                <strong>@T["footer.address"]:</strong><br>
                 Dorpsmanstraat 88<br>
                 5258 XX Straatmansdorp
             </div>
@@ -25,6 +31,37 @@
                     <i class="bi bi-instagram fs-4"></i>
                 </a>
             </div>
+
+            <div class="col-md-4 text-start">
+                <strong>Meld je aan voor de Nieuwsbrief:</strong>
+                <EditForm Model="form" OnValidSubmit="HandleSubmit" FormName="CreateSubscriberFormFooter">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary />
+
+                    <div class="row mb-2">
+                        <div class="col-6">
+                            <InputText class="form-control form-control-sm my-1" @bind-Value="form.Name" placeholder="Naam" />
+                        
+                            <InputText class="form-control form-control-sm my-1" @bind-Value="form.Email" placeholder="E-mail" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-light btn-sm" disabled="@isSubmitting">Aanmelden</button>
+                </EditForm>
+            </div>
         </div>
     </div>
+
+    @if (showToast)
+    {
+        <div class="position-fixed bottom-0 end-0 p-3">
+            <div class="alert @toastColor alert-dismissible fade show mb-0" role="alert">
+                @toastMessage
+                <button type="button"
+                        class="btn-close"
+                        aria-label="Close"
+                        @onclick="() => showToast = false">
+                </button>
+            </div>
+        </div>
+    }
 </footer>

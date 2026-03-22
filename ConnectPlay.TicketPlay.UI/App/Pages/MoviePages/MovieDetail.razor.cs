@@ -1,12 +1,13 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.MoviePages;
 
-public partial class MovieDetail : ComponentBase
+public partial class MovieDetail : TranslatableComponent
 {
     [Parameter] public int Id { get; set; }
 
@@ -42,7 +43,7 @@ public partial class MovieDetail : ComponentBase
 
         try
         {
-            movie = await movieRepository.GetMovieByIdAsync(Id);
+            movie = await movieRepository.GetMovieByIdAsync(Id, T.CurrentLanguage);
 
             screenings = await screeningRepository.GetTodayScreeningsFromMovieAsync(Id);
         }
@@ -52,6 +53,15 @@ public partial class MovieDetail : ComponentBase
             screenings = [];
             logger.LogError(ex, "Error fetching movie with Id {MovieId}", Id);
         }
+    }
+
+    protected override void UpdateUiOnLanguageChange()
+    {
+        InvokeAsync(async () =>
+        {
+            movie = await movieRepository.GetMovieByIdAsync(Id, T.CurrentLanguage);
+            StateHasChanged();
+        });
     }
 
     public void SetSelectedScreening(Screening screening)

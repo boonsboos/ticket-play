@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages;
 
-public partial class PaymentSuccess
+public partial class PaymentSuccess 
 {
     private readonly ApiConfiguration options;
 

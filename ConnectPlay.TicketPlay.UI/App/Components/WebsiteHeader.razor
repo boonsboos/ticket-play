@@ -1,3 +1,7 @@
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent
+
 @* This Is is where the website header content goes *@
 <header>
     <nav class="navbar navbar-dark bg-dark ">
@@ -8,11 +12,11 @@
             <ul class="navbar-nav flex-row me-auto">
 
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="/">Films</a>
+                    <a class="nav-link" href="/">@T["header.nav.movies"]</a>
                 </li>
 
                 <li class="nav-item me-3">
-                    <a class="nav-link" href="/contact">Contact</a>
+                    <a class="nav-link" href="/contact">@T["header.nav.contact"]</a>
                 </li>
             </ul>
 

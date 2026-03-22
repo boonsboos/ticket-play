@@ -1,12 +1,13 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.OrderPages;
 
-public partial class OrderOverview : ComponentBase
+public partial class OrderOverview : TranslatableComponent
 {
     private readonly WebsiteService websiteService;
     private readonly NavigationManager navigationManager;
