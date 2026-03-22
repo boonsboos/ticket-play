@@ -157,24 +157,52 @@ public class KioskOrderService(
             throw new InvalidOperationException("Only orders with status Pending can be updated");
         }
 
+        var seatList = seats.ToList();
         var tickets = order.Tickets.ToList();
 
-        if (seats.Count() != tickets.Count)
+        if (seatList.Count != tickets.Count)
         {
             throw new InvalidOperationException("The number of seats must match the number of tickets in the order");
+        }
+
+        // Reject duplicate seat selections within the request
+        var distinctSeats = seatList.Select(s => (s.Row, s.SeatNumber, s.IsForWheelchair)).Distinct().ToList();
+        if (distinctSeats.Count != seatList.Count)
+        {
+            throw new InvalidOperationException("Duplicate seat selections are not allowed");
         }
 
         // Get the screening to access hall information
         var screening = await screeningRepository.GetScreeningAsync(tickets[0].ScreeningId)
             ?? throw new InvalidOperationException("Screening not found for order tickets");
 
+        // Resolve all seat entities from the database first
+        var resolvedSeats = new List<Seat>();
+        for (int i = 0; i < seatList.Count; i++)
+        {
+            var seat = await seatRepository.GetSeatByRowAndNumberAsync(screening.Hall.Id, seatList[i].Row, seatList[i].SeatNumber, seatList[i].IsForWheelchair)
+                ?? throw new InvalidOperationException($"Seat not found for row {seatList[i].Row} and seat number {seatList[i].SeatNumber}");
+            resolvedSeats.Add(seat);
+        }
+
+        // Check that none of the requested seats are already taken or reserved by other orders for the same screening
+        var existingTickets = await ticketRepository.GetTicketsByScreeningIdAsync(tickets[0].ScreeningId);
+        var unavailableSeatIds = existingTickets
+            .Where(t => t.OrderId != orderId && (t.Order?.Status == OrderStatus.Paid || t.Order?.Status == OrderStatus.Pending))
+            .Select(t => t.SeatId)
+            .ToHashSet();
+
+        var conflictingSeats = resolvedSeats.Where(s => unavailableSeatIds.Contains(s.Id)).ToList();
+        if (conflictingSeats.Count > 0)
+        {
+            var seatDescriptions = string.Join(", ", conflictingSeats.Select(s => $"row {s.Row} seat {s.SeatNumber}"));
+            throw new InvalidOperationException($"The following seats are not available: {seatDescriptions}");
+        }
+
         for (int i = 0; i < tickets.Count; i++)
         {
-            var seat = await seatRepository.GetSeatByRowAndNumberAsync(screening.Hall.Id, seats.ElementAt(i).Row, seats.ElementAt(i).SeatNumber, seats.ElementAt(i).IsForWheelchair)
-                ?? throw new InvalidOperationException($"Seat not found for row {seats.ElementAt(i).Row} and seat number {seats.ElementAt(i).SeatNumber}");
-
-            tickets[i].SeatId = seat.Id;
-            tickets[i].Seat = seat;
+            tickets[i].SeatId = resolvedSeats[i].Id;
+            tickets[i].Seat = resolvedSeats[i];
         }
         logger.LogInformation("Updating seats for order {OrderId} with [{seatsCount}]", orderId, tickets.Select(t => $"row {t.Seat.Row} seat {t.Seat.SeatNumber} (seatId: {t.SeatId})").Aggregate((a, b) => a + ", " + b));
 
