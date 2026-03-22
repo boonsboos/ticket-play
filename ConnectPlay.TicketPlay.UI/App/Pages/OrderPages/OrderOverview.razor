@@ -101,7 +101,7 @@
                                     {
                                         var row = i;
                                         var seatNumber = j;
-                                        var isWheelchairSeat = HallLayout.WeelchairSeat.Row == row && HallLayout.WeelchairSeat.Seat == seatNumber;
+                                        var isWheelchairSeat = HallLayout.WheelchairSeat.Row == row && HallLayout.WheelchairSeat.Seat == seatNumber;
                                         var takenSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsTaken);
                                         var reservedSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsReserved);
                                         var selectedSeat = SelectedSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsForWheelchair == isWheelchairSeat);
