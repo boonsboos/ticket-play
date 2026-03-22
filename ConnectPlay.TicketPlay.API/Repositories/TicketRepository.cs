@@ -61,9 +61,8 @@ public class TicketRepository : ITicketRepository
 
         return await context.Tickets
             .Include(ticket => ticket.Seat)
-            .Include(ticket => ticket.Screening)
             .Include(ticket => ticket.Order)
-            .Where(ticket => ticket.Screening.Id == screeningId)
+            .Where(ticket => ticket.ScreeningId == screeningId)
             .ToListAsync();
     }
 
