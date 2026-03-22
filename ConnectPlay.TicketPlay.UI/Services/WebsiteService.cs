@@ -94,9 +94,9 @@ public class WebsiteService
         }
     }
 
-    public async Task LoadTakenSeats(int screeningId, int ticketId)
+    public async Task LoadTakenSeats(int screeningId, int orderId)
     {
-        var response = await kioskApi.GetTakenSeatsAsync(screeningId, ticketId);
+        var response = await kioskApi.GetTakenSeatsAsync(screeningId, orderId);
 
         if (response.IsSuccessStatusCode)
         {
