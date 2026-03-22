@@ -113,15 +113,15 @@ public class WebsiteService
     /// Applies the selected seats to the current order. This will update the seat information for each ticket in the order based on the provided list of selected seats.
     /// <para>It will also make an API call to update the order with the new seat selections.</para>
     /// </summary>
-    /// <param name="SelectedSeats"></param>
+    /// <param name="selectedSeats"></param>
     /// <exception cref="InvalidOperationException"></exception>
-    public async Task<bool> ApplySeatSelection(List<Seat> SelectedSeats)
+    public async Task<bool> ApplySeatSelection(List<Seat> selectedSeats)
     {
         if (currentOrder is null) return false;
-        if (SelectedSeats.Count != currentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
+        if (selectedSeats.Count != currentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
 
         // Call the API to update the order with the new seat selections
-        var updateResponse = await kioskApi.UpdateOrderSeatsAsync(currentOrder.Id, SelectedSeats);
+        var updateResponse = await kioskApi.UpdateOrderSeatsAsync(currentOrder.Id, selectedSeats);
 
         if (!updateResponse.IsSuccessStatusCode)
         {
