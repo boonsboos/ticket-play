@@ -8,4 +8,5 @@ public interface IHallRepository
     public Task<bool> HallNumberExistAsync(int hallNumber);
     public Task<IEnumerable<Hall>> GetHallsAsync();
     public Task<Hall> GetHallAsync(Screening screening);
+    public Task<Hall?> GetHallByIdAsync(int hallId);
 }

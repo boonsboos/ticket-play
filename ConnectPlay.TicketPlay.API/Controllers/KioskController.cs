@@ -89,7 +89,8 @@ public class KioskController : ControllerBase
         {
             logger.LogError(argException, "Cant print tickets for order {OrderId}", orderId);
             return BadRequest(argException.Message);
-        } catch (InvalidOperationException invalidOpException)
+        }
+        catch (InvalidOperationException invalidOpException)
         {
             logger.LogError(invalidOpException, "Unable to print tickets for order {OrderId}", orderId);
             return BadRequest(invalidOpException.Message);
@@ -105,5 +106,42 @@ public class KioskController : ControllerBase
         if (order is null) return NotFound();
 
         return Ok(order);
+    }
+
+    [HttpGet]
+    [Route("taken-seats")] // /taken-seats?screeningId=1234&orderId=5678
+    public async Task<IActionResult> GetTakenSeatsAsync([FromQuery] int screeningId, [FromQuery] int orderId)
+    {
+        try
+        {
+            var takenSeats = await kioskOrderService.GetTakenSeatsAsync(screeningId, orderId);
+            return Ok(takenSeats);
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant get taken seats for screening {ScreeningId} and order {OrderId}", screeningId, orderId);
+            return BadRequest(argException.Message);
+        }
+    }
+
+    [HttpPut]
+    [Route("{orderId}/update-seats")]
+    public async Task<IActionResult> UpdateOrderSeatsAsync([FromRoute] int orderId, [FromBody] IEnumerable<Seat> seats)
+    {
+        try
+        {
+            var updatedOrder = await kioskOrderService.UpdateSeatsAsync(orderId, seats);
+            return Ok(updatedOrder);
+        }
+        catch (ArgumentException argException)
+        {
+            logger.LogError(argException, "Cant update seats for order {OrderId}", orderId);
+            return BadRequest(argException.Message);
+        }
+        catch (InvalidOperationException invalidOpException)
+        {
+            logger.LogError(invalidOpException, "Unable to update seats for order {OrderId}", orderId);
+            return BadRequest(invalidOpException.Message);
+        }
     }
 }

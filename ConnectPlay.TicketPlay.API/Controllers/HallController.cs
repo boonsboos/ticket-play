@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.API.Repositories;
+using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class HallController(IHallRepository hallRepository) : ControllerBase
+public class HallController(IHallRepository hallRepository, IHallService hallService) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> CreateHallAsync([FromBody] CreateHallRequest request)
@@ -84,5 +84,16 @@ public class HallController(IHallRepository hallRepository) : ControllerBase
     public async Task<IEnumerable<Hall>> GetHallsAsync()
     {
         return await hallRepository.GetHallsAsync();
+    }
+
+    [HttpGet("{id}/layout")]
+    public async Task<IActionResult> GetHallLayoutAsync([FromRoute] int id)
+    {
+        var hallLayout = await hallService.GetHallLayoutAsync(id);
+
+        if (hallLayout is null)
+            return NotFound();
+
+        return Ok(hallLayout);
     }
 }

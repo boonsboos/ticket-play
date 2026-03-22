@@ -1,4 +1,6 @@
-﻿using ConnectPlay.TicketPlay.Models;
+﻿using ConnectPlay.TicketPlay.Contracts.Hall;
+using ConnectPlay.TicketPlay.Contracts.Seat;
+using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Services;
@@ -6,20 +8,23 @@ namespace ConnectPlay.TicketPlay.UI.Services;
 public class WebsiteService
 {
     private readonly IKioskApi kioskApi;
+    private readonly IHallApi hallApi;
     private readonly ILogger<WebsiteService> logger;
 
     private Order? currentOrder = null;
-
     public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
     public Movie? Movie => currentOrder?.Tickets.FirstOrDefault()?.Screening.Movie;
     public int? CurrentOrderId { get => currentOrder?.Id; } // Only get the order id if there is a current order
     public Screening? SelectedScreening { get; set; } = null;
-    public IEnumerable<TicketType> Tickets { get; set; } = [];
+    public IEnumerable<TicketType> Tickets { get; set; } = [TicketType.Regular, TicketType.Student];
+    public HallLayoutResponse? HallLayout { get; set; }
+    public IEnumerable<SeatResponse> TakenSeats { get; set; } = [];
 
-    public WebsiteService(IKioskApi kioskApi, ILogger<WebsiteService> logger)
+    public WebsiteService(IKioskApi kioskApi, IHallApi hallApi, ILogger<WebsiteService> logger)
     {
         this.kioskApi = kioskApi;
+        this.hallApi = hallApi;
         this.logger = logger;
     }
 
@@ -61,7 +66,6 @@ public class WebsiteService
             logger.LogError("Canceling order {OrderId} failed: {StatusCode} - {Reason}", orderId, cancelResponse.StatusCode, cancelResponse.Error);
         }
     }
-
     public async Task PayOrder()
     {
         var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
@@ -75,11 +79,74 @@ public class WebsiteService
         }
     }
 
+    public async Task LoadLayout(int hallId)
+    {
+        var response = await hallApi.GetHallLayoutAsync(hallId);
+
+        if (response.IsSuccessStatusCode)
+        {
+            HallLayout = response.Content;
+        }
+        else
+        {
+            logger.LogError("Failed to get hall layout for hall {HallId}: {StatusCode} - {Reason}", hallId, response.StatusCode, response.Error);
+            HallLayout = null;
+        }
+    }
+
+    public async Task LoadTakenSeats(int screeningId, int orderId)
+    {
+        var response = await kioskApi.GetTakenSeatsAsync(screeningId, orderId);
+
+        if (response.IsSuccessStatusCode)
+        {
+            TakenSeats = response.Content ?? [];
+            logger.LogInformation("Received {Count} taken seats for screening {ScreeningId}", TakenSeats.Count(), screeningId);
+        }
+        else
+        {
+            logger.LogError("Failed to get taken seats for screening {ScreeningId}: {StatusCode} - {Reason}", screeningId, response.StatusCode, response.Error);
+        }
+    }
+
+    /// <summary>
+    /// Applies the selected seats to the current order. This will update the seat information for each ticket in the order based on the provided list of selected seats.
+    /// <para>It will also make an API call to update the order with the new seat selections.</para>
+    /// </summary>
+    /// <param name="selectedSeats"></param>
+    /// <exception cref="InvalidOperationException"></exception>
+    public async Task<bool> ApplySeatSelection(List<Seat> selectedSeats)
+    {
+        if (currentOrder is null) return false;
+        if (selectedSeats.Count != currentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
+
+        // Call the API to update the order with the new seat selections
+        var updateResponse = await kioskApi.UpdateOrderSeatsAsync(currentOrder.Id, selectedSeats);
+
+        if (!updateResponse.IsSuccessStatusCode)
+        {
+            logger.LogError("Failed to update seats for order {OrderId}: {StatusCode} - {Reason}", currentOrder.Id, updateResponse.StatusCode, updateResponse.Error);
+            return false;
+        }
+
+        if (updateResponse.Content is null)
+        {
+            logger.LogError("Failed to update seats for order {OrderId}: API returned empty content", currentOrder.Id);
+            return false;
+        }
+
+        // Update the current order with the response from the API, which should include the updated seat information
+        currentOrder = updateResponse.Content;
+        return true;
+    }
+
+
     private void Cleanup()
     {
         logger.LogInformation("Resetting state for use in next order");
         SelectedScreening = null;
         Tickets = [];
+        HallLayout = null;
         currentOrder = null;
     }
 

@@ -10,4 +10,6 @@ public interface IHallApi
     public Task<ApiResponse<CreateHallResponse>> CreateNewHallAsync(CreateHallRequest hallRequest);
     [Get("/hall/all")]
     Task<IEnumerable<Hall>> GetHallsAsync();
+    [Get("/hall/{id}/layout")]
+    Task<ApiResponse<HallLayoutResponse?>> GetHallLayoutAsync(int id);
 }
