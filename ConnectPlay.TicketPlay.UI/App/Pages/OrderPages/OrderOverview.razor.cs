@@ -72,7 +72,7 @@ public partial class OrderOverview : TranslatableComponent
         }
 
         // 1. Block taken seats
-        if (TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && s.IsForWheelchair == isWheelchair))
+        if (TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber && (s.IsReserved || s.IsTaken)))
         {
             logger.LogInformation("Seat row {row} seat {seat} is already taken", row, seatNumber);
             return;
