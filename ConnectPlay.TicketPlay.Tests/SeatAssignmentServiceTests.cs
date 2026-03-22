@@ -26,6 +26,7 @@ public class SeatAssignmentServiceTests
             Title = "Test Movie",
             Duration = 120,
             Description = "A test movie description",
+            DescriptionEn = "Een test movie beschrijving",
             MinimumAge = 0,
             Genre = "Action",
             Language = "nl",

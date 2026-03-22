@@ -2,11 +2,11 @@
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
-using Microsoft.AspNetCore.Components;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 
-public partial class CreateMovie(IMovieApi movieApi) : ComponentBase
+public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
 {
     protected CreateMovieFormModel model = new();
 
