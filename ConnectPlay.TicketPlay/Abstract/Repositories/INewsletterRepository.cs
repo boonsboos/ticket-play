@@ -7,5 +7,7 @@ public interface INewsletterRepository
 {
     public Task CreateSubscriberAsync(NewsletterSubscriber subscriber);
 
+    public Task<IEnumerable<NewsletterSubscriber>> GetAllSubscriberAsync();
+
     public Task SendNewsletterAsync(NewsletterRequest request);
 }
