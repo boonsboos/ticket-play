@@ -24,9 +24,11 @@ public class NewsletterRepository : INewsletterRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<NewsletterSubscriber>> GetAllSubscriberAsync()
+    public async Task<IEnumerable<NewsletterSubscriber>> GetAllSubscriberAsync()
     {
-        throw new NotImplementedException();
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.NewsletterSubscribers.ToListAsync();
     }
 
     public Task SendNewsletterAsync(NewsletterRequest request)

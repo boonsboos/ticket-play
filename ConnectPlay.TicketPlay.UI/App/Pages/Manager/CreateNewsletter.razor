@@ -1,0 +1,24 @@
+﻿@page "/manager/create-newsletter"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent;
+
+@rendermode InteractiveServer
+
+<PageTitle>@T["createNewsletter.pageTitle"]</PageTitle>
+
+<div class="container my-4 col-8">
+    <h3 class="mb-4">@T["createNewsletter.title"]</h3>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <EditForm Model = "@form" OnValidSubmit="HandleSubmit" FormName="CreateNewsletterForm">
+                <ValidationSummary />
+
+                <div class="row g-3 mb-4">
+
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
