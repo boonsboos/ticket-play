@@ -7,11 +7,15 @@
         <div class="card-body text-center">
             <h4 class="mb-4 fw-bold">Arrangementen</h4>
 
+            <p>Bestel hier je drankje of snack, wij zorgen dat het bij je stoel staat wanneer de film begint!</p>
+
             <div class="accordion">
-                <details class="accordion-item">
-                    <summary class="accordion-header">
-                        <h5 class="text-start mb-3 fw-bold">Popcorn</h5>
+                <details class="accordion-item p-3">
+                    <summary class="accordion-header d-flex justify-content-between py-3">
+                        <h5 class="text-start fw-bold">Popcorn</h5>
+                        <i class="bi bi-arrow-down"></i>
                     </summary>
+                    <hr />
                     @foreach (var item in PopcornOptions)
                     {
                         <div class="row g-3 mb-3 align-items-center justify-content-center">
@@ -25,31 +29,43 @@
                     }
                 </details>
 
-                <h5 class="mt-4 mb-3 text-start fw-bold">Dranken</h5>
-                @foreach (var item in DrinkOptions)
-                {
-                    <div class="row g-3 mb-3 align-items-center justify-content-center">
-                        <div class="col-5 text-start">@item.Name</div>
-                        <div class="col-2">@item.Price.ToString("C")</div>
-                        <div class="col-2">
-                            <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="item.Quantity" />
+                <details class="accordion-item p-3">
+                    <summary class="accordion-header d-flex justify-content-between py-3">
+                        <h5 class="text-start fw-bold">Dranken</h5>
+                        <i class="bi bi-arrow-down"></i>
+                    </summary>
+                    <hr />
+                    @foreach (var item in DrinkOptions)
+                    {
+                        <div class="row g-3 mb-3 align-items-center justify-content-center">
+                            <div class="col-5 text-start">@item.Name</div>
+                            <div class="col-2">@item.Price.ToString("C")</div>
+                            <div class="col-2">
+                                <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="item.Quantity" />
+                            </div>
+                            <div class="col-3">Subtotaal: @((item.Quantity * item.Price).ToString("C"))</div>
                         </div>
-                        <div class="col-3">Subtotaal: @((item.Quantity * item.Price).ToString("C"))</div>
-                    </div>
-                }
+                    }
+                </details>
 
-                <h5 class="mt-4 mb-3 text-start fw-bold">Combi (Medium Popcorn + Drink, 10% korting)</h5>
-                @foreach (var combi in CombiSelections)
-                {
-                    <div class="row g-3 mb-3 align-items-center justify-content-center">
-                        <div class="col-5 text-start">Medium Popcorn + @combi.Drink.Name</div>
-                        <div class="col-2">@combi.PriceWithDiscount.ToString("C")</div>
-                        <div class="col-2">
-                            <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="combi.Quantity" />
+                <details class="accordion-item p-3">
+                    <summary class="accordion-header d-flex justify-content-between py-3">
+                        <h5 class="text-start fw-bold">Combi</h5>
+                        <i class="bi bi-arrow-down"></i>
+                    </summary>
+                    <hr />
+                    @foreach (var combi in CombiSelections)
+                    {
+                        <div class="row g-3 mb-3 align-items-center justify-content-center">
+                            <div class="col-5 text-start">Medium Popcorn + @combi.Drink.Name</div>
+                            <div class="col-2">@combi.PriceWithDiscount.ToString("C")</div>
+                            <div class="col-2">
+                                <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="combi.Quantity" />
+                            </div>
+                            <div class="col-3">Subtotaal: @((combi.Quantity * combi.PriceWithDiscount).ToString("C"))</div>
                         </div>
-                        <div class="col-3">Subtotaal: @((combi.Quantity * combi.PriceWithDiscount).ToString("C"))</div>
-                    </div>
-                }
+                    }
+                </details>
             </div>
 
             <div class="alert alert-light border mt-4 text-start">

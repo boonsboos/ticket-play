@@ -98,8 +98,8 @@ public partial class ArrangementSelector : TranslatableComponent
 
     public class CombiItem
     {
-        public ArrangementItem Drink { get; set; } = new();
+        public ArrangementItem Drink { get; set; }
         public int Quantity { get; set; } = 0;
-        public decimal PriceWithDiscount => Math.Round((4.50m + Drink.Price) * 0.9m, 2);
+        public decimal PriceWithDiscount => 6.00m;
     }
 }
