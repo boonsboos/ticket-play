@@ -1,3 +1,7 @@
 ﻿summary::marker {
     content: "";
 }
+
+details[open] > summary > i.bi {
+    transform: rotate(180deg);
+}
