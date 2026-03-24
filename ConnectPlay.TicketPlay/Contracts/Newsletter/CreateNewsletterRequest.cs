@@ -2,7 +2,7 @@
 
 namespace ConnectPlay.TicketPlay.Contracts.Newsletter;
 
-public record NewsletterRequest
+public sealed record CreateNewsletterRequest
 {
     [StringLength(255)]
     public required string Topic { get; init; }

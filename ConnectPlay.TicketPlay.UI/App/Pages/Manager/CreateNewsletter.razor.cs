@@ -8,34 +8,37 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 public partial class CreateNewsletter(INewsletterApi newsletterApi) : TranslatableComponent
 {
     private readonly CreateNewsletterFormModel form = new();
-    private NewsletterRequest request = new();
 
     private string toastMessage = "";
     private string toastColor = "bg-success";
     private bool showToast = false;
 
     private bool isSubmitting = false;
+    private bool showContentValidation = false;
 
     private async Task HandleSubmit()
     {
+        showContentValidation = string.IsNullOrWhiteSpace(form.Content);
+
+        if (showContentValidation)
+        {
+            return;
+        }
+
         isSubmitting = true;
         try
         {
-            var response = await newsletterApi.CreateNewsletterAsync(request);
-
-            // Handle response and show appropriate toast message
-            if (response.IsSuccessStatusCode)
+            var request = new CreateNewsletterRequest
             {
-                var newsletter = response.Content!;
+                Topic = form.Topic,
+                Content = form.Content
+            };
 
-                ShowSuccess($"Newsletter {newsletter.Topic} created.");
-            }
-            else
-            {
-                var errorContent = response.Error?.Content;
+            await newsletterApi.SendNewsletterAsync(request);
 
-                ShowError(!string.IsNullOrWhiteSpace(errorContent) ? errorContent : $"Server returned {response.StatusCode}");
-            }
+            var subscribers = await newsletterApi.GetNewsletterSubscribersAsync();
+
+            ShowSuccess($"Newsletter {request.Topic} was created. And send to {subscribers.Count()} subscribers.");
         }
         catch (ApiException e)
         {
@@ -59,11 +62,6 @@ public partial class CreateNewsletter(INewsletterApi newsletterApi) : Translatab
         toastMessage = message;
         toastColor = "bg-danger";
         showToast = true;
-    }
-
-    private void HideToast()
-    {
-        showToast = false;
     }
 
     public sealed class CreateNewsletterFormModel

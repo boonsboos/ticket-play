@@ -24,6 +24,7 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     }
 
     [HttpGet]
+    [Route("/subscriber")]
     public async Task<IActionResult> GetAllSubscribersAsync()
     {
         var subscribers = await newsletterRepository.GetAllSubscriberAsync();
@@ -32,14 +33,14 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateNewsletterAsync([FromBody] NewsletterRequest request)
+    public async Task<IActionResult> SendNewsletterAsync([FromBody] CreateNewsletterRequest request)
     {
         if (!ModelState.IsValid)
         {
             return ValidationProblem(ModelState);
         }
 
-        await newsletterRepository.SendNewsletterAsync(request);
+        await newsletterRepository.CreateNewsletterAsync(request);
 
         return StatusCode(StatusCodes.Status201Created);
     }

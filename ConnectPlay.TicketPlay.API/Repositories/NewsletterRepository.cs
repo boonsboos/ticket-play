@@ -31,8 +31,10 @@ public class NewsletterRepository : INewsletterRepository
         return await dbContext.NewsletterSubscribers.ToListAsync();
     }
 
-    public Task SendNewsletterAsync(NewsletterRequest request)
+    public async Task CreateNewsletterAsync(CreateNewsletterRequest request)
     {
-        throw new NotImplementedException();
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        await dbContext.SaveChangesAsync();
     }
 }

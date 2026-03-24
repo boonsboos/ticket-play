@@ -8,6 +8,10 @@ public interface INewsletterApi
 {
     [Post("/newsletter/subscriber")]
     Task CreateSubscriberAsync(NewsletterSubscriber subscriber);
+
     [Post("/newsletter")]
-    Task CreateNewsletterAsync(NewsletterRequest request);
+    Task SendNewsletterAsync(CreateNewsletterRequest request);
+
+    [Get("/newsletter/subscriber")]
+    Task<IEnumerable<NewsletterSubscriber>> GetNewsletterSubscribersAsync();
 }

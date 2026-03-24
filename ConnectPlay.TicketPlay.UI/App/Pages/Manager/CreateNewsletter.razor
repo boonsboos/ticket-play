@@ -1,24 +1,47 @@
 ﻿@page "/manager/create-newsletter"
 
 @using ConnectPlay.TicketPlay.UI.App.Components.Base
+@using Radzen
+@using Radzen.Blazor
 
-@inherits TranslatableComponent;
-
+@inherits TranslatableComponent
 @rendermode InteractiveServer
 
 <PageTitle>@T["createNewsletter.pageTitle"]</PageTitle>
 
 <div class="container my-4 col-8">
     <h3 class="mb-4">@T["createNewsletter.title"]</h3>
+
     <div class="card shadow-sm">
         <div class="card-body">
-            <EditForm Model = "@form" OnValidSubmit="HandleSubmit" FormName="CreateNewsletterForm">
+            <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateNewsletterFormModel">
+                <DataAnnotationsValidator />
                 <ValidationSummary />
 
-                <div class="row g-3 mb-4">
+                <div class="mb-3">
+                    <label class="form-label">@T["createNewsletter.newsletterTopic"]</label>
+                    <InputText class="form-control" @bind-Value="form.Topic" />
+                    <ValidationMessage For="@(() => form.Topic)" />
+                </div>
 
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                        @(isSubmitting ? "Sending..." : "Send newsletter")
+                    </button>
                 </div>
             </EditForm>
+
+            <div class="mb-3 mt-4">
+                <label class="form-label">@T["createNewsletter.newsletterContent"]</label>
+                <RadzenHtmlEditor @bind-Value="form.Content" Style="height: 300px;" @rendermode="InteractiveServer" />
+
+                @if (showContentValidation)
+                {
+                    <div class="text-danger mt-1">
+                        Content is required.
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
