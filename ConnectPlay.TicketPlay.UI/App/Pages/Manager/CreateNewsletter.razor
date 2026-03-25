@@ -32,7 +32,7 @@
 
                 <div class="d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
-                        @(isSubmitting ? "Sending..." : "Send newsletter")
+                        @(isSubmitting? @T["createNewsletter.sending"] : @T["createNewsletter.send"])
                     </button>
                 </div>
             </EditForm>

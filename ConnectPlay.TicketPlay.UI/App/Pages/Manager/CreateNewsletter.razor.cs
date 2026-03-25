@@ -4,6 +4,8 @@ using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using System.ComponentModel.DataAnnotations;
 using Refit;
 
+
+
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 
 public partial class CreateNewsletter(INewsletterApi newsletterApi) : TranslatableComponent
@@ -32,7 +34,13 @@ public partial class CreateNewsletter(INewsletterApi newsletterApi) : Translatab
 
             var subscribers = await newsletterApi.GetNewsletterSubscribersAsync();
 
-            ShowSuccess($"Newsletter {request.Topic} was created and sent to {subscribers.Count()} subscribers.");
+            //ShowSuccess($"Newsletter {request.Topic} was created and sent to {subscribers.Count()} subscribers.");
+
+            ShowSuccess(string.Format(
+                T["createNewsletter.successMessage"],
+                request.Topic,
+                subscribers.Count()
+            ));
 
             form = new();
         }
