@@ -34,8 +34,6 @@ public partial class CreateNewsletter(INewsletterApi newsletterApi) : Translatab
 
             var subscribersCount = await newsletterApi.GetNewsletterSubscriberCountAsync();
 
-            //ShowSuccess($"Newsletter {request.Topic} was created and sent to {subscribers.Count()} subscribers.");
-
             ShowSuccess(string.Format(
                 T["createNewsletter.successMessage"],
                 request.Topic,
