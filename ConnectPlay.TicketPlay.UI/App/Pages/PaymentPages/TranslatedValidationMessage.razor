@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using System.Linq.Expressions
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@implements IDisposable
+@inherits TranslatableComponent
+
+@if (Messages != null)
+{
+    foreach (var message in Messages)
+    {
+        <div class="validation-message">
+            @T[message] <!-- Translated error message -->
+        </div>
+    }
+}
+
+@code {
+    // Cascading EditContext from the parent EditForm
+    [CascadingParameter]
+    private EditContext CurrentEditContext { get; set; } = default!;
+
+    // Expression pointing to the model property to validate
+    [Parameter]
+    public Expression<Func<object>> For { get; set; } = default!;
+
+    // Current validation messages for this field
+    private IEnumerable<string>? Messages;
+
+    // Subscribe to validation state changes
+    protected override void OnInitialized()
+    {
+        if (CurrentEditContext != null)
+        {
+            CurrentEditContext.OnValidationStateChanged += ValidationStateChanged;
+        }
+    }
+
+    // Update messages when parameters are set or model changes
+    protected override void OnParametersSet()
+    {
+        UpdateMessages();
+    }
+
+    // Event handler for validation changes
+    private void ValidationStateChanged(object? sender, ValidationStateChangedEventArgs e)
+    {
+        UpdateMessages();
+        StateHasChanged(); // Refresh UI
+    }
+
+    // Helper to get messages for the current field
+    private void UpdateMessages()
+    {
+        if (CurrentEditContext != null && For != null)
+        {
+            var fieldIdentifier = FieldIdentifier.Create(For);
+            Messages = CurrentEditContext.GetValidationMessages(fieldIdentifier);
+        }
+    }
+
+    public new void Dispose()
+    {
+        if (CurrentEditContext != null)
+        {
+            CurrentEditContext.OnValidationStateChanged -= ValidationStateChanged;
+        }
+    }
+}
