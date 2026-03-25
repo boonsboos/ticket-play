@@ -24,24 +24,32 @@
                     <ValidationMessage For="@(() => form.Topic)" />
                 </div>
 
-                <div class="mb-3">
-                    <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                <div class="my-3">
+                    <label class="form-label">@T["createNewsletter.newsletterContent"]</label>
+                    <RadzenHtmlEditor @bind-Value="form.Content" Style="height: 300px;" @rendermode="InteractiveServer" />
+                    <ValidationMessage For="@(() => form.Content)" />
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
                         @(isSubmitting ? "Sending..." : "Send newsletter")
                     </button>
                 </div>
             </EditForm>
 
-            <div class="mb-3 mt-4">
-                <label class="form-label">@T["createNewsletter.newsletterContent"]</label>
-                <RadzenHtmlEditor @bind-Value="form.Content" Style="height: 300px;" @rendermode="InteractiveServer" />
-
-                @if (showContentValidation)
-                {
-                    <div class="text-danger mt-1">
-                        Content is required.
+            @if (showToast)
+            {
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div class="toast show align-items-center text-white @toastColor border-0">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @toastMessage
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" @onclick="HideToast"></button>
+                        </div>
                     </div>
-                }
-            </div>
+                </div>
+            }
         </div>
     </div>
 </div>

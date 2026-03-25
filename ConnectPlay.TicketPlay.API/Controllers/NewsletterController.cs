@@ -9,8 +9,7 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 [Route("[controller]")]
 public class NewsletterController(INewsletterRepository newsletterRepository) : ControllerBase
 {
-    [HttpPost]
-    [Route("/subscriber")]
+    [HttpPost("subscriber")]
     public async Task<IActionResult> CreateSubscriberAsync([FromBody] NewsletterSubscriber subscriber)
     {
         if (!ModelState.IsValid)
@@ -23,8 +22,7 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
         return StatusCode(StatusCodes.Status201Created); // "Subscriber was created", no payload given.
     }
 
-    [HttpGet]
-    [Route("/subscriber")]
+    [HttpGet("subscriber")]
     public async Task<IActionResult> GetAllSubscribersAsync()
     {
         var subscribers = await newsletterRepository.GetAllSubscriberAsync();
