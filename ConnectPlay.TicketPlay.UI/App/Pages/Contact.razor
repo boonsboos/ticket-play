@@ -3,16 +3,33 @@
 @rendermode InteractiveServer
 @layout MainLayout
 
-<h1>Contact</h1>
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card border-1">
+@inherits TranslatableComponent
+
+<PageTitle>@T["contact.pageTitle"]</PageTitle>
+
+<h1>@T["contact.title"]</h1>
+
+<div class="container py-5 mb-5" style="max-width: 1000px;">
+    <div class="row g-4 align-items-stretch justify-content-center">
+        <div class="col-md-10 d-flex">
+            <div class="col-md-6 d-flex">
+                <div class="w-100 ratio ratio-1x1">
+                    <iframe title="Google Maps location"
+                            src="https://www.google.com/maps?q=Hogeschoollaan+1+Breda+Netherlands&output=embed"
+                            width="100%"
+                            height="100%"
+                            style="border:0; border-radius:8px; min-height:100%;">
+                    </iframe>
+                </div>
+            </div>
+
+            <div class="card border-1 w-100">
                 <div class="card-body p-4">
-                    <h5 class="card-title mb-3">Meld je aan voor de nieuwsbrief</h5>
+                    <h5 class="card-title mb-3">@T["contact.newsletter.title"]</h5>
                     <p class="text-muted small mb-3">
-                        Vul je naam en e-mailadres in om updates te ontvangen.
+                        @T["contact.newsletter.description"]
                     </p>
 
                     <EditForm Model="form" OnValidSubmit="HandleSubmit" FormName="CreateSubscriberForm">
@@ -20,21 +37,21 @@
                         <ValidationSummary />
 
                         <div class="row g-2 mb-3">
-                            <div class="col-12 col-md-6">
+                            <div class="col-12">
                                 <InputText class="form-control form-control-sm"
                                            @bind-Value="form.Name"
-                                           placeholder="Naam" />
+                                           placeholder="@T["contact.form.namePlaceholder"]" />
                             </div>
 
-                            <div class="col-12 col-md-6">
+                            <div class="col-12">
                                 <InputText class="form-control form-control-sm"
                                            @bind-Value="form.Email"
-                                           placeholder="E-mail" />
+                                           placeholder="@T["contact.form.emailPlaceholder"]" />
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary btn-sm" disabled="@isSubmitting">
-                            Aanmelden
+                        <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">
+                            @T["contact.form.submit"]
                         </button>
                     </EditForm>
 
