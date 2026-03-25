@@ -49,7 +49,7 @@ public partial class OrderOverview : TranslatableComponent
     }
 
 
-    private void ToPayment() => navigationManager.NavigateTo("/payment/pin");
+    private void ToPayment() => navigationManager.NavigateTo("/payment");
     private void ToTickets() => navigationManager.NavigateTo((Screening is null) ? "/" : "/order/tickets");
 
     /// <summary>
