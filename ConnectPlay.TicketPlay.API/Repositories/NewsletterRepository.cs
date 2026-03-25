@@ -24,11 +24,13 @@ public class NewsletterRepository : INewsletterRepository
         await dbContext.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<NewsletterSubscriber>> GetAllSubscriberAsync()
+    public async Task<int> GetNewsletterSubscriberCountAsync()
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
-        return await dbContext.NewsletterSubscribers.ToListAsync();
+        int subscriberCount = dbContext.NewsletterSubscribers.Count();
+
+        return subscriberCount;
     }
 
     public async Task CreateNewsletterAsync(CreateNewsletterRequest request)

@@ -23,11 +23,11 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     }
 
     [HttpGet("subscriber")]
-    public async Task<IActionResult> GetAllSubscribersAsync()
+    public async Task<IActionResult> GetNewsletterSubscriberCountAsync()
     {
-        var subscribers = await newsletterRepository.GetAllSubscriberAsync();
+        var subscriberCount = await newsletterRepository.GetNewsletterSubscriberCountAsync();
 
-        return Ok(subscribers);
+        return Ok(subscriberCount);
     }
 
     [HttpPost]

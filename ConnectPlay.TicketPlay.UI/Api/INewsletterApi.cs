@@ -13,5 +13,5 @@ public interface INewsletterApi
     Task SendNewsletterAsync(CreateNewsletterRequest request);
 
     [Get("/newsletter/subscriber")]
-    Task<IEnumerable<NewsletterSubscriber>> GetNewsletterSubscribersAsync();
+    Task<int> GetNewsletterSubscriberCountAsync();
 }
