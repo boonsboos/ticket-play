@@ -1,8 +1,18 @@
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent
+
 <NavLink class="col-md-2 col-lg-2" href="@($"/movies/{CardMovie.Id}")">
     <div class="card h-100 p-3">
         <img src="@CardMovie.PosterUrl" alt="@CardMovie.Title" class="img-fluid mb-2" />
         <h5 class="mb-1">@CardMovie.Title</h5>
-        <p class="text-muted mb-2">@CardMovie.Genre</p>
+        
+        @{
+            var genreKey = $"genre.{CardMovie.Genre}";
+            var translatedGenre = T[genreKey];
+            var genreText = translatedGenre == genreKey ? CardMovie.Genre : translatedGenre;
+        }
+        <p class="text-muted mb-2">@genreText</p>
 
         <div class="d-flex gap-2 flex-wrap">
             @{
@@ -25,7 +35,7 @@
 
             @if (hasMoreScreenings)
             {
-                <span class="badge bg-secondary">Zie meer</span>
+                <span class="badge bg-secondary">@T["movieCard.seeMore"]</span>
             }
         </div>
     </div>

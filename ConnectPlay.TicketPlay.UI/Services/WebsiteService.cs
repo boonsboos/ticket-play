@@ -15,6 +15,7 @@ public class WebsiteService
     public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
     public Movie? Movie => currentOrder?.Tickets.FirstOrDefault()?.Screening.Movie;
+    public DateTimeOffset? ScreeningTime => currentOrder?.Tickets.FirstOrDefault()?.Screening.StartTime;
     public int? CurrentOrderId { get => currentOrder?.Id; } // Only get the order id if there is a current order
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [TicketType.Regular, TicketType.Student];
