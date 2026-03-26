@@ -7,6 +7,7 @@
 
 @if (Messages != null)
 {
+    @* Loop through each validation message and display the translated text *@
     foreach (var message in Messages)
     {
         <div class="validation-message">
@@ -16,40 +17,46 @@
 }
 
 @code {
-    // Cascading EditContext from the parent EditForm
+    // Cascading EditContext from the parent EditForm.
+    // This gives access to the validation state of the form.
     [CascadingParameter]
     private EditContext CurrentEditContext { get; set; } = default!;
 
-    // Expression pointing to the model property to validate
+    // Expression pointing to the specific model property to validate.
+    // Example: () => _creditCardModel.Name
     [Parameter]
     public Expression<Func<object>> For { get; set; } = default!;
 
-    // Current validation messages for this field
+    // Holds the current validation messages for this specific field
     private IEnumerable<string>? Messages;
 
-    // Subscribe to validation state changes
+    // Called when the component is initialized
+    // Subscribe to validation state changes from EditContext
     protected override void OnInitialized()
     {
         if (CurrentEditContext != null)
         {
+            // Listen to any validation state changes
             CurrentEditContext.OnValidationStateChanged += ValidationStateChanged;
         }
     }
 
-    // Update messages when parameters are set or model changes
+    // Called when component parameters are set or updated
+    // Ensures messages are updated for the current field
     protected override void OnParametersSet()
     {
         UpdateMessages();
     }
 
-    // Event handler for validation changes
+    // Event handler triggered when validation state changes
+    // Updates the Messages collection and refreshes the UI
     private void ValidationStateChanged(object? sender, ValidationStateChangedEventArgs e)
     {
         UpdateMessages();
-        StateHasChanged(); // Refresh UI
+        StateHasChanged(); // Forces the component to re-render
     }
 
-    // Helper to get messages for the current field
+    // Helper method to retrieve validation messages for the specific field
     private void UpdateMessages()
     {
         if (CurrentEditContext != null && For != null)
@@ -59,6 +66,8 @@
         }
     }
 
+    // Dispose method to unsubscribe from EditContext events
+    // Using 'new' keyword to avoid hiding warnings from the base class
     public new void Dispose()
     {
         if (CurrentEditContext != null)

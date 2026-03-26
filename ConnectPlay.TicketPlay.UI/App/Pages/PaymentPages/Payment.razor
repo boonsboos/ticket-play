@@ -16,7 +16,7 @@
                    value="iDEAL"
                    @onchange="OnPaymentMethodChanged"
                    checked="@(_selectedMethod == "iDEAL")">
-                <label class="form-check-label fs-5" for="ideal">@T["payment.methods.ideal"]</label>
+                <label class="form-check-label fs-5" for="ideal">iDEAL</label>
             </div>
 
             <div class="form-check form-check-inline">
@@ -27,7 +27,7 @@
                        value="CreditCard"
                        @onchange="OnPaymentMethodChanged"
                        checked="@(_selectedMethod == "CreditCard")">
-                    <label class="form-check-label fs-5" for="credit">@T["payment.methods.creditcard"]</label>
+                    <label class="form-check-label fs-5" for="credit">Credit Card</label>
                 </div>
             </div>
 
@@ -38,9 +38,9 @@
                         <label class="form-label fs-6">@T["payment.selectBank"]</label>
                         <select @bind="_selectedBank" class="form-select form-select-lg">
                             <option value="">@T["payment.chooseBank"]</option>
-                            <option value="Rabo">@T["payment.banks.rabo"]</option>
-                            <option value="ING">@T["payment.banks.ing"]</option>
-                            <option value="SNS">@T["payment.banks.sns"]</option>
+                            <option value="Rabo">Rabo</option>
+                            <option value="ING">ING</option>
+                            <option value="SNS">SNS</option>
                         </select>
                     </div>
                     <button class="btn btn-success btn-lg w-100"
@@ -71,7 +71,7 @@
                                 <TranslatedValidationMessage For="@(() => _creditCardModel.Expiry)" />
                             </div>
                             <div class="col">
-                                <label class="form-label fs-6">@T["payment.card.cvc"]*</label>
+                                <label class="form-label fs-6">CVC</label>
                                 <InputText @bind-Value="_creditCardModel.CVC" class="form-control form-control-lg" />
                                 <TranslatedValidationMessage For="@(() => _creditCardModel.CVC)" />
                             </div>
