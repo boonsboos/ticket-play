@@ -30,22 +30,21 @@
     // Holds the current validation messages for this specific field
     private IEnumerable<string>? Messages;
 
-    // Called when the component is initialized
-    // Subscribe to validation state changes from EditContext
-    protected override void OnInitialized()
-    {
-        if (CurrentEditContext != null)
-        {
-            // Listen to any validation state changes
-            CurrentEditContext.OnValidationStateChanged += ValidationStateChanged;
-        }
-    }
+    // Flag to track if we've already subscribed to the EditContext's validation state changes
+    private bool _isSubscribed = false;
 
     // Called when component parameters are set or updated
     // Ensures messages are updated for the current field
     protected override void OnParametersSet()
     {
         UpdateMessages();
+
+        if (CurrentEditContext != null && !_isSubscribed)
+        {
+            CurrentEditContext.OnValidationStateChanged += ValidationStateChanged;
+            // Set the flag to true to avoid multiple subscriptions
+            _isSubscribed = true;
+        }
     }
 
     // Event handler triggered when validation state changes
@@ -68,11 +67,16 @@
 
     // Dispose method to unsubscribe from EditContext events
     // Using 'new' keyword to avoid hiding warnings from the base class
+    // Ensures we don't have memory leaks by leaving event handlers subscribed
     public new void Dispose()
     {
-        if (CurrentEditContext != null)
+        if (CurrentEditContext != null && _isSubscribed)
         {
             CurrentEditContext.OnValidationStateChanged -= ValidationStateChanged;
+            _isSubscribed = false;
         }
+
+        // Call the base class Dispose method if it exists
+        base.Dispose();
     }
 }
