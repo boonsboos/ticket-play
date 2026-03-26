@@ -14,7 +14,7 @@ public record Ticket
     public int SeatId { get; set; }
     public Seat Seat { get; set; } = null!;
     public TicketType TicketType { get; init; }
-    public ArrangementItem Arrangement { get; init; }
+    public Arrangement? Arrangement { get; init; }
     public int? OrderId { get; set; }
     [JsonIgnore]
     public Order? Order { get; set; }

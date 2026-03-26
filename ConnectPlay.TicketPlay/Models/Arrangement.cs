@@ -1,10 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConnectPlay.TicketPlay.Models;
 
 [Table("arrangements")]
 public record Arrangement
 {
+    [Key]
     public int Id { get; set; }
     public required decimal Price { get; init; }
     public required string Name { get; init; }
