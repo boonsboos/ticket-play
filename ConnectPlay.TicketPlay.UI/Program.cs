@@ -4,6 +4,8 @@ using ConnectPlay.TicketPlay.UI.Configuration;
 using ConnectPlay.TicketPlay.UI.Repositories;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.Extensions.Options;
+using Radzen;
+using Radzen.Blazor;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI;
@@ -23,6 +25,8 @@ public class Program
         builder.Services.AddRazorComponents()
             .AddInteractiveWebAssemblyComponents()
             .AddInteractiveServerComponents();
+
+        builder.Services.AddRadzenComponents();
 
         // configure the ability to download files from the browser
         builder.Services.AddCors(options =>
@@ -74,6 +78,7 @@ public class Program
         services.AddScoped<KioskService>();
         services.AddScoped<WebsiteService>();
         services.AddScoped<TranslationService>();
+        services.AddScoped<DialogService>();
     }
 
     private static void ConfigureApi(IServiceCollection services, string baseUrl)

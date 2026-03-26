@@ -1,0 +1,55 @@
+﻿@page "/manager/create-newsletter"
+
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+@using Radzen
+@using Radzen.Blazor
+
+@inherits TranslatableComponent
+@rendermode InteractiveServer
+
+<PageTitle>@T["createNewsletter.pageTitle"]</PageTitle>
+
+<div class="container my-4 col-8">
+    <h3 class="mb-4">@T["createNewsletter.title"]</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <EditForm Model="@form" OnValidSubmit="HandleSubmit" FormName="CreateNewsletterFormModel">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label">@T["createNewsletter.newsletterTopic"]</label>
+                    <InputText class="form-control" @bind-Value="form.Topic" />
+                    <ValidationMessage For="@(() => form.Topic)" />
+                </div>
+
+                <div class="my-3">
+                    <label class="form-label">@T["createNewsletter.newsletterContent"]</label>
+                    <RadzenHtmlEditor @bind-Value="form.Content" Style="height: 300px;" @rendermode="InteractiveServer" />
+                    <ValidationMessage For="@(() => form.Content)" />
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
+                        @(isSubmitting? @T["createNewsletter.sending"] : @T["createNewsletter.send"])
+                    </button>
+                </div>
+            </EditForm>
+
+            @if (showToast)
+            {
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div class="toast show align-items-center text-white @toastColor border-0">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @toastMessage
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" @onclick="HideToast"></button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

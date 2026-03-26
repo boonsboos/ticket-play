@@ -1,5 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
+using ConnectPlay.TicketPlay.Contracts.Newsletter;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,5 +22,14 @@ public class NewsletterRepository : INewsletterRepository
         dbContext.NewsletterSubscribers.Add(subscriber);
 
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<int> GetNewsletterSubscriberCountAsync()
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        int subscriberCount = dbContext.NewsletterSubscribers.Count();
+
+        return subscriberCount;
     }
 }
