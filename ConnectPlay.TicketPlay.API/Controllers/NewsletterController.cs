@@ -33,13 +33,6 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     [HttpPost]
     public async Task<IActionResult> SendNewsletterAsync([FromBody] CreateNewsletterRequest request)
     {
-        if (!ModelState.IsValid)
-        {
-            return ValidationProblem(ModelState);
-        }
-
-        await newsletterRepository.CreateNewsletterAsync(request);
-
         return StatusCode(StatusCodes.Status201Created);
     }
 }

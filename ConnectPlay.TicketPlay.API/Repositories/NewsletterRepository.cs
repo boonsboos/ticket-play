@@ -32,11 +32,4 @@ public class NewsletterRepository : INewsletterRepository
 
         return subscriberCount;
     }
-
-    public async Task CreateNewsletterAsync(CreateNewsletterRequest request)
-    {
-        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
-
-        await dbContext.SaveChangesAsync();
-    }
 }

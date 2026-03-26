@@ -8,6 +8,4 @@ public interface INewsletterRepository
     public Task CreateSubscriberAsync(NewsletterSubscriber subscriber);
 
     public Task<int> GetNewsletterSubscriberCountAsync();
-
-    public Task CreateNewsletterAsync(CreateNewsletterRequest request);
 }
