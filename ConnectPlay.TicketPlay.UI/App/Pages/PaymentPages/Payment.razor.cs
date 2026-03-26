@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
 {
-    public partial class Payment : ComponentBase
+    public partial class Payment : TranslatableComponent
     {
         // Default selected payment method is iDEAL
         private string _selectedMethod = "iDEAL";
@@ -49,6 +50,7 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
             !string.IsNullOrWhiteSpace(_creditCardModel.Expiry) &&
             !string.IsNullOrWhiteSpace(_creditCardModel.CVC);
 
+        /// Custom date validation
         public class FutureOrTodayAttribute : ValidationAttribute
         {
             /// Overrides the base IsValid method to provide custom validation.
@@ -58,11 +60,10 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
                 // If the value is null, consider it valid.
                 // [Required] should handle empty/null validation separately.
                 if (value == null) return true;
+
                 // Attempt to parse the value to a DateTime object.
-                // If parsing succeeds, 'dateValue' will hold the parsed date.
                 if (DateTime.TryParse(value.ToString(), out DateTime dateValue))
                 {
-                    // Check if the parsed date is today or in the future.
                     // Returns true if the date is today or later, false if it's in the past.
                     return dateValue.Date >= DateTime.Today;
                 }
@@ -74,19 +75,23 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
         /// Uses DataAnnotations for validation
         public class CreditCardModel
         {
-            [Required(ErrorMessage = "Naam is verplicht")]
+            [Required(ErrorMessage = "payment.validation.nameRequired")]
+            [Display(Name = "Name")]
             public string Name { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Kaartnummer is verplicht")]
-            [CreditCard(ErrorMessage = "Ongeldige kaartnummer")]
+            [Required(ErrorMessage = "payment.validation.numberRequired")]
+            [CreditCard(ErrorMessage = "payment.validation.invalidNumber")]
+            [Display(Name = "Number")]
             public string Number { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "Vervaldatum is verplicht")]
-            [FutureOrToday(ErrorMessage = "Vervaldatum mag niet in het verleden liggen")]
+            [Required(ErrorMessage = "payment.validation.expiryRequired")]
+            [FutureOrToday(ErrorMessage = "payment.validation.expiryPast")]
+            [Display(Name = "Expiry")]
             public string Expiry { get; set; } = string.Empty;
 
-            [Required(ErrorMessage = "CVC is verplicht")]
-            [RegularExpression(@"^\d{3,4}$", ErrorMessage = "CVC moet bestaan uit 3 of 4 cijfers")]
+            [Required(ErrorMessage = "payment.validation.cvcRequired")]
+            [RegularExpression(@"^\d{3,4}$", ErrorMessage = "payment.validation.cvcInvalid")]
+            [Display(Name = "CVC")]
             public string CVC { get; set; } = string.Empty;
         }
     }

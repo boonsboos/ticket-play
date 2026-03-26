@@ -1,0 +1,82 @@
+﻿@using Microsoft.AspNetCore.Components.Forms
+@using System.Linq.Expressions
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@implements IDisposable
+@inherits TranslatableComponent
+
+@if (Messages != null)
+{
+    @* Loop through each validation message and display the translated text *@
+    foreach (var message in Messages)
+    {
+        <div class="validation-message">
+            @T[message] <!-- Translated error message -->
+        </div>
+    }
+}
+
+@code {
+    // Cascading EditContext from the parent EditForm.
+    // This gives access to the validation state of the form.
+    [CascadingParameter]
+    private EditContext CurrentEditContext { get; set; } = default!;
+
+    // Expression pointing to the specific model property to validate.
+    // Example: () => _creditCardModel.Name
+    [Parameter]
+    public Expression<Func<object>> For { get; set; } = default!;
+
+    // Holds the current validation messages for this specific field
+    private IEnumerable<string>? Messages;
+
+    // Flag to track if we've already subscribed to the EditContext's validation state changes
+    private bool _isSubscribed = false;
+
+    // Called when component parameters are set or updated
+    // Ensures messages are updated for the current field
+    protected override void OnParametersSet()
+    {
+        UpdateMessages();
+
+        if (CurrentEditContext != null && !_isSubscribed)
+        {
+            CurrentEditContext.OnValidationStateChanged += ValidationStateChanged;
+            // Set the flag to true to avoid multiple subscriptions
+            _isSubscribed = true;
+        }
+    }
+
+    // Event handler triggered when validation state changes
+    // Updates the Messages collection and refreshes the UI
+    private void ValidationStateChanged(object? sender, ValidationStateChangedEventArgs e)
+    {
+        UpdateMessages();
+        StateHasChanged(); // Forces the component to re-render
+    }
+
+    // Helper method to retrieve validation messages for the specific field
+    private void UpdateMessages()
+    {
+        if (CurrentEditContext != null && For != null)
+        {
+            var fieldIdentifier = FieldIdentifier.Create(For);
+            Messages = CurrentEditContext.GetValidationMessages(fieldIdentifier);
+        }
+    }
+
+    // Dispose method to unsubscribe from EditContext events
+    // Using 'new' keyword to avoid hiding warnings from the base class
+    // Ensures we don't have memory leaks by leaving event handlers subscribed
+    public new void Dispose()
+    {
+        if (CurrentEditContext != null && _isSubscribed)
+        {
+            CurrentEditContext.OnValidationStateChanged -= ValidationStateChanged;
+            _isSubscribed = false;
+        }
+
+        // Call the base class Dispose method if it exists
+        base.Dispose();
+    }
+}
