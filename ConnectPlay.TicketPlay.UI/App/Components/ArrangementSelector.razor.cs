@@ -27,66 +27,11 @@ public partial class ArrangementSelector : TranslatableComponent
     protected bool ShowToast = false;
     protected string ToastType = "success";
 
-    public ArrangementSelector()
+    protected override void OnInitialized()
     {
         CombiSelections = DrinkOptions
             .Select(d => new CombiItem { Drink = d, Quantity = 0 })
             .ToList();
-    }
-
-    protected decimal TotalPrice => Math.Round(
-        PopcornOptions.Sum(p => (p.Quantity * p.Price)) +
-        DrinkOptions.Sum(d => (d.Quantity * d.Price)) +
-        CombiSelections.Sum(c => c.Quantity * c.PriceWithDiscount), 2);
-
-    protected bool HasSelection =>
-        PopcornOptions.Any(p => p.Quantity > 0) ||
-        DrinkOptions.Any(d => d.Quantity > 0) ||
-        CombiSelections.Any(c => c.Quantity > 0);
-
-    protected void SaveSelection()
-    {
-        SavedSelections.Clear();
-
-        var selectedPopcorn = PopcornOptions.Where(p => p.Quantity > 0);
-        var selectedDrinks = DrinkOptions.Where(d => d.Quantity > 0);
-        var selectedCombos = CombiSelections.Where(c => c.Quantity > 0);
-
-        if (!selectedPopcorn.Any() && !selectedDrinks.Any() && !selectedCombos.Any())
-        {
-            ToastMessage = "Je moet eerst iets selecteren!";
-            ToastType = "danger";
-            ShowToast = true;
-            return;
-        }
-
-        foreach (var p in selectedPopcorn)
-            SavedSelections.Add($"{p.Name} x{p.Quantity}");
-
-        foreach (var d in selectedDrinks)
-            SavedSelections.Add($"{d.Name} x{d.Quantity}");
-
-        foreach (var c in selectedCombos)
-            SavedSelections.Add($"Medium Popcorn + {c.Drink.Name} x{c.Quantity}");
-
-        ToastMessage = "Selectie succesvol opgeslagen!";
-        ToastType = "success";
-        ShowToast = true;
-    }
-
-    protected void ClearSelection()
-    {
-        SavedSelections.Clear();
-        ToastMessage = "Selectie verwijderd!";
-        ToastType = "success";
-        ShowToast = true;
-
-        foreach (var p in PopcornOptions)
-            p.Quantity = 0;
-        foreach (var d in DrinkOptions)
-            d.Quantity = 0;
-        foreach (var c in CombiSelections)
-            c.Quantity = 0;
     }
 
     public class ArrangementItem
