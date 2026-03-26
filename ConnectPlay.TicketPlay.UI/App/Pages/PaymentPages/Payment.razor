@@ -1,39 +1,52 @@
 ﻿@page "/payment"
 
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent
+
 <div class="container mt-5">
-    <h2 class="mb-5 text-center">Betaalpagina</h2>
+    <h2 class="mb-5 text-center">@T["payment.title"]</h2>
 
     <div class="mb-4 text-center">
         <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" id="ideal" name="paymentMethod" value="iDEAL"
-                   @onchange="@(e => OnPaymentMethodChanged(e))" checked="@(_selectedMethod == "iDEAL")">
+            <input class="form-check-input"
+                   type="radio"
+                   id="ideal"
+                   name="paymentMethod"
+                   value="iDEAL"
+                   @onchange="OnPaymentMethodChanged"
+                   checked="@(_selectedMethod == "iDEAL")">
                 <label class="form-check-label fs-5" for="ideal">iDEAL</label>
             </div>
 
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="credit" name="paymentMethod" value="CreditCard"
-                       @onchange="@(e => OnPaymentMethodChanged(e))" checked="@(_selectedMethod == "CreditCard")">
+                <input class="form-check-input"
+                       type="radio"
+                       id="credit"
+                       name="paymentMethod"
+                       value="CreditCard"
+                       @onchange="OnPaymentMethodChanged"
+                       checked="@(_selectedMethod == "CreditCard")">
                     <label class="form-check-label fs-5" for="credit">Credit Card</label>
                 </div>
             </div>
-            <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
 
+            <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
                 @if (_selectedMethod == "iDEAL")
                 {
                     <div class="mb-3">
-                        <label class="form-label fs-6">Selecteer uw bank</label>
+                        <label class="form-label fs-6">@T["payment.selectBank"]</label>
                         <select @bind="_selectedBank" class="form-select form-select-lg">
-                            <option value="">-- Kies uw bank --</option>
+                            <option value="">@T["payment.chooseBank"]</option>
                             <option value="Rabo">Rabo</option>
                             <option value="ING">ING</option>
                             <option value="SNS">SNS</option>
                         </select>
                     </div>
-
                     <button class="btn btn-success btn-lg w-100"
                             @onclick="PayWithiDEAL"
                             disabled="@string.IsNullOrEmpty(_selectedBank)">
-                        Betaal met iDEAL
+                        @T["payment.payWithIdeal"]
                     </button>
                 }
                 else if (_selectedMethod == "CreditCard")
@@ -42,30 +55,27 @@
                         <DataAnnotationsValidator />
 
                         <div class="mb-3">
-                            <label class="form-label fs-6">Naam op kaart*</label>
+                            <label class="form-label fs-6">@T["payment.card.name"]*</label>
                             <InputText @bind-Value="_creditCardModel.Name" class="form-control form-control-lg" />
-                            <ValidationMessage For="@(() => _creditCardModel.Name)" />
+                            <TranslatedValidationMessage For="@(() => _creditCardModel.Name)" />
                         </div>
-
                         <div class="mb-3">
-                            <label class="form-label fs-6">Kaartnummer*</label>
+                            <label class="form-label fs-6">@T["payment.card.number"]*</label>
                             <InputText @bind-Value="_creditCardModel.Number" class="form-control form-control-lg" />
-                            <ValidationMessage For="@(() => _creditCardModel.Number)" />
+                            <TranslatedValidationMessage For="@(() => _creditCardModel.Number)" />
                         </div>
-
                         <div class="row mb-3">
                             <div class="col">
-                                <label class="form-label fs-6">Vervaldatum* (MM/YY)</label>
+                                <label class="form-label fs-6">@T["payment.card.expiry"]*</label>
                                 <InputText @bind-Value="_creditCardModel.Expiry" class="form-control form-control-lg" />
-                                <ValidationMessage For="@(() => _creditCardModel.Expiry)" />
+                                <TranslatedValidationMessage For="@(() => _creditCardModel.Expiry)" />
                             </div>
                             <div class="col">
                                 <label class="form-label fs-6">CVC*</label>
                                 <InputText @bind-Value="_creditCardModel.CVC" class="form-control form-control-lg" />
-                                <ValidationMessage For="@(() => _creditCardModel.CVC)" />
+                                <TranslatedValidationMessage For="@(() => _creditCardModel.CVC)" />
                             </div>
                         </div>
-
                         <button type="submit" class="btn btn-success btn-lg w-100"
                                 disabled="@(
                                                     string.IsNullOrWhiteSpace(_creditCardModel.Name) ||
@@ -73,13 +83,12 @@
                                                     string.IsNullOrWhiteSpace(_creditCardModel.Expiry) ||
                                                     string.IsNullOrWhiteSpace(_creditCardModel.CVC)
                                                                         )">
-                            Betaal met Credit Card
+                            @T["payment.payWithCreditCard"]
                         </button>
+                        <div class="mt-2 text-end text-muted" style="font-size: 0.8rem;">
+                            @T["payment.required"]
+                        </div>
                     </EditForm>
-                    <div class="mt-2 text-end text-muted" style="font-size: 0.8rem;">
-                        * veld verplicht
-                    </div>
                 }
             </div>
         </div>
-        <!-- 5500 0000 0000 0004 -->
