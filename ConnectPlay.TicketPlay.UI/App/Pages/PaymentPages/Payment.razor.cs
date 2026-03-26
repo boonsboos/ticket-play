@@ -76,22 +76,22 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
         public class CreditCardModel
         {
             [Required(ErrorMessage = "payment.validation.nameRequired")]
-            [Display(Name = "payment.card.name")]
+            [Display(Name = "Name")]
             public string Name { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "payment.validation.numberRequired")]
             [CreditCard(ErrorMessage = "payment.validation.invalidNumber")]
-            [Display(Name = "payment.card.number")]
+            [Display(Name = "Number")]
             public string Number { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "payment.validation.expiryRequired")]
             [FutureOrToday(ErrorMessage = "payment.validation.expiryPast")]
-            [Display(Name = "payment.card.expiry")]
+            [Display(Name = "Expiry")]
             public string Expiry { get; set; } = string.Empty;
 
             [Required(ErrorMessage = "payment.validation.cvcRequired")]
             [RegularExpression(@"^\d{3,4}$", ErrorMessage = "payment.validation.cvcInvalid")]
-            [Display(Name = "payment.card.cvc")]
+            [Display(Name = "CVC")]
             public string CVC { get; set; } = string.Empty;
         }
     }
