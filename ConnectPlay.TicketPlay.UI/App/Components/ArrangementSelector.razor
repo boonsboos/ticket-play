@@ -1,96 +1,89 @@
-﻿@namespace ConnectPlay.TicketPlay.UI.App.Components
+﻿@using ConnectPlay.TicketPlay.Models
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
 
-<div class="d-flex justify-content-center mt-5">
-    <div class="card shadow-sm" style="max-width: 700px; width: 100%;">
+@inherits TranslatableComponent
+
+<div class="d-flex justify-content-center mt-5 col-12">
+    <div class="card w-100">
         <div class="card-body text-center">
-            <h5 class="mb-4 fw-bold">Arrangementen</h5>
+            <h4 class="mb-4 fw-bold">Arrangementen</h4>
 
-            <h6 class="text-start mb-3 fw-bold">Popcorn</h6>
-            @foreach (var item in PopcornOptions)
-            {
-                <div class="row g-3 mb-3 align-items-center justify-content-center">
-                    <div class="col-5 text-start">@item.Name</div>
-                    <div class="col-2">€@item.Price</div>
-                    <div class="col-2">
-                        <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="item.Quantity" />
-                    </div>
-                    <div class="col-3">Subtotaal: €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</div>
-                </div>
-            }
+            <p>Bestel hier je drankje of snack, wij zorgen dat het bij je stoel staat wanneer de film begint!</p>
 
-            <h6 class="mt-4 mb-3 text-start fw-bold">Dranken</h6>
-            @foreach (var item in DrinkOptions)
-            {
-                <div class="row g-3 mb-3 align-items-center justify-content-center">
-                    <div class="col-5 text-start">@item.Name</div>
-                    <div class="col-2">€@item.Price</div>
-                    <div class="col-2">
-                        <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="item.Quantity" />
-                    </div>
-                    <div class="col-3">Subtotaal: €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</div>
-                </div>
-            }
-
-            <h6 class="mt-4 mb-3 text-start fw-bold">Combi (Medium Popcorn + Drink, 10% korting)</h6>
-            @foreach (var combi in CombiSelections)
-            {
-                <div class="row g-3 mb-3 align-items-center justify-content-center">
-                    <div class="col-5 text-start">Medium Popcorn + @combi.Drink.Name</div>
-                    <div class="col-2">€@combi.PriceWithDiscount</div>
-                    <div class="col-2">
-                        <InputNumber class="form-control mx-auto" style="max-width: 80px;" min="0" @bind-Value="combi.Quantity" />
-                    </div>
-                    <div class="col-3">Subtotaal: €@(Math.Round((combi.Quantity ?? 0) * combi.PriceWithDiscount, 2))</div>
-                </div>
-            }
-
-            <div class="alert alert-light border mt-4 text-start">
-                <h6 class="mb-3 text-center">Totaal overzicht</h6>
-                <ul class="list-unstyled">
-                    @foreach (var item in PopcornOptions.Where(p => (p.Quantity ?? 0) > 0))
+            <div class="accordion">
+                <details class="accordion-item p-3">
+                    <summary class="accordion-header d-flex justify-content-between py-3">
+                        <h5 class="text-start fw-bold">Popcorn</h5>
+                        <i class="bi bi-arrow-down"></i>
+                    </summary>
+                    <hr />
+                    @foreach (var item in PopcornOptions)
                     {
-                        <li>@item.Name x @item.Quantity = €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</li>
+                        <div class="row g-4 mb-3 d-flex">
+                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:{item.Name}"]</div>
+                            <div class="col-1">@item.Price.ToString("C")</div>
+                            <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
+                                <button class="btn btn-outline-secondary" @onclick="() => { if (item.Quantity > 0) item.Quantity--; }">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <p class="mb-0">@item.Quantity</p>
+                                <button class="btn btn-outline-secondary" @onclick="() => item.Quantity++">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
                     }
-                    @foreach (var item in DrinkOptions.Where(d => (d.Quantity ?? 0) > 0))
+                </details>
+
+                <details class="accordion-item p-3">
+                    <summary class="accordion-header d-flex justify-content-between py-3">
+                        <h5 class="text-start fw-bold">Dranken</h5>
+                        <i class="bi bi-arrow-down"></i>
+                    </summary>
+                    <hr />
+                    @foreach (var item in DrinkOptions)
                     {
-                        <li>@item.Name x @item.Quantity = €@(Math.Round((item.Quantity ?? 0) * item.Price, 2))</li>
+                        <div class="row g-4 mb-3 d-flex">
+                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:{item.Name}"]</div>
+                            <div class="col-1">@item.Price.ToString("C")</div>
+                            <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
+                                <button class="btn btn-outline-secondary" @onclick="() => { if (item.Quantity > 0) item.Quantity--; }">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <p class="mb-0">@item.Quantity</p>
+                                <button class="btn btn-outline-secondary" @onclick="() => item.Quantity++">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
                     }
-                    @foreach (var combi in CombiSelections.Where(c => (c.Quantity ?? 0) > 0))
+                </details>
+
+                <details class="accordion-item p-3">
+                    <summary class="accordion-header d-flex justify-content-between py-3">
+                        <h5 class="text-start fw-bold">Combideal</h5>
+                        <i class="bi bi-arrow-down"></i>
+                    </summary>
+                    <hr />
+                    @foreach (var combi in CombiOptions)
                     {
-                        <li>Medium Popcorn + @combi.Drink.Name x @combi.Quantity = €@(Math.Round((combi.Quantity ?? 0) * combi.PriceWithDiscount, 2))</li>
+                        <div class="row g-4 mb-3 d-flex">
+                            <!-- The text for the combo is a combination of the medium popcorn and drink options -->
+                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:MediumPopcorn"] + @T[$"orderTickets:arrangements:{combi.Name}"]</div>
+                            <div class="col-1">@combi.Price.ToString("C")</div>
+                            <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
+                                <button class="btn btn-outline-secondary" @onclick="() => { if (combi.Quantity > 0) combi.Quantity--; }">
+                                    <i class="bi bi-dash"></i>
+                                </button>
+                                <p class="mb-0">@combi.Quantity</p>
+                                <button class="btn btn-outline-secondary" @onclick="() => combi.Quantity++">
+                                    <i class="bi bi-plus"></i>
+                                </button>
+                            </div>
+                        </div>
                     }
-                </ul>
-                <strong>Totaal: €@TotalPrice</strong>
+                </details>
             </div>
-
-            <div class="d-flex justify-content-center mt-3 gap-2">
-                <button class="btn btn-primary" @onclick="SaveSelection">Opslaan</button>
-                @if (SavedSelections.Any())
-                {
-                    <button class="btn btn-danger" @onclick="ClearSelection">Verwijder selectie</button>
-                }
-            </div>
-
-            @if (ShowToast)
-            {
-                <div class="alert alert-@ToastType alert-dismissible fade show mt-3" role="alert">
-                    @ToastMessage
-                    <button type="button" class="btn-close" @onclick="() => ShowToast = false"></button>
-                </div>
-            }
-
-            @if (SavedSelections.Any())
-            {
-                <div class="mt-3 text-start">
-                    <h6>Opgeslagen selectie:</h6>
-                    <ul>
-                        @foreach (var item in SavedSelections)
-                        {
-                            <li>@item</li>
-                        }
-                    </ul>
-                </div>
-            }
         </div>
     </div>
 </div>

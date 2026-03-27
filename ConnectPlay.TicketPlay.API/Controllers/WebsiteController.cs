@@ -1,4 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Contracts.Arrangement;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Contracts.Overview;
 using ConnectPlay.TicketPlay.Models;
@@ -13,10 +14,12 @@ public class WebsiteController : ControllerBase
     private const string SneakPreviewUrl = "https://dummyimage.com/300x450/000/fff&text=Sneak%20Preview";
 
     private readonly IScreeningRepository screeningRepository;
+    private readonly IArrangementRepository arrangementRepository;
 
-    public WebsiteController(IScreeningRepository screeningRepository)
+    public WebsiteController(IScreeningRepository screeningRepository, IArrangementRepository arrangementRepository)
     {
         this.screeningRepository = screeningRepository;
+        this.arrangementRepository = arrangementRepository;
     }
 
     [HttpGet]
@@ -65,5 +68,23 @@ public class WebsiteController : ControllerBase
                         })
                 }
             ).ToList();
+    }
+
+    [HttpPost]
+    [Route("arrangements")]
+    public async Task<IActionResult> CreateArrangementAsync([FromBody] NewArrangement newArrangement)
+    {
+        await arrangementRepository.CreateAsync(newArrangement);
+
+        return Ok();
+    }
+
+    [HttpGet]
+    [Route("arrangements")]
+    public async Task<IActionResult> GetArrangementsAsync()
+    {
+        var arrangements = await arrangementRepository.GetAllAsync();
+
+        return Ok(arrangements);
     }
 }

@@ -3,7 +3,7 @@
 @using ConnectPlay.TicketPlay.Models
 @using ConnectPlay.TicketPlay.UI.App.Components.Base
 
-@inherits TranslatableComponent;
+@inherits TranslatableComponent
 
 @rendermode InteractiveServer
 
@@ -12,38 +12,6 @@
 <div class="container mt-4 col-6 offset-3 d-flex flex-column justify-content-center align-items-center">
 
     <h2 class="text-center">@T["orderTickets.title"]</h2>
-
-    <div class="d-flex flex-column gap-3 mt-4 w-100">
-        @foreach (var ticketType in Enum.GetValues<TicketType>())
-        {
-            <div class="border border-secondary-subtle rounded p-3 d-flex">
-                <div class="d-flex flex-column align-items-start justify-content-center">
-                    <h4 class="fw-semibold text-body mb-0">
-                        @(ticketType switch
-                        {
-                            TicketType.Regular => @T["orderTickets.regular"],
-                            TicketType.Child => @T["orderTickets.child"],
-                            TicketType.Student => @T["orderTickets.regular"],
-                            TicketType.Senior => @T["orderTickets.senior"],
-                            _ => ticketType.ToString()
-                        })
-                    </h4>
-                    <p class="text-muted mb-0">@websiteService.GetPrice(ticketType).ToString("C")</p>
-                </div>
-
-                @* counter *@
-                <div class="d-flex flex-row align-items-center gap-2 ms-auto">
-                    <button class="btn btn-outline-secondary" @onclick="() => DecreaseTicket(ticketType)">
-                        <i class="bi bi-dash"></i>
-                    </button>
-                    <p class="mb-0">@(Tickets.FirstOrDefault(t => t.Type == ticketType)?.Count ?? 0)</p>
-                    <button class="btn btn-outline-secondary" @onclick="() => IncreaseTicket(ticketType)">
-                        <i class="bi bi-plus"></i>
-                    </button>
-                </div>
-            </div>
-        }
-    </div>
 
     @* little screening overview *@
     <div class="border border-secondary-subtle rounded p-3 mt-5 w-25">
@@ -66,6 +34,42 @@
                 <p class="text-muted mb-0">@T["orderTickets.yes"]</p>
             </div>
         }
+    </div>
+
+    <div class="d-flex flex-column gap-3 mt-4 w-100">
+        @foreach (var ticketType in Enum.GetValues<TicketType>())
+        {
+            <div class="border border-secondary-subtle rounded p-3 d-flex">
+                <div class="d-flex flex-column align-items-start justify-content-center">
+                    <h4 class="fw-semibold text-body mb-0">
+                        @(ticketType switch
+                        {
+                            TicketType.Regular => @T["orderTickets.regular"],
+                            TicketType.Child => @T["orderTickets.child"],
+                            TicketType.Student => @T["orderTickets.student"],
+                            TicketType.Senior => @T["orderTickets.senior"],
+                            _ => ticketType.ToString()
+                        })
+                    </h4>
+                    <p class="text-muted mb-0">@websiteService.GetPrice(ticketType).ToString("C")</p>
+                </div>
+
+                @* counter *@
+                <div class="d-flex flex-row align-items-center gap-2 ms-auto">
+                    <button class="btn btn-outline-secondary" @onclick="() => DecreaseTicket(ticketType)">
+                        <i class="bi bi-dash"></i>
+                    </button>
+                    <p class="mb-0">@(Tickets.FirstOrDefault(t => t.Type == ticketType)?.Count ?? 0)</p>
+                    <button class="btn btn-outline-secondary" @onclick="() => IncreaseTicket(ticketType)">
+                        <i class="bi bi-plus"></i>
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="d-flex flex-column w-100">
+        <ArrangementSelector/>
     </div>
 
     <div class="container d-flex justify-content-between m-3">
