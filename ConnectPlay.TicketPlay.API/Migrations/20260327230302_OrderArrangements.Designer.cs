@@ -292,7 +292,7 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.HasOne("ConnectPlay.TicketPlay.Models.Arrangement", "Arrangement")
                         .WithMany()
                         .HasForeignKey("ArrangementId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ConnectPlay.TicketPlay.Models.Order", "Order")
