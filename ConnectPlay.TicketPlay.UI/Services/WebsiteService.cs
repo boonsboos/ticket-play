@@ -1,4 +1,6 @@
-﻿using ConnectPlay.TicketPlay.Contracts.Hall;
+﻿using ConnectPlay.TicketPlay.Contracts.Arrangements;
+using ConnectPlay.TicketPlay.Contracts.Hall;
+using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
@@ -7,7 +9,7 @@ namespace ConnectPlay.TicketPlay.UI.Services;
 
 public class WebsiteService
 {
-    private readonly IKioskApi kioskApi;
+    private readonly IOrderApi kioskApi;
     private readonly IHallApi hallApi;
     private readonly ILogger<WebsiteService> logger;
 
@@ -18,11 +20,13 @@ public class WebsiteService
     public DateTimeOffset? ScreeningTime => currentOrder?.Tickets.FirstOrDefault()?.Screening.StartTime;
     public int? CurrentOrderId { get => currentOrder?.Id; } // Only get the order id if there is a current order
     public Screening? SelectedScreening { get; set; } = null;
-    public IEnumerable<TicketType> Tickets { get; set; } = [TicketType.Regular, TicketType.Student];
+    public IEnumerable<ArrangementQuantity> SelectedArrangements { get; set; } = [];
+    public IEnumerable<TicketType> Tickets { get; set; } = [];
+
     public HallLayoutResponse? HallLayout { get; set; }
     public IEnumerable<SeatResponse> TakenSeats { get; set; } = [];
 
-    public WebsiteService(IKioskApi kioskApi, IHallApi hallApi, ILogger<WebsiteService> logger)
+    public WebsiteService(IOrderApi kioskApi, IHallApi hallApi, ILogger<WebsiteService> logger)
     {
         this.kioskApi = kioskApi;
         this.hallApi = hallApi;
@@ -39,7 +43,7 @@ public class WebsiteService
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
 
-        var response = await kioskApi.ReserveSeatsAsync(SelectedScreening.Id, Tickets);
+        var response = await kioskApi.ReserveSeatsAsync(SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets});
         if (response.IsSuccessStatusCode)
         {
             currentOrder = response.Content;

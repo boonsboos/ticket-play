@@ -1,4 +1,4 @@
-﻿using ConnectPlay.TicketPlay.Contracts.Arrangement;
+﻿using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Models;
 
 namespace ConnectPlay.TicketPlay.Abstract.Repositories;

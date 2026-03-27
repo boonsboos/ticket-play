@@ -95,7 +95,7 @@ public class Program
             .AddRefitClient<IMovieApi>()
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
-            .AddRefitClient<IKioskApi>()
+            .AddRefitClient<IOrderApi>()
             .AddRefitClient<IOrderApi>()
             .AddRefitClient<INewsletterApi>()
             .AddRefitClient<IWebsiteApi>()

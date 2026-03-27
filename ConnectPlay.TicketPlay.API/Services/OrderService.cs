@@ -6,7 +6,7 @@ using System.Data;
 
 namespace ConnectPlay.TicketPlay.API.Services;
 
-public class KioskOrderService(
+public class OrderService(
         IScreeningRepository screeningRepository,
         ITicketRepository ticketRepository,
         ISeatAssignmentService seatAssignmentService,
@@ -14,7 +14,7 @@ public class KioskOrderService(
         ITicketPrintingService ticketPrintingService,
         IOrderRepository orderRepository,
         ISeatRepository seatRepository,
-        ILogger<KioskOrderService> logger) : IKioskOrderService
+        ILogger<OrderService> logger) : IOrderService
 {
 
     public async Task<Order> ReserveAsync(int screeningId, IEnumerable<TicketType> reservation)

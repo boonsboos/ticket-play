@@ -1,4 +1,5 @@
 using ConnectPlay.TicketPlay.Models;
+using ConnectPlay.TicketPlay.UI.App.Components;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.AspNetCore.Components;
@@ -11,15 +12,18 @@ public partial class TicketOrder : TranslatableComponent
     private readonly NavigationManager navigationManager;
     private readonly ILogger<TicketOrder> logger;
 
+    // make child component part of the component class so we can call its methods
+    private ArrangementSelector arrangementSelector;
+
+    protected Screening Screening { get; set; } = null!;
+    protected List<WebsiteTicket> Tickets { get; set; } = [];
+
     public TicketOrder(WebsiteService websiteService, NavigationManager navigationManager, ILogger<TicketOrder> logger)
     {
         this.websiteService = websiteService;
         this.navigationManager = navigationManager;
         this.logger = logger;
     }
-
-    protected Screening Screening { get; set; } = null!;
-    protected List<WebsiteTicket> Tickets { get; set; } = [];
 
     protected override void OnInitialized()
     {
@@ -37,6 +41,9 @@ public partial class TicketOrder : TranslatableComponent
     {
         try
         {
+            // get selected arrangements from the subcomponent
+            websiteService.SelectedArrangements = arrangementSelector.GetSelectedArrangements();
+
             // map tickets to the count of each ticket type so it becomes [Regular,Regular,Student,...] instead of [{Type: Regular, Count: 2}, {Type: Student, Count: 1}, ...]
             websiteService.Tickets = [.. this.Tickets.SelectMany(t => Enumerable.Repeat(t.Type, t.Count))];
             await websiteService.PlaceOrder();

@@ -41,10 +41,10 @@ public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
                 MinimumAge = (int)model.MinimumAge!.Value,
                 Genre = model.Genre switch
                 {
-                    Models.Genre.Thriller => "thriller",
-                    Models.Genre.Family => "family",
-                    Models.Genre.Drama => "drama",
-                    Models.Genre.ScienceFiction => "science_fiction",
+                    Genre.Thriller => "thriller",
+                    Genre.Family => "family",
+                    Genre.Drama => "drama",
+                    Genre.ScienceFiction => "science_fiction",
                     _ => throw new InvalidOperationException("Invalid genre") // this is the default case for .net
                 },
                 Tags = tags
