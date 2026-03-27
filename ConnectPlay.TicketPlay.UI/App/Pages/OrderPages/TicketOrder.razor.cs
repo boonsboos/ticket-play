@@ -13,7 +13,7 @@ public partial class TicketOrder : TranslatableComponent
     private readonly ILogger<TicketOrder> logger;
 
     // make child component part of the component class so we can call its methods
-    private ArrangementSelector arrangementSelector;
+    private ArrangementSelector? arrangementSelector;
 
     protected Screening Screening { get; set; } = null!;
     protected List<WebsiteTicket> Tickets { get; set; } = [];
@@ -42,7 +42,7 @@ public partial class TicketOrder : TranslatableComponent
         try
         {
             // get selected arrangements from the subcomponent
-            websiteService.SelectedArrangements = arrangementSelector.GetSelectedArrangements();
+            websiteService.SelectedArrangements = arrangementSelector?.GetSelectedArrangements() ?? [];
 
             // map tickets to the count of each ticket type so it becomes [Regular,Regular,Student,...] instead of [{Type: Regular, Count: 2}, {Type: Student, Count: 1}, ...]
             websiteService.Tickets = [.. this.Tickets.SelectMany(t => Enumerable.Repeat(t.Type, t.Count))];

@@ -96,7 +96,6 @@ public class Program
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
             .AddRefitClient<IOrderApi>()
-            .AddRefitClient<IOrderApi>()
             .AddRefitClient<INewsletterApi>()
             .AddRefitClient<IWebsiteApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));

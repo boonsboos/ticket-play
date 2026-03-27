@@ -40,7 +40,7 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                         column: x => x.ArrangementId,
                         principalTable: "arrangements",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_order_arrangement_orders_OrderId",
                         column: x => x.OrderId,
