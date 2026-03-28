@@ -5,7 +5,7 @@ namespace ConnectPlay.TicketPlay.Models;
 [JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ArrangementType : byte
 {
-    Popcorn,
+    Snack,
     Drink,
     Special
 }
