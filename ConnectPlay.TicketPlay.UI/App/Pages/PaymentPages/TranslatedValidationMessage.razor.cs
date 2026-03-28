@@ -1,49 +1,56 @@
-﻿// This file contains the logic for the TranslatedValidationMessage Blazor
-// component. It is responsible for displaying the validation messages for a
-// specific field inside an EditForm.
-//
-// - The 'For' parameter provides a lambda expression pointing to the bound
-//   model property (e.g., () => Model.Name). This identifies which field the
-//   component should show messages for.
-// - The component receives the EditContext from the parent EditForm via a
-//   CascadingParameter. This gives access to the form's validation state.
-// - When validation occurs, Blazor triggers the EditContext's
-//   OnValidationStateChanged event. This component listens to that event and
-//   refreshes its displayed messages accordingly.
-// - UpdateMessages() extracts only the validation messages that belong to the
-//   targeted field and exposes them to the .razor markup.
-// - The .razor view then handles translating those messages using the T[key]
-//   helper provided by the TranslatableComponent base class.
-// - Dispose() unsubscribes from EditContext events to prevent memory leaks when
-//   the component is removed.
-
-using ConnectPlay.TicketPlay.UI.App.Components.Base;
+﻿using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using System.Linq.Expressions;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages;
 
+
+/// <summary>
+/// Blazor component that displays translated validation messages for a specific
+/// model field inside an <see cref="EditForm"/>.
+/// </summary>
 public partial class TranslatedValidationMessage : TranslatableComponent, IDisposable
 {
-    // Cascading EditContext from the parent EditForm.
-    // This gives access to the validation state of the form.
+
+    /// <summary>
+    /// Gets the <see cref="EditContext"/> cascaded from the parent <c>EditForm</c>.
+    /// Provides access to the form’s validation and field-level messages.
+    /// </summary>
     [CascadingParameter]
     private EditContext? CurrentEditContext { get; set; }
 
-    // Expression pointing to the specific model property to validate.
-    // Example: () => _creditCardModel.Name
+    /// <summary>
+    /// Expression that identifies the bound model property this component displays
+    /// validation messages for.
+    /// </summary>
+    /// <remarks>
+    /// Example usage in Razor:
+    /// <code>
+    /// <TranslatedValidationMessage For="() => model.Property" />
+    /// </code>
+    /// </remarks>
     [Parameter]
     public Expression<Func<object>>? For { get; set; }
 
-    // Holds the current validation messages for this specific field
+    /// <summary>
+    /// Contains the validation messages associated with the field referenced by
+    /// the <see cref="For"/> expression.
+    /// </summary>
     protected IEnumerable<string>? Messages { get; private set; }
 
-    // Flag to track if we've already subscribed to the EditContext's validation state changes
+    /// <summary>
+    /// Indicates whether this component has already subscribed to the
+    /// <see cref="EditContext.OnValidationStateChanged"/> event.
+    /// Prevents duplicate subscriptions.
+    /// </summary>
     private bool _isSubscribed;
 
-    // Called when component parameters are set or updated
-    // Ensures messages are updated for the current field
+    /// <summary>
+    /// Called by the Blazor framework whenever component parameters are set or updated.
+    /// Ensures that validation messages are refreshed and that the component subscribes
+    /// to validation state changes from the parent <see cref="EditContext"/>.
+    /// </summary>
     protected override void OnParametersSet()
     {
         if (CurrentEditContext is null || For is null)
@@ -58,17 +65,34 @@ public partial class TranslatedValidationMessage : TranslatableComponent, IDispo
         }
     }
 
-    // Event handler triggered when validation state changes
-    // Updates the Messages collection and refreshes the UI
+    /// <summary>
+    /// Handles validation state changes raised by the parent <see cref="EditContext"/>.
+    /// </summary>
+    /// <remarks>
+    /// This method is triggered whenever the form performs validation — for example
+    /// when a field loses focus, when input changes, or when <c>EditForm</c> performs
+    /// a validation cycle.
+    /// <para>
+    /// The method refreshes the validation messages for the bound field by calling
+    /// <see cref="UpdateMessages"/> and then requests a UI re-render using
+    /// <see cref="InvokeAsync(Func{Task})"/> with <see cref="StateHasChanged"/>.
+    /// This ensures the translated validation messages are immediately reflected
+    /// in the user interface.
+    /// </para>
+    /// </remarks>
+    /// <param name="sender">
+    /// The <see cref="EditContext"/> that triggered the event.
+    /// </param>
     private void ValidationStateChanged(object? sender, ValidationStateChangedEventArgs e)
     {
         UpdateMessages();
         InvokeAsync(StateHasChanged);
     }
 
-    // Extracts validation messages for the specific field identified by 'For'
-    // Uses the EditContext's GetValidationMessages method with the appropriate FieldIdentifier
-    // Updates the Messages property with the current validation messages for that field
+    /// <summary>
+    /// Updates the <see cref="Messages"/> collection with the current validation
+    /// messages for the field specified by the <see cref="For"/> parameter.
+    /// </summary
     private void UpdateMessages()
     {
         if (CurrentEditContext is null || For is null)
@@ -78,8 +102,15 @@ public partial class TranslatedValidationMessage : TranslatableComponent, IDispo
         Messages = CurrentEditContext.GetValidationMessages(fieldIdentifier);
     }
 
-    // Unsubscribes from the EditContext's validation state changes to prevent memory leaks
-    // This is important when the component is removed from the UI to avoid keeping references to it in the EditContext
+    /// <summary>
+    /// Cleans up the component by unsubscribing from the EditContext's 
+    /// <c>OnValidationStateChanged</c> event.
+    /// </summary>
+    /// <remarks>
+    /// This prevents memory leaks and unintended event triggers when the component is
+    /// removed from the UI. Without unsubscribing, the EditContext would continue to
+    /// reference this component, keeping it alive in memory.
+    /// </remarks>
     public new void Dispose()
     {
         if (_isSubscribed && CurrentEditContext is not null)
