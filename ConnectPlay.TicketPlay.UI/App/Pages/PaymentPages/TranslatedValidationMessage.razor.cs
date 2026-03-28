@@ -5,14 +5,12 @@ using System.Linq.Expressions;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages;
 
-
 /// <summary>
 /// Blazor component that displays translated validation messages for a specific
 /// model field inside an <see cref="EditForm"/>.
 /// </summary>
 public partial class TranslatedValidationMessage : TranslatableComponent, IDisposable
 {
-
     /// <summary>
     /// Gets the <see cref="EditContext"/> cascaded from the parent <c>EditForm</c>.
     /// Provides access to the form’s validation and field-level messages.

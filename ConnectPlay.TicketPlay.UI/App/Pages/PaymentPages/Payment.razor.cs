@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages;
 
-
 /// <summary>
 /// Represents the payment page of the application, allowing the user to choose
 /// and complete a payment method (iDEAL or credit card) for the current order.
@@ -64,7 +63,6 @@ public partial class Payment : TranslatableComponent
         !string.IsNullOrWhiteSpace(_creditCardModel.Number) &&
         !string.IsNullOrWhiteSpace(_creditCardModel.Expiry) &&
         !string.IsNullOrWhiteSpace(_creditCardModel.CVC);
-
 
     /// <summary>
     /// Validation attribute that checks whether a date is today or lies in the future.
