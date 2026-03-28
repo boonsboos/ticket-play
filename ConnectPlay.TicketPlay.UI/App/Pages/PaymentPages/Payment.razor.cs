@@ -1,11 +1,21 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using ConnectPlay.TicketPlay.UI.App.Components.Base;
+using ConnectPlay.TicketPlay.UI.Services;
+using Microsoft.AspNetCore.Components;
 using System.ComponentModel.DataAnnotations;
-using ConnectPlay.TicketPlay.UI.App.Components.Base;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
 {
     public partial class Payment : TranslatableComponent
     {
+        private readonly WebsiteService _websiteService;
+        private readonly NavigationManager _navigation;
+
+        public Payment(WebsiteService websiteService, NavigationManager navigation)
+        {
+            _websiteService = websiteService;
+            _navigation = navigation;
+        }
+
         // Default selected payment method is iDEAL
         private string _selectedMethod = "iDEAL";
 
@@ -14,10 +24,6 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
 
         // Credit card form model
         private CreditCardModel _creditCardModel = new();
-
-        // Navigation service for redirecting to success page
-        [Inject]
-        private NavigationManager Navigation { get; set; } = default!;
 
         /// Handles changing the payment method (radio buttons)
         /// Resets bank selection if switching away from iDEAL
@@ -29,17 +35,17 @@ namespace ConnectPlay.TicketPlay.UI.App.Pages.PaymentPages
 
         /// Mock payment using Credit Card
         /// Validates form via EditForm / DataAnnotations
-        private void PayWithCreditCard()
+        private async Task PayWithCreditCard()
         {
-            Console.WriteLine($"Paid with credit card: {_creditCardModel.Number}");
-            Navigation.NavigateTo("/payment/success");
+            await _websiteService.PayOrder();
+            _navigation.NavigateTo("/payment/success");
         }
 
         /// Mock payment using iDEAL
-        private void PayWithiDEAL()
+        private async Task PayWithiDEAL()
         {
-            Console.WriteLine($"Paid with iDEAL via bank: {_selectedBank}");
-            Navigation.NavigateTo("/payment/success");
+            await _websiteService.PayOrder();
+            _navigation.NavigateTo("/payment/success");
         }
 
         /// Checks if the credit card form is fully filled
