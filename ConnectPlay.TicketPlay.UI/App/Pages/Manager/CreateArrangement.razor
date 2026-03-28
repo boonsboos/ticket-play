@@ -1,0 +1,67 @@
+﻿@page "/manager/create-arrangement"
+
+@using ConnectPlay.TicketPlay.Models
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+
+@inherits TranslatableComponent
+
+@rendermode InteractiveServer
+
+<PageTitle>@T["createArrangement.pageTitle"]</PageTitle>
+
+<div class="container my-4 col-8">
+    <h3 class="mb-4">@T["createArrangement.title"]</h3>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <EditForm Model="@formModel" OnValidSubmit="HandleSubmit" FormName="CreateArrangementForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-7">
+                        <label class="form-label">@T["createArrangement.name"]</label>
+                        <InputText class="form-control" @bind-Value="formModel.Name" placeholder="Potato chips"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@T["createArrangement.price"]</label>
+                        <div class="input-group">
+                            <span class="input-group-text">€</span>
+                            <InputNumber class="form-control" @bind-Value="formModel.Price" placeholder="3,50"/>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">@T["createArrangement.type"]</label>
+                        <InputSelect class="form-control" @bind-Value="formModel.ArrangementType">
+                            @foreach(var opt in Enum.GetValues<ArrangementType>())
+                            {
+                                <option value="@opt">@T[$"createArrangement.types.{opt}"]</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+
+                <hr />
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary px-4" disabled="@isSubmitting">
+                        @T["createArrangement.submit"]
+                    </button>
+                </div>
+            </EditForm>
+
+            @if (showToast)
+            {
+                <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                    <div class="toast show align-items-center text-white @toastColor border-0">
+                        <div class="d-flex">
+                            <div class="toast-body">
+                                @toastMessage
+                            </div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto" @onclick="() => showToast = false">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
