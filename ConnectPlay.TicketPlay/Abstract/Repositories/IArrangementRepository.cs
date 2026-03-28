@@ -7,4 +7,5 @@ public interface IArrangementRepository
 {
     public Task<IEnumerable<Arrangement>> GetAllAsync();
     public Task CreateAsync(NewArrangement newArrangement);
+    public Task<Arrangement?> GetByIdAsync(int id);
 }

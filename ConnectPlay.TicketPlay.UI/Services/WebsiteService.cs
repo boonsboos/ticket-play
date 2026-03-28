@@ -9,16 +9,19 @@ namespace ConnectPlay.TicketPlay.UI.Services;
 
 public class WebsiteService
 {
-    private readonly IOrderApi kioskApi;
+    private readonly IOrderApi orderApi;
     private readonly IHallApi hallApi;
     private readonly ILogger<WebsiteService> logger;
 
-    private Order? currentOrder = null;
-    public IEnumerable<Seat> Seats { get { return currentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
+    public Order? CurrentOrder = null;
+    public IEnumerable<Seat> Seats { get { return CurrentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
-    public Movie? Movie => currentOrder?.Tickets.FirstOrDefault()?.Screening.Movie;
-    public DateTimeOffset? ScreeningTime => currentOrder?.Tickets.FirstOrDefault()?.Screening.StartTime;
-    public int? CurrentOrderId { get => currentOrder?.Id; } // Only get the order id if there is a current order
+    public Movie? Movie => CurrentOrder?.Tickets.FirstOrDefault()?.Screening.Movie;
+    public DateTimeOffset? ScreeningTime => CurrentOrder?.Tickets.FirstOrDefault()?.Screening.StartTime;
+    public int? CurrentOrderId { get => CurrentOrder?.Id; } // Only get the order id if there is a current order
+
+    public IEnumerable<OrderArrangement> ReservedArrangements { get => CurrentOrder?.Arrangements ?? []; }
+
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<ArrangementQuantity> SelectedArrangements { get; set; } = [];
     public IEnumerable<TicketType> Tickets { get; set; } = [];
@@ -26,9 +29,9 @@ public class WebsiteService
     public HallLayoutResponse? HallLayout { get; set; }
     public IEnumerable<SeatResponse> TakenSeats { get; set; } = [];
 
-    public WebsiteService(IOrderApi kioskApi, IHallApi hallApi, ILogger<WebsiteService> logger)
+    public WebsiteService(IOrderApi orderApi, IHallApi hallApi, ILogger<WebsiteService> logger)
     {
-        this.kioskApi = kioskApi;
+        this.orderApi = orderApi;
         this.hallApi = hallApi;
         this.logger = logger;
     }
@@ -43,10 +46,10 @@ public class WebsiteService
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
 
-        var response = await kioskApi.ReserveSeatsAsync(SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets});
+        var response = await orderApi.ReserveSeatsAsync(SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets});
         if (response.IsSuccessStatusCode)
         {
-            currentOrder = response.Content;
+            CurrentOrder = response.Content;
         }
         else
         {
@@ -60,7 +63,7 @@ public class WebsiteService
         var orderId = CurrentOrderId ?? throw new InvalidOperationException("Cannot cancel order when there is none");
 
         // Call the api to cancel the order
-        var cancelResponse = await kioskApi.CancelOrderAsync(orderId);
+        var cancelResponse = await orderApi.CancelOrderAsync(orderId);
 
         if (cancelResponse.IsSuccessStatusCode)
         {
@@ -75,7 +78,7 @@ public class WebsiteService
     {
         var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
 
-        var payResponse = await kioskApi.PayOrderAsync(orderId);
+        var payResponse = await orderApi.PayOrderAsync(orderId);
 
         // if the response is not OK (200)
         if (!payResponse.IsSuccessStatusCode)
@@ -101,7 +104,7 @@ public class WebsiteService
 
     public async Task LoadTakenSeats(int screeningId, int orderId)
     {
-        var response = await kioskApi.GetTakenSeatsAsync(screeningId, orderId);
+        var response = await orderApi.GetTakenSeatsAsync(screeningId, orderId);
 
         if (response.IsSuccessStatusCode)
         {
@@ -122,26 +125,26 @@ public class WebsiteService
     /// <exception cref="InvalidOperationException"></exception>
     public async Task<bool> ApplySeatSelection(List<Seat> selectedSeats)
     {
-        if (currentOrder is null) return false;
-        if (selectedSeats.Count != currentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
+        if (CurrentOrder is null) return false;
+        if (selectedSeats.Count != CurrentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
 
         // Call the API to update the order with the new seat selections
-        var updateResponse = await kioskApi.UpdateOrderSeatsAsync(currentOrder.Id, selectedSeats);
+        var updateResponse = await orderApi.UpdateOrderSeatsAsync(CurrentOrder.Id, selectedSeats);
 
         if (!updateResponse.IsSuccessStatusCode)
         {
-            logger.LogError("Failed to update seats for order {OrderId}: {StatusCode} - {Reason}", currentOrder.Id, updateResponse.StatusCode, updateResponse.Error);
+            logger.LogError("Failed to update seats for order {OrderId}: {StatusCode} - {Reason}", CurrentOrderId, updateResponse.StatusCode, updateResponse.Error);
             return false;
         }
 
         if (updateResponse.Content is null)
         {
-            logger.LogError("Failed to update seats for order {OrderId}: API returned empty content", currentOrder.Id);
+            logger.LogError("Failed to update seats for order {OrderId}: API returned empty content", CurrentOrderId);
             return false;
         }
 
         // Update the current order with the response from the API, which should include the updated seat information
-        currentOrder = updateResponse.Content;
+        CurrentOrder = updateResponse.Content;
         return true;
     }
 
@@ -150,9 +153,10 @@ public class WebsiteService
     {
         logger.LogInformation("Resetting state for use in next order");
         SelectedScreening = null;
+        SelectedArrangements = [];
         Tickets = [];
         HallLayout = null;
-        currentOrder = null;
+        CurrentOrder = null;
     }
 
     public float GetPrice(TicketType ticketType)

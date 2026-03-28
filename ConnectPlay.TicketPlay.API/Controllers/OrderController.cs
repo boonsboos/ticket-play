@@ -29,7 +29,7 @@ public class OrderController : ControllerBase
 
         try
         {
-            var placedOrder = await orderService.ReserveAsync(screeningId, order.Tickets);
+            var placedOrder = await orderService.ReserveAsync(screeningId, order);
 
             return Ok(placedOrder);
         }

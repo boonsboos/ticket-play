@@ -1,6 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.API.Services;
+using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -75,15 +76,17 @@ public class OrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
+        var arrangementRepository = Substitute.For<IArrangementRepository>();
+        var orderArrangementRepository = Substitute.For<IOrderArrangementRepository>();
         var logger = Substitute.For<ILogger<OrderService>>();
 
         screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns(null as Screening);
 
-        var orderProcessingService = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var orderProcessingService = new OrderService(screeningRepository, ticketRepository, arrangementRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, orderArrangementRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
-            async () => await orderProcessingService.ReserveAsync(2, [])
+            async () => await orderProcessingService.ReserveAsync(2, new NewOrder { Arrangements = [], Tickets = [] })
         );
     }
 
@@ -98,13 +101,15 @@ public class OrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
+        var arrangementRepository = Substitute.For<IArrangementRepository>();
+        var orderArrangementRepository = Substitute.For<IOrderArrangementRepository>();
         var logger = Substitute.For<ILogger<OrderService>>();
 
         var seat = new Seat { Row = 1, SeatNumber = 1, IsForWheelchair = false };
         var order = new Order
         {
             Id = 1,
-            Total = 10f,
+            Total = 10m,
             Status = OrderStatus.Pending,
             Tickets =
             [
@@ -115,7 +120,7 @@ public class OrderServiceTests
 
         orderRepository.GetOrderByIdAsync(1).Returns(order);
 
-        var service = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var service = new OrderService(screeningRepository, ticketRepository, arrangementRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, orderArrangementRepository, logger);
 
         // Act & Assert — both requested seats are identical, so duplicates should be rejected
         await Assert.ThrowsAsync<InvalidOperationException>(
@@ -134,6 +139,8 @@ public class OrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
+        var arrangementRepository = Substitute.For<IArrangementRepository>();
+        var orderArrangementRepository = Substitute.For<IOrderArrangementRepository>();
         var logger = Substitute.For<ILogger<OrderService>>();
 
         var takenSeat = new Seat { Id = 5, Row = 2, SeatNumber = 3, IsForWheelchair = false };
@@ -141,12 +148,12 @@ public class OrderServiceTests
         var order = new Order
         {
             Id = 1,
-            Total = 10f,
+            Total = 10m,
             Status = OrderStatus.Pending,
             Tickets = [new Ticket { ScreeningId = 1, SeatId = 1, Seat = new Seat { Row = 1, SeatNumber = 1, IsForWheelchair = false }, TicketType = TicketType.Regular }]
         };
 
-        var paidOrder = new Order { Id = 2, Total = 10f, Status = OrderStatus.Paid };
+        var paidOrder = new Order { Id = 2, Total = 10m, Status = OrderStatus.Paid };
 
         // Ticket belonging to another paid order occupying the seat we want
         var existingTicket = new Ticket { ScreeningId = 1, SeatId = 5, Seat = takenSeat, OrderId = 2, Order = paidOrder, TicketType = TicketType.Regular };
@@ -157,7 +164,7 @@ public class OrderServiceTests
             .Returns(takenSeat);
         ticketRepository.GetTicketsByScreeningIdAsync(1).Returns([existingTicket]);
 
-        var service = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var service = new OrderService(screeningRepository, ticketRepository, arrangementRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, orderArrangementRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(
@@ -176,6 +183,8 @@ public class OrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
+        var arrangementRepository = Substitute.For<IArrangementRepository>();
+        var orderArrangementRepository = Substitute.For<IOrderArrangementRepository>();
         var logger = Substitute.For<ILogger<OrderService>>();
 
         var reservedSeat = new Seat { Id = 7, Row = 3, SeatNumber = 4, IsForWheelchair = false };
@@ -183,12 +192,12 @@ public class OrderServiceTests
         var order = new Order
         {
             Id = 1,
-            Total = 10f,
+            Total = 10m,
             Status = OrderStatus.Pending,
             Tickets = [new Ticket { ScreeningId = 1, SeatId = 1, Seat = new Seat { Row = 1, SeatNumber = 1, IsForWheelchair = false }, TicketType = TicketType.Regular }]
         };
 
-        var pendingOrder = new Order { Id = 3, Total = 10f, Status = OrderStatus.Pending };
+        var pendingOrder = new Order { Id = 3, Total = 10m, Status = OrderStatus.Pending };
 
         // Ticket belonging to another pending order occupying the seat we want
         var existingTicket = new Ticket { ScreeningId = 1, SeatId = 7, Seat = reservedSeat, OrderId = 3, Order = pendingOrder, TicketType = TicketType.Regular };
@@ -199,7 +208,7 @@ public class OrderServiceTests
             .Returns(reservedSeat);
         ticketRepository.GetTicketsByScreeningIdAsync(1).Returns([existingTicket]);
 
-        var service = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var service = new OrderService(screeningRepository, ticketRepository, arrangementRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, orderArrangementRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(

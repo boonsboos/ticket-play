@@ -23,4 +23,9 @@ public class ArrangementRepository : IArrangementRepository
     {
         return websiteApi.GetArrangementsAsync();
     }
+
+    public Task<Arrangement?> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 }
