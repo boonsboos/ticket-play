@@ -34,7 +34,7 @@
                         <InputSelect class="form-control" @bind-Value="formModel.ArrangementType">
                             @foreach(var opt in Enum.GetValues<ArrangementType>())
                             {
-                                <option value="@opt">T[$"createArrangement.types.{@opt}"]</option>
+                                <option value="@opt">@T[$"createArrangement.types.{opt}"]</option>
                             }
                         </InputSelect>
                     </div>

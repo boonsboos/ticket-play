@@ -51,31 +51,33 @@ public partial class CreateArrangement : TranslatableComponent
         }
     }
 
-    private void ShowSuccess(string message)
+    private async Task ShowSuccess(string message)
     {
         toastMessage = message;
         toastColor = "bg-success";
         showToast = true;
 
-        HideToastAfterDelay();
+        await HideToastAfterDelay();
     }
 
-    private void ShowError(string message)
+    private async Task ShowError(string message)
     {
         toastMessage = message;
         toastColor = "bg-danger";
         showToast = true;
 
-        HideToastAfterDelay();
+        await HideToastAfterDelay();
     }
 
-    private void HideToastAfterDelay()
+    private async Task HideToastAfterDelay()
     {
         // delay hiding the toast
-        Task.Run(async () =>
+        await Task.Delay(5000);
+
+        await InvokeAsync(() =>
         {
-            await Task.Delay(5000);
             showToast = false;
+            StateHasChanged();
         });
     }
 
