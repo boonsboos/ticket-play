@@ -22,7 +22,7 @@ public partial class ArrangementSelector : TranslatableComponent
         List<Arrangement> arrangements = [.. await arrangementRepository.GetAllAsync()];
 
         PopcornOptions = arrangements
-            .Where(a => a.Type == ArrangementType.Popcorn)
+            .Where(a => a.Type == ArrangementType.Snack)
             .Select(a => new ArrangementQuantity { Arrangement = a })
             .ToList();
 
