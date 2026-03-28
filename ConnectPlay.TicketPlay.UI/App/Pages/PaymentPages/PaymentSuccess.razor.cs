@@ -19,7 +19,7 @@ public partial class PaymentSuccess : TranslatableComponent
 
     private string GetTicketFileUrl()
     {
-        return options.BaseUrl + $"/kiosk/{websiteService.CurrentOrderId}/pdf";
+        return options.BaseUrl + $"/order/{websiteService.CurrentOrderId}/pdf";
     }
 
     private string GetShareMessage()
