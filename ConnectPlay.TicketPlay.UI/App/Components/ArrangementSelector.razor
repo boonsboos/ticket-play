@@ -6,9 +6,9 @@
 <div class="d-flex justify-content-center mt-5 col-12">
     <div class="card w-100">
         <div class="card-body text-center">
-            <h4 class="mb-4 fw-bold">Arrangementen</h4>
+            <h4 class="mb-4 fw-bold">@T["orderTickets:arrangements:title"]</h4>
 
-            <p>Bestel hier je drankje of snack, wij zorgen dat het bij je stoel staat wanneer de film begint!</p>
+            <p>@T["orderTickets:arrangements:description"]</p>
 
             <div class="accordion">
                 <details class="accordion-item p-3">
@@ -65,18 +65,18 @@
                         <i class="bi bi-arrow-down"></i>
                     </summary>
                     <hr />
-                    @foreach (var combi in CombiOptions)
+                    @foreach (var special in SpecialsOptions)
                     {
                         <div class="row g-4 mb-3 d-flex">
                             <!-- The text for the combo is a combination of the medium popcorn and drink options -->
-                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:MediumPopcorn"] + @T[$"orderTickets:arrangements:{combi.Name}"]</div>
-                            <div class="col-1">@combi.Price.ToString("C")</div>
+                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:MediumPopcorn"] + @T[$"orderTickets:arrangements:{special.Name}"]</div>
+                            <div class="col-1">@special.Price.ToString("C")</div>
                             <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
-                                <button class="btn btn-outline-secondary" @onclick="() => { if (combi.Quantity > 0) combi.Quantity--; }">
+                                <button class="btn btn-outline-secondary" @onclick="() => { if (special.Quantity > 0) special.Quantity--; }">
                                     <i class="bi bi-dash"></i>
                                 </button>
-                                <p class="mb-0">@combi.Quantity</p>
-                                <button class="btn btn-outline-secondary" @onclick="() => combi.Quantity++">
+                                <p class="mb-0">@special.Quantity</p>
+                                <button class="btn btn-outline-secondary" @onclick="() => special.Quantity++">
                                     <i class="bi bi-plus"></i>
                                 </button>
                             </div>

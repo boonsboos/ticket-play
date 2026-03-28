@@ -1,6 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
-using ConnectPlay.TicketPlay.Contracts.Arrangement;
+using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
 

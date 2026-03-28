@@ -8,7 +8,7 @@ using NSubstitute;
 namespace ConnectPlay.TicketPlay.Tests;
 
 [TestClass]
-public class KioskOrderServiceTests
+public class OrderServiceTests
 {
     private readonly Screening WheelchairInaccessible2DProjectorScreening = new()
     {
@@ -75,11 +75,11 @@ public class KioskOrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
-        var logger = Substitute.For<ILogger<KioskOrderService>>();
+        var logger = Substitute.For<ILogger<OrderService>>();
 
         screeningRepository.GetScreeningAsync(Arg.Any<int>()).Returns(null as Screening);
 
-        var orderProcessingService = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var orderProcessingService = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
@@ -98,7 +98,7 @@ public class KioskOrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
-        var logger = Substitute.For<ILogger<KioskOrderService>>();
+        var logger = Substitute.For<ILogger<OrderService>>();
 
         var seat = new Seat { Row = 1, SeatNumber = 1, IsForWheelchair = false };
         var order = new Order
@@ -115,7 +115,7 @@ public class KioskOrderServiceTests
 
         orderRepository.GetOrderByIdAsync(1).Returns(order);
 
-        var service = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var service = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
 
         // Act & Assert — both requested seats are identical, so duplicates should be rejected
         await Assert.ThrowsAsync<InvalidOperationException>(
@@ -134,7 +134,7 @@ public class KioskOrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
-        var logger = Substitute.For<ILogger<KioskOrderService>>();
+        var logger = Substitute.For<ILogger<OrderService>>();
 
         var takenSeat = new Seat { Id = 5, Row = 2, SeatNumber = 3, IsForWheelchair = false };
 
@@ -157,7 +157,7 @@ public class KioskOrderServiceTests
             .Returns(takenSeat);
         ticketRepository.GetTicketsByScreeningIdAsync(1).Returns([existingTicket]);
 
-        var service = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var service = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(
@@ -176,7 +176,7 @@ public class KioskOrderServiceTests
         var ticketPrintingService = Substitute.For<ITicketPrintingService>();
         var orderRepository = Substitute.For<IOrderRepository>();
         var seatRepository = Substitute.For<ISeatRepository>();
-        var logger = Substitute.For<ILogger<KioskOrderService>>();
+        var logger = Substitute.For<ILogger<OrderService>>();
 
         var reservedSeat = new Seat { Id = 7, Row = 3, SeatNumber = 4, IsForWheelchair = false };
 
@@ -199,7 +199,7 @@ public class KioskOrderServiceTests
             .Returns(reservedSeat);
         ticketRepository.GetTicketsByScreeningIdAsync(1).Returns([existingTicket]);
 
-        var service = new KioskOrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
+        var service = new OrderService(screeningRepository, ticketRepository, seatAssignmentService, priceCalculation, ticketPrintingService, orderRepository, seatRepository, logger);
 
         // Act & Assert
         await Assert.ThrowsAsync<InvalidOperationException>(

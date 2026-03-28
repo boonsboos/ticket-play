@@ -1,11 +1,12 @@
-﻿using ConnectPlay.TicketPlay.Models;
+﻿using ConnectPlay.TicketPlay.Contracts.Orders;
+using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Services;
 
 public class KioskService
 {
-    private readonly IKioskApi kioskApi;
+    private readonly IOrderApi orderApi;
     private readonly ILogger<KioskService> logger;
 
     private Order? currentOrder = null;
@@ -17,9 +18,9 @@ public class KioskService
     public Screening? SelectedScreening { get; set; } = null;
     public IEnumerable<TicketType> Tickets { get; set; } = [];
 
-    public KioskService(IKioskApi kioskApi, ILogger<KioskService> logger)
+    public KioskService(IOrderApi orderApi, ILogger<KioskService> logger)
     {
-        this.kioskApi = kioskApi;
+        this.orderApi = orderApi;
         this.logger = logger;
     }
 
@@ -33,7 +34,15 @@ public class KioskService
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
 
-        var response = await kioskApi.ReserveSeatsAsync(SelectedScreening.Id, Tickets);
+        var response = await orderApi.ReserveSeatsAsync(
+            SelectedScreening.Id, 
+            new NewOrder
+            {
+                Arrangements = [],
+                Tickets = this.Tickets
+            }
+        );
+
         if (response.IsSuccessStatusCode)
         {
             currentOrder = response.Content;
@@ -52,7 +61,7 @@ public class KioskService
         // kioskApi is the API Client injected into the service
         // CancelOrderAsync() send a resuqest to the API to cancel the order
         // With await we wait for the respone frome the api
-        var cancelResponse = await kioskApi.CancelOrderAsync(orderId);
+        var cancelResponse = await orderApi.CancelOrderAsync(orderId);
 
         if (cancelResponse.IsSuccessStatusCode)
         {
@@ -68,7 +77,7 @@ public class KioskService
     {
         var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
 
-        var payResponse = await kioskApi.PayOrderAsync(orderId);
+        var payResponse = await orderApi.PayOrderAsync(orderId);
 
 
         // if the response is not OK (200)
