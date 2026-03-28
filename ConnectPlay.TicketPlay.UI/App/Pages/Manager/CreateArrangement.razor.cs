@@ -39,13 +39,13 @@ public partial class CreateArrangement : TranslatableComponent
                 }
             );
 
-            ShowSuccess(T["createArrangement.success"]);
+            await ShowSuccess(T["createArrangement.success"]);
 
             // reset model
             formModel = new();
         } catch(Exception e) {
             logger.LogError(e, "Failed to submit new arrangement");
-            ShowError(T["createArrangement.error"]);
+            await ShowError(T["createArrangement.error"]);
         } finally {
             isSubmitting = false;
         }
