@@ -1,5 +1,4 @@
-﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.API.Abstract;
+﻿using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.API.Extensions;
 using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Contracts.Orders;

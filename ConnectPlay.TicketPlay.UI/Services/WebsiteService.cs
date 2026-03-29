@@ -13,7 +13,7 @@ public class WebsiteService
     private readonly IHallApi hallApi;
     private readonly ILogger<WebsiteService> logger;
 
-    public Order? CurrentOrder = null;
+    public Order? CurrentOrder { get; private set; } = null;
     public IEnumerable<Seat> Seats { get { return CurrentOrder?.Tickets.Select(ticket => ticket.Seat) ?? []; } }
 
     public Movie? Movie => CurrentOrder?.Tickets.FirstOrDefault()?.Screening.Movie;

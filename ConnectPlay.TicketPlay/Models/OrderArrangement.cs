@@ -11,7 +11,7 @@ public record OrderArrangement
     [JsonIgnore]
     public Guid Id { get; init; }
     [JsonIgnore]
-    public Order Order { get; set; }
-    public Arrangement Arrangement { get; set; }
+    public Order Order { get; set; } = null!;
+    public Arrangement Arrangement { get; set; } = null!;
     public int Amount { get; init; } = 0;
 }

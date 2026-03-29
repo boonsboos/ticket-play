@@ -19,6 +19,10 @@ public class OrderArrangementRepository : IOrderArrangementRepository
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
+        // track the pre-existing entities
+        dbContext.Attach(quantity.Arrangement);
+        dbContext.Attach(order);
+
         var arrangement = new OrderArrangement { Amount = quantity.Quantity, Arrangement = quantity.Arrangement, Order = order };
 
         dbContext.Add(arrangement);
@@ -32,7 +36,13 @@ public class OrderArrangementRepository : IOrderArrangementRepository
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
-        var arrangements = quantities.Select(quantity => new OrderArrangement { Amount = quantity.Quantity, Arrangement = quantity.Arrangement, Order = order });
+        // track the pre-existing entities
+        dbContext.AttachRange(quantities.Select(q => q.Arrangement).ToList());
+        dbContext.Attach(order);
+
+        var arrangements = quantities
+            .Select(quantity => new OrderArrangement { Amount = quantity.Quantity, Arrangement = quantity.Arrangement, Order = order })
+            .ToList();
 
         dbContext.AddRange(arrangements);
 
