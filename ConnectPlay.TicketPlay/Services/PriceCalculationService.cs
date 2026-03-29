@@ -1,10 +1,10 @@
-﻿using ConnectPlay.TicketPlay.API.Abstract;
-using ConnectPlay.TicketPlay.API.Extensions;
+﻿using ConnectPlay.TicketPlay.Abstract.Services;
+using ConnectPlay.TicketPlay.Extensions;
 using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
 
-namespace ConnectPlay.TicketPlay.API.Services;
+namespace ConnectPlay.TicketPlay.Services;
 
 public class PriceCalculationService : IPriceCalculationService
 {

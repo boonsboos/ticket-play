@@ -1,4 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Abstract.Services;
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;

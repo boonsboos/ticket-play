@@ -20,7 +20,7 @@
                     @foreach (var item in PopcornOptions)
                     {
                         <div class="row g-4 mb-3 d-flex">
-                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:{item.Name}"]</div>
+                            <div class="col-9 text-start">@item.Name</div>
                             <div class="col-1">@item.Price.ToString("C")</div>
                             <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
                                 <button class="btn btn-outline-secondary" @onclick="() => { if (item.Quantity > 0) item.Quantity--; }">
@@ -44,7 +44,7 @@
                     @foreach (var item in DrinkOptions)
                     {
                         <div class="row g-4 mb-3 d-flex">
-                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:{item.Name}"]</div>
+                            <div class="col-9 text-start">@item.Name</div>
                             <div class="col-1">@item.Price.ToString("C")</div>
                             <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
                                 <button class="btn btn-outline-secondary" @onclick="() => { if (item.Quantity > 0) item.Quantity--; }">
@@ -69,7 +69,7 @@
                     {
                         <div class="row g-4 mb-3 d-flex">
                             <!-- The text for the combo is a combination of the medium popcorn and drink options -->
-                            <div class="col-9 text-start">@T[$"orderTickets:arrangements:MediumPopcorn"] + @T[$"orderTickets:arrangements:{special.Name}"]</div>
+                            <div class="col-9 text-start">@special.Name</div>
                             <div class="col-1">@special.Price.ToString("C")</div>
                             <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
                                 <button class="btn btn-outline-secondary" @onclick="() => { if (special.Quantity > 0) special.Quantity--; }">

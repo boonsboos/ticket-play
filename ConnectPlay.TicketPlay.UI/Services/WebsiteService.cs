@@ -1,4 +1,5 @@
-﻿using ConnectPlay.TicketPlay.Contracts.Arrangements;
+﻿using ConnectPlay.TicketPlay.Abstract.Services;
+using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;
@@ -11,6 +12,7 @@ public class WebsiteService
 {
     private readonly IOrderApi orderApi;
     private readonly IHallApi hallApi;
+    private readonly IPriceCalculationService priceCalculationService;
     private readonly ILogger<WebsiteService> logger;
 
     public Order? CurrentOrder { get; private set; } = null;
@@ -29,10 +31,11 @@ public class WebsiteService
     public HallLayoutResponse? HallLayout { get; set; }
     public IEnumerable<SeatResponse> TakenSeats { get; set; } = [];
 
-    public WebsiteService(IOrderApi orderApi, IHallApi hallApi, ILogger<WebsiteService> logger)
+    public WebsiteService(IOrderApi orderApi, IHallApi hallApi, IPriceCalculationService priceCalculationService, ILogger<WebsiteService> logger)
     {
         this.orderApi = orderApi;
         this.hallApi = hallApi;
+        this.priceCalculationService = priceCalculationService;
         this.logger = logger;
     }
 
@@ -159,18 +162,11 @@ public class WebsiteService
         CurrentOrder = null;
     }
 
-    public float GetPrice(TicketType ticketType)
+    public decimal GetPrice(TicketType ticketType)
     {
-        var movie = Movie ?? SelectedScreening?.Movie;
+        if (SelectedScreening == null) return 0m;
 
-        if (movie == null) return 0f;
-
-        // everyone except regular gets €1,50 off
-        return ticketType switch
-        {
-            TicketType.Regular => RegularPrice(Movie ?? SelectedScreening?.Movie),
-            _ => RegularPrice(Movie ?? SelectedScreening?.Movie) - 1.5f,
-        };
+        return priceCalculationService.CalculatePrice(SelectedScreening, ticketType);
     }
 
     private static float RegularPrice(Movie? movie) => (movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;

@@ -129,18 +129,4 @@ public partial class OrderOverview : TranslatableComponent
         var seatWord = T["orderOverview.modal.summary.seat"];
         return $"{rowWord} {seat.Row} {seatWord} {seat.SeatNumber}{(seat.IsForWheelchair ? $" ({T["orderOverview.modal.summary.wheelchair"]})" : string.Empty)}";
     }
-
-    private float CalculateTotal()
-    {
-        var total = 0f;
-
-        foreach (var ticket in Tickets)
-        {
-            total += websiteService.GetPrice(ticket);
-        }
-
-        if (Is3D) total += 2.50f;
-
-        return total;
-    }
 }

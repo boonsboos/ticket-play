@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
 
-namespace ConnectPlay.TicketPlay.API.Abstract;
+namespace ConnectPlay.TicketPlay.Abstract.Services;
 
 public interface IPriceCalculationService
 {
