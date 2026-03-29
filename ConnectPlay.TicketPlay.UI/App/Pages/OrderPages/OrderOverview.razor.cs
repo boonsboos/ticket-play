@@ -12,11 +12,14 @@ public partial class OrderOverview : TranslatableComponent
     private readonly WebsiteService websiteService;
     private readonly NavigationManager navigationManager;
     private readonly ILogger<OrderOverview> logger;
+
+    protected Order Order { get; set; } = null!;
     protected Movie? Movie { get; set; }
     protected Screening? Screening { get; set; }
     protected string? StartTime { get; set; }
     protected IEnumerable<Seat> Seats { get; set; } = [];
     protected IEnumerable<TicketType> Tickets { get; set; } = [];
+    protected IEnumerable<OrderArrangement> Arrangements { get; set; } = [];
     protected bool Is3D { get; set; }
     protected HallLayoutResponse? HallLayout { get; set; }
     protected IEnumerable<SeatResponse> TakenSeats { get; set; } = [];
@@ -30,12 +33,15 @@ public partial class OrderOverview : TranslatableComponent
 
     protected override void OnInitialized()
     {
-        if (websiteService.CurrentOrderId is null) { navigationManager.NavigateTo("/"); return; }
+        if (websiteService.CurrentOrder is null) { navigationManager.NavigateTo("/"); return; }
+
+        this.Order = websiteService.CurrentOrder;
 
         this.Movie = websiteService.Movie;
         this.Seats = websiteService.Seats;
         this.Tickets = websiteService.Tickets;
         this.Screening = websiteService.SelectedScreening;
+        this.Arrangements = websiteService.ReservedArrangements;
 
         this.StartTime = Screening?.StartTime.ToLocalTime().ToString("HH:mm") ?? "??:??";
         this.Is3D = Screening?.Hall?.Has3DProjector ?? false;
@@ -122,19 +128,5 @@ public partial class OrderOverview : TranslatableComponent
         var rowWord = T["orderOverview.modal.summary.row"];
         var seatWord = T["orderOverview.modal.summary.seat"];
         return $"{rowWord} {seat.Row} {seatWord} {seat.SeatNumber}{(seat.IsForWheelchair ? $" ({T["orderOverview.modal.summary.wheelchair"]})" : string.Empty)}";
-    }
-
-    private float CalculateTotal()
-    {
-        var total = 0f;
-
-        foreach (var ticket in Tickets)
-        {
-            total += websiteService.GetPrice(ticket);
-        }
-
-        if (Is3D) total += 2.50f;
-
-        return total;
     }
 }

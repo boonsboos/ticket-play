@@ -3,6 +3,7 @@ using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.API.Repositories;
 using ConnectPlay.TicketPlay.API.Services;
+using ConnectPlay.TicketPlay.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConnectPlay.TicketPlay.API;
@@ -35,6 +36,7 @@ public class Startup(IConfiguration configuration)
         ConfigureDatabase(services);
 
         // Add dependency injection here
+        services.AddTicketPlayServices();
         ConfigureRepositories(services);
         ConfigureTicketPlayServices(services);
     }
@@ -56,7 +58,8 @@ public class Startup(IConfiguration configuration)
             .AddScoped<ITicketRepository, TicketRepository>()
             .AddScoped<IOrderRepository, OrderRepository>()
             .AddScoped<INewsletterRepository, NewsletterRepository>()
-            .AddScoped<IArrangementRepository, ArrangementRepository>();
+            .AddScoped<IArrangementRepository, ArrangementRepository>()
+            .AddScoped<IOrderArrangementRepository, OrderArrangementRepository>();
     }
 
     private void ConfigureTicketPlayServices(IServiceCollection services)
@@ -64,7 +67,6 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<ISeatAssignmentService, SeatAssignmentService>()
             .AddScoped<IOrderService, OrderService>()
             .AddScoped<IHallService, HallOrderService>()
-            .AddSingleton<IPriceCalculationService, PriceCalculationService>()
             .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
     }
 }

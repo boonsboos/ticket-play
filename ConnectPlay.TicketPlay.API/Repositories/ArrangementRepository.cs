@@ -38,4 +38,11 @@ public class ArrangementRepository : IArrangementRepository
 
         await dbContext.SaveChangesAsync();
     }
+
+    public async Task<Arrangement?> GetByIdAsync(int id)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Arrangements.FirstOrDefaultAsync( x => x.Id == id);
+    }
 }

@@ -1,4 +1,4 @@
-﻿namespace ConnectPlay.TicketPlay.API.Extensions;
+﻿namespace ConnectPlay.TicketPlay.Extensions;
 
 public static class DateTimeExtensions
 {

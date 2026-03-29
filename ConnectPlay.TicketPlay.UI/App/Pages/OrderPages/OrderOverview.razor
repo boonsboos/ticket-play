@@ -55,13 +55,28 @@
                 </div>
             }
 
+            @if (Arrangements.Any())
+            {
+                <hr />
+                @foreach (var arrangement in Arrangements)
+                {
+                    <div class="d-flex flex-row justify-content-between">
+                        <p><b>@arrangement.Arrangement.Name</b></p>
+                        <p>
+                            @arrangement.Amount x @(arrangement.Arrangement.Price.ToString("C")) =
+                            @((arrangement.Amount * arrangement.Arrangement.Price).ToString("C"))
+                        </p>
+                    </div>
+                }
+            }
+
             @if (Is3D)
             {
                 <hr />
                 <div class="d-flex flex-row justify-content-between">
                     <p><b>@T["orderOverview.threeDFee"]</b></p>
                     <p>
-                        @(2.50f.ToString("C"))
+                        @(2.50m.ToString("C"))
                     </p>
                 </div>
             }
@@ -69,7 +84,7 @@
             <hr />
             <div class="d-flex flex-row justify-content-between">
                 <p><b>@T["orderOverview.total"]</b></p>
-                <p>@(CalculateTotal().ToString("C"))</p>
+                <p>@Order.Total.ToString("C")</p>
             </div>
 
         </div>

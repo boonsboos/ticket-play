@@ -1,29 +1,37 @@
-﻿using ConnectPlay.TicketPlay.API.Abstract;
-using ConnectPlay.TicketPlay.API.Extensions;
+﻿using ConnectPlay.TicketPlay.Abstract.Services;
+using ConnectPlay.TicketPlay.Extensions;
+using ConnectPlay.TicketPlay.Contracts.Arrangements;
+using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
 
-namespace ConnectPlay.TicketPlay.API.Services;
+namespace ConnectPlay.TicketPlay.Services;
 
 public class PriceCalculationService : IPriceCalculationService
 {
-    public float CalculatePrices(Screening screening, IEnumerable<TicketType> ticketTypes)
+    public decimal CalculatePrices(Screening screening, NewOrder newOrder)
     {
-        var total = 0f;
+        var total = 0m;
 
-        foreach (TicketType ticketType in ticketTypes)
+        foreach (TicketType ticketType in newOrder.Tickets)
         {
             total += CalculatePrice(screening, ticketType);
         }
 
+        // authenticity of selected arrangements should have been verified beforehand
+        foreach (ArrangementQuantity arrQuantity in newOrder.Arrangements)
+        {
+            total += (arrQuantity.Quantity * arrQuantity.Price);
+        }
+
         if (screening.Hall.Has3DProjector)
         {
-            total += 2.50f; // 3D fee
+            total += 2.50m; // 3D fee
         }
 
         return total;
     }
 
-    public float CalculatePrice(Screening screening, TicketType ticketType)
+    public decimal CalculatePrice(Screening screening, TicketType ticketType)
     {
         var price = ticketType switch
         {
@@ -37,39 +45,39 @@ public class PriceCalculationService : IPriceCalculationService
         return price;
     }
 
-    private static float CalculateRegularPrice(Screening screening) => screening.Movie.Duration > 120 ? 9.00f : 8.50f;
+    private static decimal CalculateRegularPrice(Screening screening) => screening.Movie.Duration > 120 ? 9.00m : 8.50m;
 
-    private static float CalculateChildPrice(Screening screening)
+    private static decimal CalculateChildPrice(Screening screening)
     {
         var price = CalculateRegularPrice(screening);
 
         if (screening.StartTime.Hour <= 18 && screening.Movie.MinimumAge < 12 && screening.Movie.Language == "nl")
         {
-            price -= 1.5f;
+            price -= 1.5m;
         }
 
         return price;
     }
 
-    private static float CaculateSeniorPrice(Screening screening)
+    private static decimal CaculateSeniorPrice(Screening screening)
     {
         var price = CalculateRegularPrice(screening);
 
         if (screening.StartTime.DayOfWeek >= DayOfWeek.Monday && screening.StartTime.DayOfWeek <= DayOfWeek.Thursday && !screening.StartTime.Date.IsNationalHoliday())
         {
-            price -= 1.5f;
+            price -= 1.5m;
         }
 
         return price;
     }
 
-    private static float CalculateStudentPrice(Screening screening)
+    private static decimal CalculateStudentPrice(Screening screening)
     {
         var price = CalculateRegularPrice(screening);
 
         if (screening.StartTime.DayOfWeek >= DayOfWeek.Monday && screening.StartTime.DayOfWeek <= DayOfWeek.Thursday)
         {
-            price -= 1.5f;
+            price -= 1.5m;
         }
 
         return price;
