@@ -34,4 +34,15 @@ public class ScreeningController : ControllerBase
 
         return Ok(todayScreenings);
     }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
+    [Route("preview")]
+    public async Task<IActionResult> GetPreviewScreeningsAsync()
+    {
+        var previewScreenings = await _screeningRepository.GetScreeningsForMoviePreviewAsync();
+
+        return Ok(previewScreenings);
+    }
+
 }
