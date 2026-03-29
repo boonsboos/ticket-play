@@ -8,7 +8,7 @@ namespace ConnectPlay.TicketPlay.UI.App.Components;
 public partial class ArrangementSelector : TranslatableComponent
 {
     private readonly IArrangementRepository arrangementRepository;
-    private List<ArrangementQuantity> PopcornOptions = [];
+    private List<ArrangementQuantity> SnackOptions = [];
     private List<ArrangementQuantity> DrinkOptions = [];
     private List<ArrangementQuantity> SpecialsOptions = [];
 
@@ -21,7 +21,7 @@ public partial class ArrangementSelector : TranslatableComponent
     {
         List<Arrangement> arrangements = [.. await arrangementRepository.GetAllAsync()];
 
-        PopcornOptions = arrangements
+        SnackOptions = arrangements
             .Where(a => a.Type == ArrangementType.Snack)
             .Select(a => new ArrangementQuantity { Arrangement = a })
             .ToList();
@@ -42,7 +42,7 @@ public partial class ArrangementSelector : TranslatableComponent
     public List<ArrangementQuantity> GetSelectedArrangements()
     {
         return [.. 
-            PopcornOptions
+            SnackOptions
                 .Concat(DrinkOptions)
                 .Concat(SpecialsOptions)
                 .Where(aq => aq.Quantity > 0)

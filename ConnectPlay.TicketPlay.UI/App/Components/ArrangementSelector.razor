@@ -13,11 +13,11 @@
             <div class="accordion">
                 <details class="accordion-item p-3">
                     <summary class="accordion-header d-flex justify-content-between py-3">
-                        <h5 class="text-start fw-bold">Popcorn</h5>
+                        <h5 class="text-start fw-bold">@T["orderTickets:arrangements:snacks"]</h5>
                         <i class="bi bi-arrow-down"></i>
                     </summary>
                     <hr />
-                    @foreach (var item in PopcornOptions)
+                    @foreach (var item in SnackOptions)
                     {
                         <div class="row g-4 mb-3 d-flex">
                             <div class="col-9 text-start">@item.Name</div>
@@ -37,7 +37,7 @@
 
                 <details class="accordion-item p-3">
                     <summary class="accordion-header d-flex justify-content-between py-3">
-                        <h5 class="text-start fw-bold">Dranken</h5>
+                        <h5 class="text-start fw-bold">@T["orderTickets:arrangements:drinks"]</h5>
                         <i class="bi bi-arrow-down"></i>
                     </summary>
                     <hr />
@@ -61,14 +61,13 @@
 
                 <details class="accordion-item p-3">
                     <summary class="accordion-header d-flex justify-content-between py-3">
-                        <h5 class="text-start fw-bold">Combideal</h5>
+                        <h5 class="text-start fw-bold">@T["orderTickets:arrangements:specials"]</h5>
                         <i class="bi bi-arrow-down"></i>
                     </summary>
                     <hr />
                     @foreach (var special in SpecialsOptions)
                     {
                         <div class="row g-4 mb-3 d-flex">
-                            <!-- The text for the combo is a combination of the medium popcorn and drink options -->
                             <div class="col-9 text-start">@special.Name</div>
                             <div class="col-1">@special.Price.ToString("C")</div>
                             <div class="col-2 d-flex flex-row align-items-center justify-content-end gap-2">
