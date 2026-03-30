@@ -36,7 +36,7 @@ public class ScreeningController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(IEnumerable<Screening>), StatusCodes.Status200OK)]
     [Route("preview")]
     public async Task<IActionResult> GetPreviewScreeningsAsync()
     {
