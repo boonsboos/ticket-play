@@ -94,8 +94,10 @@ else
                                 class="card @(screening.Id == websiteService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
                                 <div class="card-body @(screening.StartTime.ToLocalTime() < DateTimeOffset.Now.ToLocalTime() ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
                                      @onclick="() => SetSelectedScreening(screening)">
+                                    <p class="card-subtitle text-body-secondary text-center">
+                                        @screening.StartTime.ToLocalTime().ToString("dddd")
+                                    </p>
                                     <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
-                                    <h2 class="card-subtitle">@screening.StartTime.ToLocalTime().ToString("dddd, MMMM d")</h2>
                                     @if (screening.Hall?.Has3DProjector == true)
                                     {
                                         <div
