@@ -63,8 +63,11 @@ public class MovieRepository : IMovieRepository
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
 
+        var now = DateTimeOffset.Now;
+
         return await db.Screenings
-            .Where(s => s.SneakPreview)
+            .Where(s => s.SneakPreview && s.StartTime >= now)
+            .OrderBy(s => s.StartTime)
             .Select(s => new PreviewMovieDetailResponse
             {
                 Genre = s.Movie.Genre,
