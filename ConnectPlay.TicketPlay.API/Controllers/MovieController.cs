@@ -62,6 +62,18 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(newMovies);
     }
 
+    [HttpGet("preview")]
+    [ProducesResponseType(typeof(PreviewMovieDetailResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetPreviewAsync()
+    {
+        var movie = await _movieRepository.GetMoviePreviewAsync();
+
+        if (movie == null)
+            return NotFound();
+
+        return Ok(movie);
+    }
 
     [HttpGet("{id:int}")]
     // Document that this endpoint returns a single movie on HTTP OK, and can also return HTTP Not Found if the movie with the given id does not exist.

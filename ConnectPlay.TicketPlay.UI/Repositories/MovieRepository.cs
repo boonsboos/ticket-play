@@ -45,6 +45,18 @@ public class MovieRepository : IMovieRepository
             return null;
         }
     }
+
+    public async Task<PreviewMovieDetailResponse?> GetMoviePreviewAsync()
+    {
+        try
+        {
+            return await _movieApi.GetMoviePreviewAsync();
+        }
+        catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+    }
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
         throw new NotImplementedException();

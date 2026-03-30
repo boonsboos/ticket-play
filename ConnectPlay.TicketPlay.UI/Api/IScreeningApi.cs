@@ -11,5 +11,8 @@ public interface IScreeningApi
 
     [Get("/screening/today/{movieId}")]
     Task<IEnumerable<Screening>> GetTodayByMovieIdAsync(int movieId);
+
+    [Get("/screening/preview")]
+    Task<IEnumerable<Screening>> GetScreeningsForMoviePreviewAsync();
 }
 

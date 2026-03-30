@@ -9,5 +9,6 @@ public interface IScreeningRepository
 
     public Task CreateScreeningAsync(CreateScreeningRequest dto);
     public Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId);
+    public Task<IEnumerable<Screening>> GetScreeningsForMoviePreviewAsync();
     public Task<IEnumerable<Screening>> GetWeekOverviewAsync();
 }
