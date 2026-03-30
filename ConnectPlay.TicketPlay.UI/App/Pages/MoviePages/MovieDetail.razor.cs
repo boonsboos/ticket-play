@@ -67,7 +67,7 @@ public partial class MovieDetail : TranslatableComponent
 
             if (Id == 0) // If Id is 0, we assume this is a request for the sneak preview movie, which doesn't have a real Id in the database
             {
-                previewMovie = await movieRepository.GetMoviePreviewAsync(T.CurrentLanguage);
+                previewMovie = await movieRepository.GetMoviePreviewAsync();
                 previewScreenings = await screeningRepository.GetScreeningsForMoviePreviewAsync();
             }
             else
@@ -91,7 +91,7 @@ public partial class MovieDetail : TranslatableComponent
     {
         InvokeAsync(async () =>
         {
-            if (Id == 0) previewMovie = await movieRepository.GetMoviePreviewAsync(T.CurrentLanguage);
+            if (Id == 0) previewMovie = await movieRepository.GetMoviePreviewAsync();
             else movie = await movieRepository.GetMovieByIdAsync(Id, T.CurrentLanguage);
             StateHasChanged();
         });

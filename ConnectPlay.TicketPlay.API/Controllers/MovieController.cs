@@ -65,9 +65,9 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpGet("preview")]
     [ProducesResponseType(typeof(PreviewMovieDetailResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetPreviewAsync([FromQuery] string? language = "en")
+    public async Task<IActionResult> GetPreviewAsync()
     {
-        var movie = await _movieRepository.GetMoviePreviewAsync(language);
+        var movie = await _movieRepository.GetMoviePreviewAsync();
 
         if (movie == null)
             return NotFound();

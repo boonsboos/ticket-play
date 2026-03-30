@@ -46,11 +46,11 @@ public class MovieRepository : IMovieRepository
         }
     }
 
-    public async Task<PreviewMovieDetailResponse?> GetMoviePreviewAsync(string languageCode)
+    public async Task<PreviewMovieDetailResponse?> GetMoviePreviewAsync()
     {
         try
         {
-            return await _movieApi.GetMoviePreviewAsync(languageCode);
+            return await _movieApi.GetMoviePreviewAsync();
         }
         catch (Refit.ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
         {

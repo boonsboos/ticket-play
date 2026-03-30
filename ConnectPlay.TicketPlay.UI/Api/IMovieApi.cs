@@ -24,7 +24,7 @@ public interface IMovieApi
     Task<MovieDetailResponse> GetMovieByIdAsync(int id, [Query] string language);
 
     [Get("/movie/preview")]
-    Task<PreviewMovieDetailResponse> GetMoviePreviewAsync([Query] string language);
+    Task<PreviewMovieDetailResponse> GetMoviePreviewAsync();
 
     [Post("/movie")]
     Task CreateMovieAsync(CreateMovieRequest movie);

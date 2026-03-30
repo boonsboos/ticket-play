@@ -59,7 +59,7 @@ public class MovieRepository : IMovieRepository
             })
             .FirstOrDefaultAsync();
     }
-    public async Task<PreviewMovieDetailResponse?> GetMoviePreviewAsync(string languageCode)
+    public async Task<PreviewMovieDetailResponse?> GetMoviePreviewAsync()
     {
         await using var db = await _dbContextFactory.CreateDbContextAsync();
 
