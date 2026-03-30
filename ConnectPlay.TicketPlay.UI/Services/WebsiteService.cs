@@ -166,7 +166,6 @@ public class WebsiteService
     {
         if (SelectedScreening == null) return 0m;
 
-        var price = priceCalculationService.CalculatePrice(SelectedScreening, ticketType);
-        return SelectedScreening.SneakPreview ? price - 2.5m : price;
+        return priceCalculationService.CalculatePrice(SelectedScreening, ticketType);
     }
 }
