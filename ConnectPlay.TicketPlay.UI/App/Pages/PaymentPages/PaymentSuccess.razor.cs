@@ -30,15 +30,15 @@ public partial class PaymentSuccess : TranslatableComponent
 
     protected override void OnInitialized()
     {
-        if (websiteService.CurrentOrder == null)
+        if (websiteService.SelectedScreening == null)
         {
             // if there is no selected screening, we probably got here by accident, so we navigate back to the home page
             navigationManager.NavigateTo("/");
             return;
         }
 
-        // get the screening from the current order's tickets (all tickets in the order belong to the same screening, so we can just take the first one)
-        Screening = websiteService.CurrentOrder.Tickets.First().Screening;
+        // get the selected screening from the website service, so we can display the correct movie title and poster
+        Screening = websiteService.SelectedScreening;
         base.OnInitialized();
     }
 
