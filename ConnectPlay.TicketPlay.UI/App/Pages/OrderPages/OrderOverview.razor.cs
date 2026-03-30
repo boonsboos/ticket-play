@@ -14,8 +14,8 @@ public partial class OrderOverview : TranslatableComponent
     private readonly ILogger<OrderOverview> logger;
 
     protected Order Order { get; set; } = null!;
-    protected Movie? Movie { get; set; }
-    protected Screening? Screening { get; set; }
+    protected Movie Movie { get; set; } = null!;
+    protected Screening Screening { get; set; } = null!;
     protected string? StartTime { get; set; }
     protected IEnumerable<Seat> Seats { get; set; } = [];
     protected IEnumerable<TicketType> Tickets { get; set; } = [];
@@ -24,6 +24,11 @@ public partial class OrderOverview : TranslatableComponent
     protected HallLayoutResponse? HallLayout { get; set; }
     protected IEnumerable<SeatResponse> TakenSeats { get; set; } = [];
     protected List<Seat> SelectedSeats { get; set; } = [];
+
+    private bool IsPreview => Screening.SneakPreview;
+    private string DisplayTitle => !IsPreview ? Screening.Movie.Title : T["movieDetail.sneakPreview.title"];
+    private string DisplayPosterUrl => !IsPreview ? Movie.PosterUrl.ToString() : "https://dummyimage.com/300x450/000/fff&text=Sneak+Preview";
+
     public OrderOverview(WebsiteService websiteService, NavigationManager navigationManager, ILogger<OrderOverview> logger)
     {
         this.websiteService = websiteService;
@@ -37,10 +42,10 @@ public partial class OrderOverview : TranslatableComponent
 
         this.Order = websiteService.CurrentOrder;
 
-        this.Movie = websiteService.Movie;
+        this.Movie = websiteService.Movie!;
         this.Seats = websiteService.Seats;
         this.Tickets = websiteService.Tickets;
-        this.Screening = websiteService.SelectedScreening;
+        this.Screening = websiteService.SelectedScreening!;
         this.Arrangements = websiteService.ReservedArrangements;
 
         this.StartTime = Screening?.StartTime.ToLocalTime().ToString("HH:mm") ?? "??:??";

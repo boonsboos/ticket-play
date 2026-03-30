@@ -58,6 +58,8 @@ public partial class MovieDetail : TranslatableComponent
 
     protected override async Task OnParametersSetAsync()
     {
+        // Clear any previous state in the website service to prevent issues when navigating back and forth between movie details and order pages
+        websiteService.Cleanup();
         try
         {
             movie = null;

@@ -49,7 +49,7 @@ public class WebsiteService
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
 
-        var response = await orderApi.ReserveSeatsAsync(SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets});
+        var response = await orderApi.ReserveSeatsAsync(SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets });
         if (response.IsSuccessStatusCode)
         {
             CurrentOrder = response.Content;
@@ -152,7 +152,7 @@ public class WebsiteService
     }
 
 
-    private void Cleanup()
+    public void Cleanup()
     {
         logger.LogInformation("Resetting state for use in next order");
         SelectedScreening = null;
@@ -166,8 +166,7 @@ public class WebsiteService
     {
         if (SelectedScreening == null) return 0m;
 
-        return priceCalculationService.CalculatePrice(SelectedScreening, ticketType);
+        var price = priceCalculationService.CalculatePrice(SelectedScreening, ticketType);
+        return SelectedScreening.SneakPreview ? price - 2.5m : price;
     }
-
-    private static float RegularPrice(Movie? movie) => (movie?.Duration ?? 90) > 120 ? 9.00f : 8.50f;
 }
