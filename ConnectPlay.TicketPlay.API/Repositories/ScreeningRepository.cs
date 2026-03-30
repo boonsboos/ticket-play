@@ -53,7 +53,7 @@ public class ScreeningRepository : IScreeningRepository
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
 
-        var today = DateTime.Today;
+        var today = DateTimeOffset.UtcNow;
         var thursday = GetNextThursday();
 
         // Returned an array of Screenings or empty array: []
@@ -62,8 +62,8 @@ public class ScreeningRepository : IScreeningRepository
             .Include(screening => screening.Movie)
             .Where(screening =>
                 screening.SneakPreview &&
-                screening.StartTime >= today &&
-                screening.StartTime < thursday)
+                screening.StartTime.Date >= today.Date &&
+                screening.StartTime.Date <= thursday.Date)
             .ToArrayAsync();
     }
 
