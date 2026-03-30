@@ -61,7 +61,7 @@ public partial class MovieDetail : TranslatableComponent
         try
         {
             // Cancel any pending order to avoid leaking reserved seats, then clear local state
-            await websiteService.CancelOrder();
+            if (websiteService.CurrentOrderId is not null) await websiteService.CancelOrder();
             // Clear any previous state in the website service to prevent issues when navigating back and forth between movie details and order pages
             websiteService.Cleanup();
             movie = null;
