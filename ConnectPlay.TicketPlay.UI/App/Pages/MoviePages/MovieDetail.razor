@@ -121,7 +121,8 @@ else
         </div>
         <div class="container d-flex justify-content-between col-lg-10 col-md-12 m-3">
             <button class="btn btn-outline-primary" @onclick="Back">← @T["movieDetail.back"]</button>
-            <button class="btn btn-primary" @onclick="ToTickets">@T["movieDetail.next"] →</button>
+            <button class="btn btn-primary" disabled="@(websiteService.SelectedScreening is null)"
+                    @onclick="ToTickets">@T["movieDetail.next"] →</button>
         </div>
     </div>
 }

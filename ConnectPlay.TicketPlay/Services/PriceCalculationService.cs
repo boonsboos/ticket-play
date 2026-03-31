@@ -42,7 +42,7 @@ public class PriceCalculationService : IPriceCalculationService
             _ => throw new NotImplementedException($"Invalid TicketType {ticketType}"),
         };
 
-        return price;
+        return screening.SneakPreview ? price - 2.50m : price;
     }
 
     private static decimal CalculateRegularPrice(Screening screening) => screening.Movie.Duration > 120 ? 9.00m : 8.50m;
