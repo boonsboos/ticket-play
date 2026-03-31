@@ -1,12 +1,14 @@
 ﻿using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Refit;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages;
 
 public partial class Contact(
-    INewsletterApi newsletterApi)
+    INewsletterApi newsletterApi) : TranslatableComponent
 {
     private readonly INewsletterApi _newsletterApi = newsletterApi;
 
@@ -19,12 +21,17 @@ public partial class Contact(
 
     protected async Task HandleSubmit()
     {
+        HideToast();
+        
+        if (!ValidateForm())
+        {
+            return;
+        }
+
         isSubmitting = true;
+
         try
         {
-            if (string.IsNullOrWhiteSpace(form.Email) || string.IsNullOrWhiteSpace(form.Name))
-                throw new InvalidOperationException("Velden mogen niet leeg zijn.");
-
             var subscriber = new NewsletterSubscriber
             {
                 Email = form.Email,
@@ -33,8 +40,12 @@ public partial class Contact(
 
             await _newsletterApi.CreateSubscriberAsync(subscriber);
 
-            ShowSuccess("Succesvol aangemeld!");
+            ShowSuccess(T["createNewsletterSubscriber.successMessage"]);
             form = new CreateSubscriberFormModel();
+        }
+        catch (ApiException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+        {
+            ShowError(T["createNewsletterSubscriber.errorMessage"]);
         }
         catch (ApiException ex)
         {
@@ -48,6 +59,31 @@ public partial class Contact(
         {
             isSubmitting = false;
         }
+    }
+
+    private bool ValidateForm()
+    {
+        if (string.IsNullOrWhiteSpace(form.Name))
+        {
+            ShowError(T["createNewsletterSubscriber.emptyNameField"]);
+            return false;
+        }
+
+        if (string.IsNullOrWhiteSpace(form.Email))
+        {
+            ShowError(T["createNewsletterSubscriber.emptyEmailField"]);
+            return false;
+        }
+
+        var emailValidator = new EmailAddressAttribute();
+
+        if (!emailValidator.IsValid(form.Email))
+        {
+            ShowError(T["createNewsletterSubscriber.invalidEmail"]);
+            return false;
+        }
+
+        return true;
     }
 
     protected void ShowSuccess(string message)
@@ -68,11 +104,8 @@ public partial class Contact(
 
     public sealed class CreateSubscriberFormModel
     {
-        [Required(ErrorMessage = "E-mailadres is verplicht.")]
-        [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
         public string Email { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Naam is verplicht.")]
         public string Name { get; set; } = string.Empty;
     }
 }

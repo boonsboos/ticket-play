@@ -32,4 +32,14 @@ public class NewsletterRepository : INewsletterRepository
 
         return subscriberCount;
     }
+
+    async Task<bool> INewsletterRepository.EmailExistsAsync(string email)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        var normalizedEmail = email.Trim().ToLower(); // makes email lowercase (Test@email.com -> test@email.com)
+
+        return await dbContext.NewsletterSubscribers
+            .AnyAsync(subscriber => subscriber.Email.ToLower() == normalizedEmail);
+    }
 }

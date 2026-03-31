@@ -12,9 +12,11 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     [HttpPost("subscriber")]
     public async Task<IActionResult> CreateSubscriberAsync([FromBody] NewsletterSubscriber subscriber)
     {
-        if (!ModelState.IsValid)
+        var exists = await newsletterRepository.EmailExistsAsync(subscriber.Email);
+
+        if (exists)
         {
-            return ValidationProblem(ModelState);
+            return StatusCode(StatusCodes.Status409Conflict);
         }
 
         await newsletterRepository.CreateSubscriberAsync(subscriber);
