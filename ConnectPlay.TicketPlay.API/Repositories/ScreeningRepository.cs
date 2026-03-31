@@ -49,6 +49,24 @@ public class ScreeningRepository : IScreeningRepository
             .ToArrayAsync();
     }
 
+    public async Task<IEnumerable<Screening>> GetScreeningsForMoviePreviewAsync()
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var today = DateTimeOffset.UtcNow;
+        var thursday = GetNextThursday();
+
+        // Returned an array of Screenings or empty array: []
+        return await dbContext.Screenings
+            .Include(screening => screening.Hall)
+            .Include(screening => screening.Movie)
+            .Where(screening =>
+                screening.SneakPreview &&
+                screening.StartTime.Date >= today.Date &&
+                screening.StartTime.Date <= thursday.Date)
+            .ToArrayAsync();
+    }
+
     public async Task CreateScreeningAsync(CreateScreeningRequest dto)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -103,7 +121,7 @@ public class ScreeningRepository : IScreeningRepository
         return await dbContext.Screenings
             .Include(screening => screening.Movie)
             .Include(screening => screening.Hall) // we also need the get 3D-bool from the hall
-            .Where(screening => 
+            .Where(screening =>
                 screening.StartTime.Date >= today.Date && screening.StartTime.Date <= thursday.Date
             )
             .ToListAsync();

@@ -29,8 +29,10 @@ public class OrderRepository : IOrderRepository
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
-        // Retunr the order with all the tickets connected to this order
+        // Return the order with all the tickets connected to this order
         return await dbContext.Orders
+            .Include(order => order.Arrangements) // Fetch arrangement join table
+            .ThenInclude(orderArrangement => orderArrangement.Arrangement) // Fetch arrangements to show in the order overview
             .Include(order => order.Tickets) // Include the tickets so we only need one query to get the order and the tickets
             .ThenInclude(ticket => ticket.Seat) // include the seat for each ticket so we can show the seat numbers in the kiosk
             .Include(order => order.Tickets) // Because we need to include the tickets again to include the screening for each ticket, because we need the screening details in the kiosk

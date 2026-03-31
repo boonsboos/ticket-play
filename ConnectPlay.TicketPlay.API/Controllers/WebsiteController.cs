@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Contracts.Arrangement;
+using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Contracts.Overview;
 using ConnectPlay.TicketPlay.Models;

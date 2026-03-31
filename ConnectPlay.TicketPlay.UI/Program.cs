@@ -1,11 +1,11 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Extensions;
 using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.Configuration;
 using ConnectPlay.TicketPlay.UI.Repositories;
 using ConnectPlay.TicketPlay.UI.Services;
 using Microsoft.Extensions.Options;
 using Radzen;
-using Radzen.Blazor;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI;
@@ -73,6 +73,8 @@ public class Program
 
     private static void ConfigureServices(IServiceCollection services)
     {
+        services.AddTicketPlayServices();
+
         services.AddScoped<IMovieRepository, MovieRepository>();
         services.AddScoped<IScreeningRepository, ScreeningRepository>();
         services.AddSingleton<IArrangementRepository, ArrangementRepository>();
@@ -95,7 +97,6 @@ public class Program
             .AddRefitClient<IMovieApi>()
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()
-            .AddRefitClient<IKioskApi>()
             .AddRefitClient<IOrderApi>()
             .AddRefitClient<INewsletterApi>()
             .AddRefitClient<IWebsiteApi>()

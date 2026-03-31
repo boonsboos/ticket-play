@@ -1,6 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
-using ConnectPlay.TicketPlay.Contracts.Arrangement;
+using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,5 +37,12 @@ public class ArrangementRepository : IArrangementRepository
         );
 
         await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<Arrangement?> GetByIdAsync(int id)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Arrangements.FirstOrDefaultAsync( x => x.Id == id);
     }
 }

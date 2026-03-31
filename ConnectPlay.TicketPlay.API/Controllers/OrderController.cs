@@ -1,5 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
+using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,30 +8,30 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class KioskController : ControllerBase
+public class OrderController : ControllerBase
 {
-    private readonly IKioskOrderService kioskOrderService;
-    private readonly ILogger<KioskController> logger;
+    private readonly IOrderService orderService;
+    private readonly ILogger<OrderController> logger;
     private readonly IOrderRepository orderRepository;
 
-    public KioskController(IKioskOrderService kioskOrderService, IOrderRepository orderRepository, ILogger<KioskController> logger)
+    public OrderController(IOrderService orderService, IOrderRepository orderRepository, ILogger<OrderController> logger)
     {
-        this.kioskOrderService = kioskOrderService;
+        this.orderService = orderService;
         this.orderRepository = orderRepository;
         this.logger = logger;
     }
 
     [HttpPost]
     [Route("{screeningId}/reserve")] // /kiosk/1234/reserve
-    public async Task<IActionResult> PlaceOrderAsync([FromRoute] int screeningId, [FromBody] IEnumerable<TicketType> tickets)
+    public async Task<IActionResult> PlaceOrderAsync([FromRoute] int screeningId, [FromBody] NewOrder order)
     {
-        if (!tickets.Any()) return BadRequest();
+        if (!order.Tickets.Any()) return BadRequest();
 
         try
         {
-            var order = await kioskOrderService.ReserveAsync(screeningId, tickets);
+            var placedOrder = await orderService.ReserveAsync(screeningId, order);
 
-            return Ok(order);
+            return Ok(placedOrder);
         }
         catch (ArgumentException argException)
         {
@@ -50,7 +51,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            await kioskOrderService.CancelAsync(orderId); // Controller call the service to cancel the order
+            await orderService.CancelAsync(orderId); // Controller call the service to cancel the order
             return Ok(); // 200 code
         }
         catch (ArgumentException argException)
@@ -66,7 +67,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            await kioskOrderService.PayAsync(orderId); // Set the order status to paid
+            await orderService.PayAsync(orderId); // Set the order status to paid
             return Ok();
         }
         catch (ArgumentException argException)
@@ -82,7 +83,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            var pdfStream = await kioskOrderService.PrintAsync(orderId);
+            var pdfStream = await orderService.PrintAsync(orderId);
             return File(pdfStream, "application/pdf", $"TicketPlay_Order-{orderId}-Tickets.pdf");
         }
         catch (ArgumentException argException)
@@ -114,7 +115,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            var takenSeats = await kioskOrderService.GetTakenSeatsAsync(screeningId, orderId);
+            var takenSeats = await orderService.GetTakenSeatsAsync(screeningId, orderId);
             return Ok(takenSeats);
         }
         catch (ArgumentException argException)
@@ -130,7 +131,7 @@ public class KioskController : ControllerBase
     {
         try
         {
-            var updatedOrder = await kioskOrderService.UpdateSeatsAsync(orderId, seats);
+            var updatedOrder = await orderService.UpdateSeatsAsync(orderId, seats);
             return Ok(updatedOrder);
         }
         catch (ArgumentException argException)

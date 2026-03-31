@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Contracts.Arrangement;
+using ConnectPlay.TicketPlay.Contracts.Arrangements;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
 
@@ -22,5 +22,10 @@ public class ArrangementRepository : IArrangementRepository
     public Task<IEnumerable<Arrangement>> GetAllAsync()
     {
         return websiteApi.GetArrangementsAsync();
+    }
+
+    public Task<Arrangement?> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
     }
 }

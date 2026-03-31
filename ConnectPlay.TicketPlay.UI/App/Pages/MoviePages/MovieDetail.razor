@@ -1,14 +1,12 @@
 ﻿@page "/movies/{Id:int}"
-
+@page "/movies/sneakpreview"
 @using ConnectPlay.TicketPlay.UI.App.Components.Base
-
 @inherits TranslatableComponent;
-
 @rendermode InteractiveServer
 
 <PageTitle>@T["movieDetail.pageTitle"]</PageTitle>
 
-@if (movie == null)
+@if (IsMovieNotFound)
 {
     <div class="container mt-4 text-center">
         <div class="alert alert-warning">
@@ -22,34 +20,71 @@ else
         <div class="card movie-card mb-4 col-lg-10 col-md-12">
             <div class="row g-0 align-items-start">
                 <div class="col-md-4 d-flex justify-content-center p-3">
-                    <img src="@movie.PosterUrl" alt="@movie.Title" class="img-fluid rounded" />
+                    <img src="@DisplayPosterUrl" alt="@DisplayTitle" class="img-fluid rounded" />
                 </div>
                 <div class="col-md-8 p-4 d-flex flex-column">
-                    <h2>@movie.Title</h2>
-                    @{
-                        var genreKey = $"genre.{movie.Genre}";
-                        var translatedGenre = T[genreKey];
-                        var genreText = translatedGenre == genreKey ? movie.Genre : translatedGenre;
-                    }
-                    <p class="text-muted">@genreText • @movie.Duration min • @movie.ReleaseDate • @movie.MinimumAge+</p>
-                    @if (!string.IsNullOrWhiteSpace(movie.Tags))
+                    <h2>@DisplayTitle</h2>
+                    @if (!string.IsNullOrWhiteSpace(DisplayMovieMetaText))
                     {
-                        <div class="mb-3">
-                            @foreach (var tag in movie.Tags.Split(','))
-                            {
-                                <span class="badge rounded-pill bg-purple me-1">@tag.Trim()</span>
-                            }
-                        </div>
+                        <p class="text-muted">@DisplayMovieMetaText</p>
                     }
-                    <p>@movie.Description</p>
+                    @if (ShowStandardMovieDetails)
+                    {
+                        @if (DisplayTags.Count > 0)
+                        {
+                            <div class="mb-3">
+                                @foreach (var tag in DisplayTags)
+                                {
+                                    <span class="badge rounded-pill bg-purple me-1">@tag</span>
+                                }
+                            </div>
+                        }
+
+                        
+                    }
+                    @if (!string.IsNullOrWhiteSpace(DisplayDescription))
+                    {
+                        <p>@DisplayDescription</p>
+                    }
                 </div>
             </div>
             <div class="card-footer pt-3">
                 <h5>@T["movieDetail.screenings"]</h5>
                 <div class="d-flex flex-wrap gap-3 my-2">
-                    @if (!screenings.Any())
+                    @if (!HasAnyScreenings)
                     {
                         <p>@T["movieDetail.noScreenings"]</p>
+                    }
+                    else if (IsPreview)
+                    {
+                        @foreach (var screening in previewScreenings)
+                        {
+                            <div
+                                class="card @(screening.Id == websiteService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
+                                <div class="card-body @(screening.StartTime.ToLocalTime() < DateTimeOffset.Now.ToLocalTime() ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
+                                     @onclick="() => SetSelectedScreening(screening)">
+                                    <p class="card-subtitle text-body-secondary text-center">
+                                        @screening.StartTime.ToLocalTime().ToString("dddd")
+                                    </p>
+                                    <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
+
+                                    @if (screening.Hall?.Has3DProjector == true)
+                                    {
+                                        <div
+                                            class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                            @T["movieDetail.hall"] @screening.Hall?.HallNumber
+                                            <i class="bi bi-badge-3d"></i>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="d-flex justify-content-center align-items-center gap-2 text-body-secondary fw-bold">
+                                            @T["movieDetail.hall"] @screening.Hall?.HallNumber
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
                     }
                     else
                     {
@@ -59,11 +94,14 @@ else
                                 class="card @(screening.Id == websiteService.SelectedScreening?.Id ? "border-primary bg-primary-subtle" : "")">
                                 <div class="card-body @(screening.StartTime.ToLocalTime() < DateTimeOffset.Now.ToLocalTime() ? "bg-secondary-subtle text-muted" : "cursor-pointer")"
                                      @onclick="() => SetSelectedScreening(screening)">
+                                    <p class="card-subtitle text-body-secondary text-center">
+                                        @screening.StartTime.ToLocalTime().ToString("dddd")
+                                    </p>
                                     <h2 class="card-title">@screening.StartTime.ToLocalTime().ToString("HH:mm")</h2>
-
                                     @if (screening.Hall?.Has3DProjector == true)
                                     {
-                                        <div class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center gap-2 text-body-secondary fw-bold">
                                             @T["movieDetail.hall"] @screening.Hall?.HallNumber
                                             <i class="bi bi-badge-3d"></i>
                                         </div>
@@ -83,7 +121,8 @@ else
         </div>
         <div class="container d-flex justify-content-between col-lg-10 col-md-12 m-3">
             <button class="btn btn-outline-primary" @onclick="Back">← @T["movieDetail.back"]</button>
-            <button class="btn btn-primary" @onclick="ToTickets">@T["movieDetail.next"] →</button>
+            <button class="btn btn-primary" disabled="@(websiteService.SelectedScreening is null)"
+                    @onclick="ToTickets">@T["movieDetail.next"] →</button>
         </div>
     </div>
 }

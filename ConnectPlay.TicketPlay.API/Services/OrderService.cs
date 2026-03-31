@@ -1,47 +1,63 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Abstract.Services;
 using ConnectPlay.TicketPlay.API.Abstract;
+using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
 using System.Data;
 
 namespace ConnectPlay.TicketPlay.API.Services;
 
-public class KioskOrderService(
+public class OrderService(
         IScreeningRepository screeningRepository,
         ITicketRepository ticketRepository,
+        IArrangementRepository arrangementRepository,
         ISeatAssignmentService seatAssignmentService,
         IPriceCalculationService priceCalculationService,
         ITicketPrintingService ticketPrintingService,
         IOrderRepository orderRepository,
         ISeatRepository seatRepository,
-        ILogger<KioskOrderService> logger) : IKioskOrderService
+        IOrderArrangementRepository orderArrangementRepository,
+        ILogger<OrderService> logger) : IOrderService
 {
 
-    public async Task<Order> ReserveAsync(int screeningId, IEnumerable<TicketType> reservation)
+    public async Task<Order> ReserveAsync(int screeningId, NewOrder newOrder)
     {
         // find if screening is real
         var screening = await screeningRepository.GetScreeningAsync(screeningId)
             ?? throw new ArgumentException("Screening does not exist");
 
-        // calculate cost
-        var total = priceCalculationService.CalculatePrices(screening, reservation);
+        // ensure the user did not tamper with the arrangements, otherwise we cannot proceed with the order.
+        foreach (var arrangementQuantity in newOrder.Arrangements)
+        {
+            arrangementQuantity.Arrangement = await arrangementRepository.GetByIdAsync(arrangementQuantity.Arrangement.Id) 
+                ?? throw new ArgumentException($"Arrangement {arrangementQuantity.Arrangement.Id} does not exist");
+        }
+
+        // calculate cost, including arrangements
+        var total = priceCalculationService.CalculatePrices(screening, newOrder);
 
         // assign seats
-        var assignedSeats = await seatAssignmentService.AssignAsync(screening, reservation);
+        var assignedSeats = await seatAssignmentService.AssignAsync(screening, newOrder.Tickets);
 
-        var tickets = await CreateTicketsAsync(screening, reservation, assignedSeats);
+        var tickets = await CreateTicketsAsync(screening, newOrder.Tickets, assignedSeats);
 
         // create the order object first (tickets are empty for now)
         var order = new Order
         {
             Total = total,
             Status = OrderStatus.Pending,
-            // save the order associated with the tickets
             Tickets = tickets,
         };
 
+        // save the order associated with the tickets
         await orderRepository.CreateOrderAsync(order);
-        return await orderRepository.GetOrderByIdAsync(order.Id) ?? throw new InvalidOperationException("Failed to retrieve order after creation");
+
+        await orderArrangementRepository.SaveArrangementsAsync(order, newOrder.Arrangements);
+
+        // fetch it again to make sure we have the most recent data
+        return await orderRepository.GetOrderByIdAsync(order.Id)
+            ?? throw new InvalidOperationException("Failed to retrieve order after creation");
     }
 
     // We use await because the methods are async and we want to ensuse that the order is only cancelled

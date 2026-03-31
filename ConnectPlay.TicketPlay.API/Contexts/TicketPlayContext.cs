@@ -13,6 +13,7 @@ public class TicketPlayContext : DbContext
     public DbSet<Order> Orders { get; set; }
     public DbSet<NewsletterSubscriber> NewsletterSubscribers { get; set; }
     public DbSet<Arrangement> Arrangements { get; set; }
+    public DbSet<OrderArrangement> OrderArrangements { get; set; }
 
     public TicketPlayContext(DbContextOptions options) : base(options)
     {

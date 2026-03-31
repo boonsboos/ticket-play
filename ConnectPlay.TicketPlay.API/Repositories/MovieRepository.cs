@@ -59,6 +59,23 @@ public class MovieRepository : IMovieRepository
             })
             .FirstOrDefaultAsync();
     }
+    public async Task<PreviewMovieDetailResponse?> GetMoviePreviewAsync()
+    {
+        await using var db = await _dbContextFactory.CreateDbContextAsync();
+
+        var now = DateTimeOffset.Now;
+
+        return await db.Screenings
+            .Where(s => s.SneakPreview && s.StartTime >= now)
+            .OrderBy(s => s.StartTime)
+            .Select(s => new PreviewMovieDetailResponse
+            {
+                Genre = s.Movie.Genre,
+                Duration = s.Movie.Duration,
+                MinimumAge = s.Movie.MinimumAge,
+            })
+            .FirstOrDefaultAsync();
+    }
 
     public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
     {
@@ -87,7 +104,7 @@ public class MovieRepository : IMovieRepository
 
         await dbContext.SaveChangesAsync();
     }
-    
+
     public async Task<IEnumerable<OverviewMovie>> GetTodaysMoviesAsync()
     {
         // Using "await using" so the database connection is closed when its done.
@@ -116,7 +133,7 @@ public class MovieRepository : IMovieRepository
                         PosterUrl = screeningGroup.Key.PosterUrl.AbsoluteUri,
                         ScreeningTimes = [.. screeningGroup.OrderBy(startTime => startTime).Select(x => x.StartTime)]
                     };
-                }) 
+                })
         ];
     }
 }

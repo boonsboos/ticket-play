@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace ConnectPlay.TicketPlay.Contracts.Arrangement;
+namespace ConnectPlay.TicketPlay.Contracts.Arrangements;
 
 public record NewArrangement
 {
