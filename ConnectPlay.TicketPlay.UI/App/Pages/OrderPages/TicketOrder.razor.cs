@@ -18,6 +18,9 @@ public partial class TicketOrder : TranslatableComponent
     protected Screening Screening { get; set; } = null!;
     protected List<WebsiteTicket> Tickets { get; set; } = [];
 
+    private bool IsPreview => Screening.SneakPreview;
+    private string DisplayTitle => !IsPreview ? Screening.Movie.Title : T["movieDetail.sneakPreview.title"];
+
     public TicketOrder(WebsiteService websiteService, NavigationManager navigationManager, ILogger<TicketOrder> logger)
     {
         this.websiteService = websiteService;

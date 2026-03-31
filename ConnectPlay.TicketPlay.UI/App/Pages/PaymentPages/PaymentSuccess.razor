@@ -13,11 +13,11 @@
 
         <h1>@T["paymentSuccess.title"]</h1>
 
-        <h2>@websiteService.Movie?.Title</h2>
+        <h2>@DisplayTitle</h2>
 
         <p>@T["paymentSuccess.rememberTickets"]</p>
 
-        <img class="tickets" src="@websiteService.Movie?.PosterUrl" alt="@T["paymentSuccess.posterAlt"]" />
+        <img class="tickets" src="@DisplayPosterUrl" alt="@T["paymentSuccess.posterAlt"]" />
     </div>
 
     @if (websiteService.CurrentOrderId is not null)

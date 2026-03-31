@@ -41,7 +41,7 @@ public class PdfTicketPrintingService : ITicketPrintingService
                     .AlignCenter()
                     .Column(column =>
                     {
-                        column.Item().Text(movie.Title)
+                        column.Item().Text(!screening.SneakPreview ? movie.Title : "Sneak Preview")
                             .SemiBold()
                             .FontSize(24);
 
