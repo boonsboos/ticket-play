@@ -102,6 +102,7 @@ public class ScreeningRepository : IScreeningRepository
 
         return await dbContext.Screenings
             .Include(screening => screening.Movie)
+            .Include(screening => screening.Hall) // we also need the get 3D-bool from the hall
             .Where(screening => 
                 screening.StartTime.Date >= today.Date && screening.StartTime.Date <= thursday.Date
             )

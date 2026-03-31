@@ -27,17 +27,57 @@ else if (!Overview.Any())
 }
 else
 {
+    <div class="row g-3 mb-4">
+        <div class="col-md-2">
+            <input class="form-control"  placeholder="@T["filters.searchPlaceholder"] "@bind=" searchTerm"
+                   @bind:event="oninput" />
+        </div>
+
+        <div class="col-md-1">
+            <select class="form-select" @bind="selectedGenre">
+                <option value="">@T["filters.allGenres"]</option>
+                @foreach (var genre in GetGenres())
+                {
+                    <option value="@genre">@T[$"genre.{genre}"]</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <select class="form-select" @bind="selectedMinimumAge">
+                <option value="">@T["filters.allAges"]</option>
+                @foreach (var age in GetAges())
+                {
+                    <option value="@age.ToString()">@age+</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-1">
+            <select class="form-select" @bind="selectedFormat">
+            <option value="">@T["filters.formatAll"]</option> 
+            <option value="2D">@T["filters.format2D"]</option>
+            <option value="3D">@T["filters.format3D"]</option> 
+        </select> 
+        </div>
+    </div>
+
     @foreach (var day in Overview)
     {
-        <div class="my-4">
-            <h2>@day.Day.ToLocalTime().ToString("dd-MM-yyyy")</h2>
+        var filteredMovies = AddFilter(day.Offerings).ToList();
 
-            <div class="row g-4 overflow-x-scroll">
-                @foreach (var movie in day.Offerings)
-                {
-                    <OverviewMovieCard CardMovie="@movie" />
-                }
+        if (filteredMovies.Any()) // check if there are movies of specified day after filtering
+        {
+            <div class="my-4">
+                <h2>@day.Day.ToLocalTime().ToString("dd-MM-yyyy")</h2>
+
+                <div class="row g-4 overflow-x-scroll">
+                    @foreach (var movie in filteredMovies)
+                    {
+                        <OverviewMovieCard CardMovie="@movie" />
+                    }
+                </div>
             </div>
-        </div>
+        }
     }
 }
