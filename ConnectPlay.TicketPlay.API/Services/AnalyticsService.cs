@@ -6,6 +6,15 @@ namespace ConnectPlay.TicketPlay.API.Services;
 
 public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnalyticsService
 {
+    /// <summary>
+    /// Generates an analytics overview for movies and halls based on screening data and sold tickets within a specified period.
+    /// </summary>
+    /// <param name="from"></param>
+    /// <param name="to"></param>
+    /// <param name="movieId"></param>
+    /// <param name="hallId"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
     public async Task<AnalyticsOverview> GetMoviesHallsAnalyticsAsync(DateTimeOffset? from, DateTimeOffset? to, int? movieId, int? hallId)
     {
         var today = DateTimeOffset.UtcNow;
@@ -23,17 +32,53 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
 
         var soldTicketsByScreeningId = await analyticsRepository.GetSoldTicketsByScreeningIdsAsync(screeningIds);
 
-        static decimal CalculateOccupancyPercentage(int soldTickets, int totalCapacity)
-        {
-            if (totalCapacity <= 0)
-            {
-                return 0;
-            }
+        var movieItems = GetMoviesAnalytics(screenings, soldTicketsByScreeningId);
 
-            return Math.Round((decimal)soldTickets / totalCapacity * 100m, 2);
+        var hallItems = GetHallsAnalytics(screenings, soldTicketsByScreeningId);
+
+        var dailyMovieTickets = GetDailyMovieTickets(screenings, soldTicketsByScreeningId);
+
+        var dailyHallTickets = GetDailyHallTickets(screenings, soldTicketsByScreeningId);
+
+        var analyticsData = new AnalyticsOverview
+        {
+            PeriodStart = new DateTimeOffset(periodStart, TimeSpan.Zero),
+            PeriodEnd = new DateTimeOffset(periodEndExclusive.AddTicks(-1), TimeSpan.Zero),
+            TotalScreenings = screenings.Length,
+            DailyMovieTickets = dailyMovieTickets,
+            DailyHallTickets = dailyHallTickets,
+            Movies = movieItems,
+            Halls = hallItems
+        };
+
+        return analyticsData;
+    }
+    /// <summary>
+    /// Calculates the occupancy percentage for a hall based on the number of sold tickets and the total capacity.
+    /// </summary>
+    /// <param name="soldTickets"></param>
+    /// <param name="totalCapacity"></param>
+    /// <returns></returns>
+    private decimal CalculateOccupancyPercentage(int soldTickets, int totalCapacity)
+    {
+        if (totalCapacity <= 0)
+        {
+            return 0;
         }
 
-        var movieItems = screenings
+        return Math.Round((decimal)soldTickets / totalCapacity * 100m, 2);
+    }
+
+    /// <summary>
+    /// Aggregates screening data to produce analytics items for movies, including total screenings, tickets sold, and total capacity. 
+    /// <para>The result is ordered by tickets sold in descending order, then by movie title in ascending order.</para>
+    /// </summary>
+    /// <param name="screenings"></param>
+    /// <param name="soldTicketsByScreeningId"></param>
+    /// <returns></returns>
+    private MovieAnalyticsItem[] GetMoviesAnalytics(IEnumerable<ScreeningStats> screenings, Dictionary<int, int> soldTicketsByScreeningId)
+    {
+        return screenings
             .GroupBy(screening => new { screening.MovieId, screening.MovieTitle })
             .Select(group =>
             {
@@ -52,8 +97,18 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
             .OrderByDescending(item => item.TicketsSold)
             .ThenBy(item => item.MovieTitle)
             .ToArray();
+    }
 
-        var hallItems = screenings
+    /// <summary>
+    /// Aggregates screening data to produce analytics items for halls, including total screenings, tickets sold, total capacity, and occupancy percentage.
+    /// <para>The result is ordered by tickets sold in descending order, then by hall number in ascending order.</para>
+    /// </summary>
+    /// <param name="screenings"></param>
+    /// <param name="soldTicketsByScreeningId"></param>
+    /// <returns></returns>
+    private HallAnalyticsItem[] GetHallsAnalytics(IEnumerable<ScreeningStats> screenings, Dictionary<int, int> soldTicketsByScreeningId)
+    {
+        return screenings
             .GroupBy(screening => new { screening.HallId, screening.HallNumber })
             .Select(group =>
             {
@@ -73,32 +128,44 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
             .OrderByDescending(item => item.TicketsSold)
             .ThenBy(item => item.HallNumber)
             .ToArray();
+    }
+    /// <summary>
+    /// Generates daily ticket sales data for movies by grouping screenings by date and movie, then summing the sold tickets for each group.
+    /// <para>The result is ordered by date in ascending order, then by movie title in ascending order.</para>
+    /// </summary>
+    /// <param name="screenings"></param>
+    /// <param name="soldTicketsByScreeningId"></param>
+    /// <returns></returns>
+    private MovieDailyTicketsItem[] GetDailyMovieTickets(IEnumerable<ScreeningStats> screenings, Dictionary<int, int> soldTicketsByScreeningId)
+    {
+        return screenings
+             .GroupBy(screening => new
+             {
+                 Date = DateOnly.FromDateTime(screening.StartTime.UtcDateTime.Date),
+                 screening.MovieId,
+                 screening.MovieTitle
+             })
+             .Select(group => new MovieDailyTicketsItem
+             {
+                 Date = group.Key.Date,
+                 MovieId = group.Key.MovieId,
+                 MovieTitle = group.Key.MovieTitle,
+                 TicketsSold = group.Sum(screening => soldTicketsByScreeningId.GetValueOrDefault(screening.ScreeningId))
+             })
+             .OrderBy(item => item.Date)
+             .ThenBy(item => item.MovieTitle)
+             .ToArray();
+    }
 
-        var dailyMovieTickets = screenings
-            .GroupBy(screening => new
-            {
-                Date = DateOnly.FromDateTime(screening.StartTime.UtcDateTime.Date),
-                screening.MovieId,
-                screening.MovieTitle
-            })
-            .Select(group => new MovieDailyTicketsItem
-            {
-                Date = group.Key.Date,
-                MovieId = group.Key.MovieId,
-                MovieTitle = group.Key.MovieTitle,
-                TicketsSold = group.Sum(screening => soldTicketsByScreeningId.GetValueOrDefault(screening.ScreeningId))
-            })
-            .OrderBy(item => item.Date)
-            .ThenBy(item => item.MovieTitle)
-            .ToArray();
-
-        var dailyHallTickets = screenings
-            .GroupBy(screening => new
-            {
-                Date = DateOnly.FromDateTime(screening.StartTime.UtcDateTime.Date),
-                screening.HallId,
-                screening.HallNumber
-            })
+    private HallDailyTicketsItem[] GetDailyHallTickets(IEnumerable<ScreeningStats> screenings, Dictionary<int, int> soldTicketsByScreeningId)
+    {
+        return screenings
+             .GroupBy(screening => new
+             {
+                 Date = DateOnly.FromDateTime(screening.StartTime.UtcDateTime.Date),
+                 screening.HallId,
+                 screening.HallNumber
+             })
             .Select(group => new HallDailyTicketsItem
             {
                 Date = group.Key.Date,
@@ -109,18 +176,5 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
             .OrderBy(item => item.Date)
             .ThenBy(item => item.HallNumber)
             .ToArray();
-
-        var analyticsData = new AnalyticsOverview
-        {
-            PeriodStart = new DateTimeOffset(periodStart, TimeSpan.Zero),
-            PeriodEnd = new DateTimeOffset(periodEndExclusive.AddTicks(-1), TimeSpan.Zero),
-            TotalScreenings = screenings.Length,
-            DailyMovieTickets = dailyMovieTickets,
-            DailyHallTickets = dailyHallTickets,
-            Movies = movieItems,
-            Halls = hallItems
-        };
-
-        return analyticsData;
     }
 }
