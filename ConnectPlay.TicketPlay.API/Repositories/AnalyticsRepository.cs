@@ -12,12 +12,17 @@ public class AnalyticsRepository(IDbContextFactory<TicketPlayContext> contextFac
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 
+        // Normalize the period bounds to UTC to avoid implicit DateTime -> DateTimeOffset conversions.
+        var periodStartUtc = DateTime.SpecifyKind(periodStart, DateTimeKind.Utc);
+        var periodEndExclusiveUtc = DateTime.SpecifyKind(periodEndExclusive, DateTimeKind.Utc);
+
         var screeningsQuery = context.Screenings
             // We use AsNoTracking since we don't need to track changes to these entities, which can improve performance for read-only queries. 
             .AsNoTracking()
             .Include(screening => screening.Movie)
             .Include(screening => screening.Hall)
-            .Where(screening => screening.StartTime >= periodStart && screening.StartTime < periodEndExclusive);
+            .Where(screening => screening.StartTime.UtcDateTime >= periodStartUtc
+                                && screening.StartTime.UtcDateTime < periodEndExclusiveUtc);
 
         if (movieId.HasValue) screeningsQuery = screeningsQuery.Where(screening => screening.Movie.Id == movieId.Value);
 
