@@ -94,6 +94,7 @@ public class Program
         );
 
         services
+            .AddRefitClient<IAnalyticsApi>()
             .AddRefitClient<IMovieApi>()
             .AddRefitClient<IScreeningApi>()
             .AddRefitClient<IHallApi>()

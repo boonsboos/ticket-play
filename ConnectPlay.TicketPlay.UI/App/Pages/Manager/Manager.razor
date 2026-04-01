@@ -7,31 +7,42 @@
 <PageTitle>@T["managerDashboard.pageTitle"]</PageTitle>
 
 <div class="container mt-5">
-    <h2 class="mb-4">@T["managerDashboard.title"]</h2>
+    <div>
+        <h2 class="mb-4">@T["managerDashboard.title"]</h2>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col">
+                <a class="btn btn-primary w-100 py-4" href="/manager/create-movie">
+                    @T["managerDashboard.createMovie"]
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-success w-100 py-4" href="/manager/create-screening">
+                    @T["managerDashboard.createScreening"]
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-warning w-100 py-4" href="/manager/create-hall">
+                    @T["managerDashboard.createHall"]
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-info w-100 py-4" href="/manager/create-newsletter">
+                    @T["managerDashboard.createNewsletter"]
+                </a>
+            </div>
+            <div class="col">
+                <a class="btn btn-danger w-100 py-4" href="/manager/create-arrangement">
+                    @T["managerDashboard.createArrangement"]
+                </a>
+            </div>
+        </div>
+    </div>
+    <h2 class="my-4">@T["managerDashboard.analytics"]</h2>
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div class="col">
-            <a class="btn btn-primary w-100 py-4" href="/manager/create-movie">
-                @T["managerDashboard.createMovie"]
-            </a>
-        </div>
-        <div class="col">
-            <a class="btn btn-success w-100 py-4" href="/manager/create-screening">
-                @T["managerDashboard.createScreening"]
-            </a>
-        </div>
-        <div class="col">
-            <a class="btn btn-warning w-100 py-4" href="/manager/create-hall">
-                @T["managerDashboard.createHall"]
-            </a>
-        </div>
-        <div class="col">
-            <a class="btn btn-info w-100 py-4" href="/manager/create-newsletter">
-                @T["managerDashboard.createNewsletter"]
-            </a>
-        </div>
-        <div class="col">
-            <a class="btn btn-danger w-100 py-4" href="/manager/create-arrangement">
-                @T["managerDashboard.createArrangement"]
+            <a class="btn btn-primary w-100 py-4" href="/manager/analytics/movies-halls">
+                @* Analytics for Movies and halls *@
+                @T["managerDashboard.analyticsMoviesHalls"]
             </a>
         </div>
     </div>

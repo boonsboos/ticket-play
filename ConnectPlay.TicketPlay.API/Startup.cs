@@ -53,6 +53,7 @@ public class Startup(IConfiguration configuration)
     {
         services.AddScoped<IMovieRepository, MovieRepository>()
             .AddSingleton<IHallRepository, HallRepository>()
+            .AddSingleton<IAnalyticsRepository, AnalyticsRepository>()
             .AddScoped<IScreeningRepository, ScreeningRepository>()
             .AddScoped<ISeatRepository, SeatRepository>()
             .AddScoped<ITicketRepository, TicketRepository>()
@@ -67,6 +68,7 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<ISeatAssignmentService, SeatAssignmentService>()
             .AddScoped<IOrderService, OrderService>()
             .AddScoped<IHallService, HallOrderService>()
+            .AddSingleton<IAnalyticsService, AnalyticsService>()
             .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
     }
 }

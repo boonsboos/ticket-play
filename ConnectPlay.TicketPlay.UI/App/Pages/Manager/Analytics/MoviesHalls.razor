@@ -1,0 +1,202 @@
+@page "/manager/analytics/movies-halls"
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+@inherits TranslatableComponent
+@rendermode InteractiveServer
+
+<PageTitle>@T["managerDashboard.analyticsMoviesHalls"]</PageTitle>
+
+<div class="container my-4">
+    <h2 class="mb-4">@T["managerDashboard.analyticsMoviesHalls"]</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <EditForm Model="form" OnValidSubmit="LoadAnalyticsAsync" FormName="MoviesHallsAnalyticsFilters">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">@T["analyticsMoviesHalls.from"]</label>
+                        <InputDate class="form-control" @bind-Value="form.From" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@T["analyticsMoviesHalls.to"]</label>
+                        <InputDate class="form-control" @bind-Value="form.To" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@T["analyticsMoviesHalls.movie"]</label>
+                        <InputSelect class="form-select" @bind-Value="form.MovieId">
+                            <option value="">@T["analyticsMoviesHalls.allMovies"]</option>
+                            @foreach (var movie in movies)
+                            {
+                                <option value="@movie.Id">@movie.Title</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@T["analyticsMoviesHalls.hall"]</label>
+                        <InputSelect class="form-select" @bind-Value="form.HallId">
+                            <option value="">@T["analyticsMoviesHalls.allHalls"]</option>
+                            @foreach (var hall in halls)
+                            {
+                                <option value="@hall.Id">@T["createScreening.hallOption"] @hall.HallNumber</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary" disabled="@isLoading">
+                        @T["analyticsMoviesHalls.load"]
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="ResetFilters"
+                            disabled="@isLoading">
+                        @T["analyticsMoviesHalls.reset"]
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    @if (isLoading)
+    {
+        <p>@T["analyticsMoviesHalls.loading"]</p>
+    }
+    else if (analytics is not null)
+    {
+        <p class="text-muted">
+            @T["analyticsMoviesHalls.totalScreenings"]: <strong>@analytics.TotalScreenings</strong>
+            | @T["analyticsMoviesHalls.period"]:
+            <strong>@analytics.PeriodStart.ToLocalTime().ToString("dd-MM-yyyy")</strong> -
+            <strong>@analytics.PeriodEnd.ToLocalTime().ToString("dd-MM-yyyy")</strong>
+        </p>
+
+        <h4 class="mt-4">@T["analyticsMoviesHalls.movieTicketsTrend"]</h4>
+        @if (!movieDailyTicketsChartSeries.Any())
+        {
+            <p>@T["analyticsMoviesHalls.noData"]</p>
+        }
+        else
+        {
+            <RadzenChart style="height: 380px" class="mb-4">
+                @foreach (var series in movieDailyTicketsChartSeries)
+                {
+                    <RadzenLineSeries Data="@series.Points" CategoryProperty="DateLabel" ValueProperty="TicketsSold"
+                                      Title="@series.SeriesName">
+                        <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    </RadzenLineSeries>
+                }
+                <RadzenCategoryAxis>
+                    <RadzenAxisTitle Text="@T["analyticsMoviesHalls.day"]" />
+                </RadzenCategoryAxis>
+                <RadzenValueAxis Min="0">
+                    <RadzenAxisTitle Text="@T["analyticsMoviesHalls.ticketsSold"]" />
+                    <RadzenGridLines Visible="true" />
+                </RadzenValueAxis>
+                <RadzenLegend Position="LegendPosition.Bottom" />
+            </RadzenChart>
+        }
+
+        <h4 class="mt-4">@T["analyticsMoviesHalls.movieDetails"]</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>@T["analyticsMoviesHalls.movie"]</th>
+                        <th>@T["analyticsMoviesHalls.screenings"]</th>
+                        <th>@T["analyticsMoviesHalls.capacity"]</th>
+                        <th>@T["analyticsMoviesHalls.ticketsSold"]</th>
+                        <th>@T["analyticsMoviesHalls.avgTicketsPerScreening"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!analytics.Movies.Any())
+                    {
+                        <tr>
+                            <td colspan="5">@T["analyticsMoviesHalls.noData"]</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in analytics.Movies)
+                        {
+                            <tr>
+                                <td>@item.MovieTitle</td>
+                                <td>@item.Screenings</td>
+                                <td>@item.TotalCapacity</td>
+                                <td>@item.TicketsSold</td>
+                                <td>@GetAverageTicketsPerScreening(item.Screenings, item.TicketsSold).ToString("0.##")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="mt-4">@T["analyticsMoviesHalls.hallTicketsTrend"]</h4>
+        @if (!hallDailyTicketsChartSeries.Any())
+        {
+            <p>@T["analyticsMoviesHalls.noData"]</p>
+        }
+        else
+        {
+            <RadzenChart style="height: 380px" class="mb-4">
+                @foreach (var series in hallDailyTicketsChartSeries)
+                {
+                    <RadzenLineSeries Data="@series.Points" CategoryProperty="DateLabel" ValueProperty="TicketsSold"
+                                      Title="@series.SeriesName">
+                        <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    </RadzenLineSeries>
+                }
+                <RadzenCategoryAxis>
+                    <RadzenAxisTitle Text="@T["analyticsMoviesHalls.day"]" />
+                </RadzenCategoryAxis>
+                <RadzenValueAxis Min="0">
+                    <RadzenAxisTitle Text="@T["analyticsMoviesHalls.ticketsSold"]" />
+                    <RadzenGridLines Visible="true" />
+                </RadzenValueAxis>
+                <RadzenLegend Position="LegendPosition.Bottom" />
+            </RadzenChart>
+        }
+
+        <h4 class="mt-4">@T["analyticsMoviesHalls.hallDetails"]</h4>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>@T["analyticsMoviesHalls.hall"]</th>
+                        <th>@T["analyticsMoviesHalls.screenings"]</th>
+                        <th>@T["analyticsMoviesHalls.capacity"]</th>
+                        <th>@T["analyticsMoviesHalls.ticketsSold"]</th>
+                        <th>@T["analyticsMoviesHalls.occupancy"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!analytics.Halls.Any())
+                    {
+                        <tr>
+                            <td colspan="5">@T["analyticsMoviesHalls.noData"]</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in analytics.Halls)
+                        {
+                            <tr>
+                                <td>@T["analyticsMoviesHalls.hall"] @item.HallNumber</td>
+                                <td>@item.Screenings</td>
+                                <td>@item.TotalCapacity</td>
+                                <td>@item.TicketsSold</td>
+                                <td>@item.OccupancyPercentage.ToString("0.##")%</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
