@@ -68,7 +68,7 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<ISeatAssignmentService, SeatAssignmentService>()
             .AddScoped<IOrderService, OrderService>()
             .AddScoped<IHallService, HallOrderService>()
-            .AddScoped<IAnalyticsService, AnalyticsService>()
+            .AddSingleton<IAnalyticsService, AnalyticsService>()
             .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
     }
 }
