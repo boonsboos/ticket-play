@@ -53,7 +53,7 @@ public class Startup(IConfiguration configuration)
     {
         services.AddScoped<IMovieRepository, MovieRepository>()
             .AddSingleton<IHallRepository, HallRepository>()
-            .AddScoped<IAnalyticsRepository, AnalyticsRepository>()
+            .AddSingleton<IAnalyticsRepository, AnalyticsRepository>()
             .AddScoped<IScreeningRepository, ScreeningRepository>()
             .AddScoped<ISeatRepository, SeatRepository>()
             .AddScoped<ITicketRepository, TicketRepository>()
