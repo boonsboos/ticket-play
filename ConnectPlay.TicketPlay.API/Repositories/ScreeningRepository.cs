@@ -61,8 +61,8 @@ public class ScreeningRepository : IScreeningRepository
             .Include(screening => screening.Movie)
             .Where(screening =>
                 screening.Movie.Id == movieId &&
-                screening.StartTime >= today &&
-                screening.StartTime <= thursday)
+                screening.StartTime.Date >= today &&
+                screening.StartTime.Date <= thursday.Date)
             .ToArrayAsync();
     }
 
