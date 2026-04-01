@@ -1,6 +1,7 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
-using ConnectPlay.TicketPlay.Contracts.Analytics;
+using ConnectPlay.TicketPlay.Contracts.Analytics.Financial;
+using ConnectPlay.TicketPlay.Contracts.Analytics.MovieHall;
 
 namespace ConnectPlay.TicketPlay.API.Services;
 
@@ -15,7 +16,7 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
     /// <param name="hallId"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public async Task<AnalyticsOverview> GetMoviesHallsAnalyticsAsync(DateTimeOffset? from, DateTimeOffset? to, int? movieId, int? hallId)
+    public async Task<MovieHallAnalytics> GetMoviesHallsAnalyticsAsync(DateTimeOffset? from, DateTimeOffset? to, int? movieId, int? hallId)
     {
         var today = DateTimeOffset.UtcNow;
         var periodStartDate = from ?? today;
@@ -40,7 +41,7 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
 
         var dailyHallTickets = GetDailyHallTickets(screenings, soldTicketsByScreeningId);
 
-        var analyticsData = new AnalyticsOverview
+        var analyticsData = new MovieHallAnalytics
         {
             PeriodStart = new DateTimeOffset(periodStart, TimeSpan.Zero),
             PeriodEnd = new DateTimeOffset(periodEndExclusive.AddTicks(-1), TimeSpan.Zero),
@@ -176,5 +177,67 @@ public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnaly
             .OrderBy(item => item.Date)
             .ThenBy(item => item.HallNumber)
             .ToArray();
+    }
+
+
+    public async Task<FinancialAnalytics> GetFinancialAnalyticsAsync(DateTimeOffset? from, DateTimeOffset? to)
+    {
+        var today = DateTimeOffset.UtcNow;
+        var periodStartDate = from ?? today;
+        var periodEndDate = to ?? today;
+
+        if (periodEndDate < periodStartDate) throw new ArgumentException("The end date must be on or after the start date.", nameof(to));
+
+        var periodStart = periodStartDate.UtcDateTime;
+        var periodEndExclusive = periodEndDate.AddDays(1).UtcDateTime;
+
+        return await BuildFinancialAnalyticsAsync(periodStart, periodEndExclusive);
+    }
+
+    private async Task<FinancialAnalytics> BuildFinancialAnalyticsAsync(DateTime periodStart, DateTime periodEndExclusive)
+    {
+        var soldOrders = (await analyticsRepository.GetSoldOrderStatsAsync(periodStart, periodEndExclusive)).ToArray();
+
+        var movieItems = soldOrders
+            .GroupBy(order => new { order.MovieId, order.MovieTitle })
+            .Select(group => new MovieFinancialItem
+            {
+                MovieId = group.Key.MovieId,
+                MovieTitle = group.Key.MovieTitle,
+                Orders = group.Count(),
+                TicketsSold = group.Sum(item => item.TicketCount),
+                Revenue = group.Sum(item => item.OrderTotal)
+            })
+            .OrderByDescending(item => item.Revenue)
+            .ThenBy(item => item.MovieTitle)
+            .ToArray();
+
+        var dailyMovieRevenue = soldOrders
+            .GroupBy(order => new
+            {
+                Date = DateOnly.FromDateTime(order.StartTime.UtcDateTime.Date),
+                order.MovieId,
+                order.MovieTitle
+            })
+            .Select(group => new MovieDailyRevenueItem
+            {
+                Date = group.Key.Date,
+                MovieId = group.Key.MovieId,
+                MovieTitle = group.Key.MovieTitle,
+                Revenue = group.Sum(item => item.OrderTotal)
+            })
+            .OrderBy(item => item.Date)
+            .ThenBy(item => item.MovieTitle)
+            .ToArray();
+
+        return new FinancialAnalytics
+        {
+            PeriodStart = new DateTimeOffset(periodStart, TimeSpan.Zero),
+            PeriodEnd = new DateTimeOffset(periodEndExclusive.AddTicks(-1), TimeSpan.Zero),
+            TotalOrders = soldOrders.Length,
+            TotalRevenue = soldOrders.Sum(item => item.OrderTotal),
+            DailyMovieRevenue = dailyMovieRevenue,
+            Movies = movieItems
+        };
     }
 }

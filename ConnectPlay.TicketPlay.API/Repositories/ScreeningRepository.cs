@@ -49,6 +49,23 @@ public class ScreeningRepository : IScreeningRepository
             .ToArrayAsync();
     }
 
+    public async Task<IEnumerable<Screening>> GetScreeningsFromMovieAsync(int movieId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var today = DateTime.Today;
+        var thursday = GetNextThursday();
+        
+        return await dbContext.Screenings
+            .Include(screening => screening.Hall)
+            .Include(screening => screening.Movie)
+            .Where(screening =>
+                screening.Movie.Id == movieId &&
+                screening.StartTime.Date >= today &&
+                screening.StartTime.Date <= thursday.Date)
+            .ToArrayAsync();
+    }
+
     public async Task<IEnumerable<Screening>> GetScreeningsForMoviePreviewAsync()
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
