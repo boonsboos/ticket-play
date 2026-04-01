@@ -4,8 +4,6 @@ using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using System.ComponentModel.DataAnnotations;
 using Refit;
 
-
-
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 
 public partial class CreateNewsletter(INewsletterApi newsletterApi) : TranslatableComponent
