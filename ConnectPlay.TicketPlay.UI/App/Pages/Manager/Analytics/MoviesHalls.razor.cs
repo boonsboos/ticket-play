@@ -138,7 +138,7 @@ public partial class MoviesHalls(IAnalyticsApi analyticsApi, IMovieApi movieApi,
             .GroupBy(item => new { item.HallId, item.HallNumber })
             .Select(group => new DailyTicketsChartSeries
             {
-                SeriesName = $"Hall {group.Key.HallNumber}",
+                SeriesName = $"#{group.Key.HallNumber}",
                 TotalTickets = group.Sum(item => item.TicketsSold),
                 Points = group
                     .OrderBy(item => item.Date)
