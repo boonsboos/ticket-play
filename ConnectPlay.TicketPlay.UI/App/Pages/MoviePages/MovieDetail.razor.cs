@@ -78,7 +78,9 @@ public partial class MovieDetail : TranslatableComponent
             {
                 movie = await movieRepository.GetMovieByIdAsync(Id, T.CurrentLanguage);
 
-                screenings = await screeningRepository.GetTodayScreeningsFromMovieAsync(Id);
+                screenings = await screeningRepository.GetScreeningsFromMovieAsync(Id);
+                // Ensure screenings are ordered by start time, so they are displayed in the correct order in the UI
+                screenings = screenings.OrderBy(screening => screening.StartTime).ToArray();
             }
         }
         catch (Exception ex)

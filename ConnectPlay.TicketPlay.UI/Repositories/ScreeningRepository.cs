@@ -27,6 +27,7 @@ public class ScreeningRepository : IScreeningRepository
     }
 
     public async Task<IEnumerable<Screening>> GetTodayScreeningsFromMovieAsync(int movieId) => await _screeningApi.GetTodayByMovieIdAsync(movieId);
+    public async Task<IEnumerable<Screening>> GetScreeningsFromMovieAsync(int movieId) => await _screeningApi.GetScreeningsByMovieIdAsync(movieId);
     public async Task<IEnumerable<Screening>> GetScreeningsForMoviePreviewAsync() => await _screeningApi.GetScreeningsForMoviePreviewAsync();
 
     public async Task<IEnumerable<Screening>> GetWeekOverviewAsync()

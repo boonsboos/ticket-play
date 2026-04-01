@@ -1,6 +1,7 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Contexts;
-using ConnectPlay.TicketPlay.Contracts.Analytics;
+using ConnectPlay.TicketPlay.Contracts.Analytics.Financial;
+using ConnectPlay.TicketPlay.Contracts.Analytics.MovieHall;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,5 +57,41 @@ public class AnalyticsRepository(IDbContextFactory<TicketPlayContext> contextFac
                 .GroupBy(ticket => ticket.ScreeningId)
                 .Select(group => new { ScreeningId = group.Key, Count = group.Count() })
                 .ToDictionaryAsync(item => item.ScreeningId, item => item.Count);
+    }
+
+    public async Task<IEnumerable<SoldOrderStats>> GetSoldOrderStatsAsync(DateTimeOffset periodStart, DateTimeOffset periodEndExclusive)
+    {
+        await using var context = await contextFactory.CreateDbContextAsync();
+
+        var soldStatuses = new[] { OrderStatus.Paid, OrderStatus.Redeemed };
+
+        // Each group represents one sold order for a single screening.
+        return await context.Tickets
+            .AsNoTracking()
+            .Where(ticket => ticket.OrderId != null
+                            && ticket.Order != null
+                            && soldStatuses.Contains(ticket.Order.Status)
+                            && ticket.Screening.StartTime >= periodStart
+                            && ticket.Screening.StartTime < periodEndExclusive)
+            .GroupBy(ticket => new
+            {
+                OrderId = ticket.OrderId!.Value,
+                ticket.ScreeningId,
+                ticket.Screening.StartTime,
+                MovieId = ticket.Screening.Movie.Id,
+                MovieTitle = ticket.Screening.Movie.Title,
+                OrderTotal = ticket.Order!.Total
+            })
+            .Select(group => new SoldOrderStats
+            {
+                OrderId = group.Key.OrderId,
+                ScreeningId = group.Key.ScreeningId,
+                StartTime = group.Key.StartTime,
+                MovieId = group.Key.MovieId,
+                MovieTitle = group.Key.MovieTitle,
+                TicketCount = group.Count(),
+                OrderTotal = group.Key.OrderTotal
+            })
+            .ToListAsync();
     }
 }

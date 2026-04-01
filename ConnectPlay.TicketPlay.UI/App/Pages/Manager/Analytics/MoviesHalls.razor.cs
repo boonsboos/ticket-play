@@ -1,8 +1,7 @@
-using ConnectPlay.TicketPlay.Contracts.Analytics;
+using ConnectPlay.TicketPlay.Contracts.Analytics.MovieHall;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
-using ConnectPlay.TicketPlay.UI.Services;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager.Analytics;
@@ -13,7 +12,7 @@ public partial class MoviesHalls(IAnalyticsApi analyticsApi, IMovieApi movieApi,
     private readonly IMovieApi _movieApi = movieApi;
     private readonly IHallApi _hallApi = hallApi;
 
-    private AnalyticsOverview? analytics;
+    private MovieHallAnalytics? analytics;
     private IEnumerable<DailyTicketsChartSeries> movieDailyTicketsChartSeries = [];
     private IEnumerable<DailyTicketsChartSeries> hallDailyTicketsChartSeries = [];
     private IEnumerable<Movie> movies = [];
@@ -108,7 +107,7 @@ public partial class MoviesHalls(IAnalyticsApi analyticsApi, IMovieApi movieApi,
         return Math.Round((decimal)ticketsSold / screenings, 2);
     }
 
-    private DailyTicketsChartSeries[] BuildMovieSeries(AnalyticsOverview analytics)
+    private DailyTicketsChartSeries[] BuildMovieSeries(MovieHallAnalytics analytics)
     {
         return analytics.DailyMovieTickets
             .GroupBy(item => new { item.MovieId, item.MovieTitle })
@@ -130,7 +129,7 @@ public partial class MoviesHalls(IAnalyticsApi analyticsApi, IMovieApi movieApi,
             .ToArray();
     }
 
-    private DailyTicketsChartSeries[] BuildHallSeries(AnalyticsOverview analytics)
+    private DailyTicketsChartSeries[] BuildHallSeries(MovieHallAnalytics analytics)
     {
         return analytics.DailyHallTickets
             .GroupBy(item => new { item.HallId, item.HallNumber })

@@ -1,0 +1,119 @@
+@page "/manager/analytics/financial"
+@using ConnectPlay.TicketPlay.UI.App.Components.Base
+@inherits TranslatableComponent
+@rendermode InteractiveServer
+
+<PageTitle>@T["managerDashboard.analyticsFinancial"]</PageTitle>
+
+
+<div class="container my-4">
+    <h2 class="mb-4">@T["managerDashboard.analyticsFinancial"]</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <EditForm Model="form" OnValidSubmit="LoadAnalyticsAsync" FormName="FinancialAnalyticsFilters">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label">@T["analyticsFinancial.from"]</label>
+                        <InputDate class="form-control" @bind-Value="form.From" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">@T["analyticsFinancial.to"]</label>
+                        <InputDate class="form-control" @bind-Value="form.To" />
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-primary" disabled="@isLoading">
+                        @T["analyticsFinancial.load"]
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" @onclick="ResetFilters"
+                            disabled="@isLoading">
+                        @T["analyticsFinancial.reset"]
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+
+    @if (isLoading)
+    {
+        <p>@T["analyticsFinancial.loading"]</p>
+    }
+    else if (analytics is not null)
+    {
+        <p class="text-muted">
+            @T["analyticsFinancial.period"]:
+            <strong>@analytics.PeriodStart.ToLocalTime().ToString("dd-MM-yyyy")</strong> -
+            <strong>@analytics.PeriodEnd.ToLocalTime().ToString("dd-MM-yyyy")</strong>
+            | @T["analyticsFinancial.totalOrders"]: <strong>@analytics.TotalOrders</strong>
+            | @T["analyticsFinancial.totalRevenue"]: <strong>@analytics.TotalRevenue.ToString("C")</strong>
+        </p>
+
+        <h4 class="mt-4">@T["analyticsFinancial.movieRevenueTrend"]</h4>
+        @if (!movieDailyRevenueChartSeries.Any())
+        {
+            <p>@T["analyticsFinancial.noData"]</p>
+        }
+        else
+        {
+            <RadzenChart style="height: 380px" class="mb-4">
+                @foreach (var series in movieDailyRevenueChartSeries)
+                {
+                    <RadzenLineSeries Data="@series.Points" CategoryProperty="DateLabel" ValueProperty="Revenue"
+                                      Title="@series.SeriesName">
+                        <RadzenMarkers MarkerType="MarkerType.Circle" />
+                    </RadzenLineSeries>
+                }
+                <RadzenCategoryAxis>
+                    <RadzenAxisTitle Text="@T["analyticsFinancial.day"]" />
+                </RadzenCategoryAxis>
+                <RadzenValueAxis Min=" 0">
+                    <RadzenAxisTitle Text="@T["analyticsFinancial.revenue"]" />
+                    <RadzenGridLines Visible=" true" />
+                </RadzenValueAxis>
+                <RadzenLegend Position="LegendPosition.Bottom" />
+            </RadzenChart>
+            }
+
+            <h4 class="mt-4">@T["analyticsFinancial.movieRevenueDetails"]</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>@T["analyticsFinancial.movie"]</th>
+                            <th>@T["analyticsFinancial.orders"]</th>
+                            <th>@T["analyticsFinancial.ticketsSold"]</th>
+                            <th>@T["analyticsFinancial.revenue"]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!analytics.Movies.Any())
+                        {
+                            <tr>
+                                <td colspan="4">@T["analyticsFinancial.noData"]</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            @foreach (var item in analytics.Movies)
+                            {
+                                <tr>
+                                    <td>@item.MovieTitle</td>
+                                    <td>@item.Orders</td>
+                                    <td>@item.TicketsSold</td>
+                                    <td>@item.Revenue.ToString("C")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>

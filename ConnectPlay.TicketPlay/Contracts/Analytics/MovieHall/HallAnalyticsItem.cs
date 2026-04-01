@@ -1,4 +1,4 @@
-namespace ConnectPlay.TicketPlay.Contracts.Analytics;
+namespace ConnectPlay.TicketPlay.Contracts.Analytics.MovieHall;
 
 public sealed record HallAnalyticsItem
 {

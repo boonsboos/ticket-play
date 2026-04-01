@@ -27,10 +27,20 @@ public class ScreeningController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
-    [Route("today/{movieId}")]
+    [Route("{movieId}/today")]
     public async Task<IActionResult> GetTodayByMovieIdAsync(int movieId)
     {
         var todayScreenings = await _screeningRepository.GetTodayScreeningsFromMovieAsync(movieId);
+
+        return Ok(todayScreenings);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
+    [Route("{movieId}")]
+    public async Task<IActionResult> GetScreeningsByMovieIdAsync(int movieId)
+    {
+        var todayScreenings = await _screeningRepository.GetScreeningsFromMovieAsync(movieId);
 
         return Ok(todayScreenings);
     }
