@@ -19,8 +19,6 @@ public class AnalyticsRepository(IDbContextFactory<TicketPlayContext> contextFac
         var screeningsQuery = context.Screenings
             // We use AsNoTracking since we don't need to track changes to these entities, which can improve performance for read-only queries. 
             .AsNoTracking()
-            .Include(screening => screening.Movie)
-            .Include(screening => screening.Hall)
             .Where(screening => screening.StartTime.UtcDateTime >= periodStartUtc
                                 && screening.StartTime.UtcDateTime < periodEndExclusiveUtc);
 
