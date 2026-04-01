@@ -6,22 +6,22 @@ namespace ConnectPlay.TicketPlay.API.Services;
 
 public class AnalyticsService(IAnalyticsRepository analyticsRepository) : IAnalyticsService
 {
-    public async Task<AnalyticsOverview> GetMoviesHallsAnalyticsAsync(DateOnly? from, DateOnly? to, int? movieId, int? hallId)
+    public async Task<AnalyticsOverview> GetMoviesHallsAnalyticsAsync(DateTimeOffset? from, DateTimeOffset? to, int? movieId, int? hallId)
     {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var today = DateTimeOffset.UtcNow;
         var periodStartDate = from ?? today;
         var periodEndDate = to ?? today;
 
         if (periodEndDate < periodStartDate) throw new ArgumentException("The end date must be on or after the start date.", nameof(to));
 
-        var periodStart = periodStartDate.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
-        var periodEndExclusive = periodEndDate.AddDays(1).ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+        var periodStart = periodStartDate.UtcDateTime;
+        var periodEndExclusive = periodEndDate.AddDays(1).UtcDateTime;
 
-        var screenings = (await analyticsRepository.GetScreenings(periodStart, periodEndExclusive, movieId, hallId)).ToArray();
+        var screenings = (await analyticsRepository.GetScreeningsAsync(periodStart, periodEndExclusive, movieId, hallId)).ToArray();
 
         var screeningIds = screenings.Select(screening => screening.ScreeningId).ToArray();
 
-        var soldTicketsByScreeningId = await analyticsRepository.GetSoldTicketsByScreeningIds(screeningIds);
+        var soldTicketsByScreeningId = await analyticsRepository.GetSoldTicketsByScreeningIdsAsync(screeningIds);
 
         static decimal CalculateOccupancyPercentage(int soldTickets, int totalCapacity)
         {

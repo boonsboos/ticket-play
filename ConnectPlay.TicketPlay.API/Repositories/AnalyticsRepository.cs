@@ -8,13 +8,13 @@ namespace ConnectPlay.TicketPlay.API.Repositories;
 
 public class AnalyticsRepository(IDbContextFactory<TicketPlayContext> contextFactory) : IAnalyticsRepository
 {
-    public async Task<IEnumerable<ScreeningStats>> GetScreenings(DateTime periodStart, DateTime periodEndExclusive, int? movieId, int? hallId)
+    public async Task<IEnumerable<ScreeningStats>> GetScreeningsAsync(DateTimeOffset periodStart, DateTimeOffset periodEndExclusive, int? movieId, int? hallId)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 
         // Normalize the period bounds to UTC to avoid implicit DateTime -> DateTimeOffset conversions.
-        var periodStartUtc = DateTime.SpecifyKind(periodStart, DateTimeKind.Utc);
-        var periodEndExclusiveUtc = DateTime.SpecifyKind(periodEndExclusive, DateTimeKind.Utc);
+        var periodStartUtc = DateTime.SpecifyKind(periodStart.DateTime, DateTimeKind.Utc);
+        var periodEndExclusiveUtc = DateTime.SpecifyKind(periodEndExclusive.DateTime, DateTimeKind.Utc);
 
         var screeningsQuery = context.Screenings
             // We use AsNoTracking since we don't need to track changes to these entities, which can improve performance for read-only queries. 
@@ -40,7 +40,7 @@ public class AnalyticsRepository(IDbContextFactory<TicketPlayContext> contextFac
             .ToListAsync();
     }
 
-    public async Task<Dictionary<int, int>> GetSoldTicketsByScreeningIds(int[] screeningIds)
+    public async Task<Dictionary<int, int>> GetSoldTicketsByScreeningIdsAsync(int[] screeningIds)
     {
         await using var context = await contextFactory.CreateDbContextAsync();
 

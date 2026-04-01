@@ -11,7 +11,7 @@ public class AnalyticsController(IAnalyticsService analyticsService) : Controlle
     [HttpGet("movies-halls")]
     [ProducesResponseType(typeof(AnalyticsOverview), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetMoviesHallsAnalyticsAsync([FromQuery] DateOnly? from, [FromQuery] DateOnly? to, [FromQuery] int? movieId, [FromQuery] int? hallId)
+    public async Task<IActionResult> GetMoviesHallsAnalyticsAsync([FromQuery] DateTimeOffset? from, [FromQuery] DateTimeOffset? to, [FromQuery] int? movieId, [FromQuery] int? hallId)
     {
         try
         {
