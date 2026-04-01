@@ -2,6 +2,7 @@ using ConnectPlay.TicketPlay.Contracts.Analytics;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
+using ConnectPlay.TicketPlay.UI.Services;
 using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager.Analytics;
@@ -102,15 +103,12 @@ public partial class MoviesHalls(IAnalyticsApi analyticsApi, IMovieApi movieApi,
 
     private static decimal GetAverageTicketsPerScreening(int screenings, int ticketsSold)
     {
-        if (screenings <= 0)
-        {
-            return 0;
-        }
+        if (screenings <= 0) return 0;
 
         return Math.Round((decimal)ticketsSold / screenings, 2);
     }
 
-    private static IEnumerable<DailyTicketsChartSeries> BuildMovieSeries(AnalyticsOverview analytics)
+    private DailyTicketsChartSeries[] BuildMovieSeries(AnalyticsOverview analytics)
     {
         return analytics.DailyMovieTickets
             .GroupBy(item => new { item.MovieId, item.MovieTitle })
@@ -132,13 +130,13 @@ public partial class MoviesHalls(IAnalyticsApi analyticsApi, IMovieApi movieApi,
             .ToArray();
     }
 
-    private static IEnumerable<DailyTicketsChartSeries> BuildHallSeries(AnalyticsOverview analytics)
+    private DailyTicketsChartSeries[] BuildHallSeries(AnalyticsOverview analytics)
     {
         return analytics.DailyHallTickets
             .GroupBy(item => new { item.HallId, item.HallNumber })
             .Select(group => new DailyTicketsChartSeries
             {
-                SeriesName = $"#{group.Key.HallNumber}",
+                SeriesName = $"{T["analyticsMoviesHalls.hall"]} {group.Key.HallNumber}",
                 TotalTickets = group.Sum(item => item.TicketsSold),
                 Points = group
                     .OrderBy(item => item.Date)
