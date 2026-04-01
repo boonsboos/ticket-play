@@ -50,7 +50,9 @@ public class WebsiteController : ControllerBase
                                 Title = dayScreenings.Key.Title,
                                 Genre = dayScreenings.Key.Genre,
                                 PosterUrl = dayScreenings.Key.PosterUrl.AbsoluteUri,
-                                ScreeningTimes = screenings.Select(screening => screening.StartTime)
+                                ScreeningTimes = screenings.Select(screening => screening.StartTime),
+                                MinimumAge = dayScreenings.Key.MinimumAge,
+                                Is3D = dayScreenings.Any(screening => screening.Hall.Has3DProjector)
                             };
                             
                             // handle sneak preview screenings
