@@ -50,11 +50,11 @@ public class WebsiteController : ControllerBase
                                 Title = dayScreenings.Key.Title,
                                 Genre = dayScreenings.Key.Genre,
                                 PosterUrl = dayScreenings.Key.PosterUrl.AbsoluteUri,
-                                ScreeningTimes = screenings.Select(screening => screening.StartTime),
+                                ScreeningTimes = dayScreenings.Select(screening => screening.StartTime).Order(),
                                 MinimumAge = dayScreenings.Key.MinimumAge,
                                 Is3D = dayScreenings.Any(screening => screening.Hall.Has3DProjector)
                             };
-                            
+
                             // handle sneak preview screenings
                             if (dayScreenings.Any(screening => screening.SneakPreview))
                             {
@@ -69,7 +69,9 @@ public class WebsiteController : ControllerBase
                             return apiMovie;
                         })
                 }
-            ).ToList();
+            )
+            .OrderBy(offeringDay => offeringDay.Day)
+            .ToList();
     }
 
     [HttpPost]
