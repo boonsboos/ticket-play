@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using ConnectPlay.TicketPlay.Models;
 
 namespace ConnectPlay.TicketPlay.Contracts.Movie;
 
@@ -20,8 +21,7 @@ public record CreateMovieRequest
     [StringLength(12)]
     public required string Language { get; init; }
 
-    [Range(0, 18)]
-    public required int MinimumAge { get; init; }
+    public required MinimumAgeRating MinimumAge { get; init; }
 
     [StringLength(50)]
     public required string Genre { get; init; }

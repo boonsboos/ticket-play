@@ -95,7 +95,7 @@ public class MovieRepository : IMovieRepository
             ReleaseDate = dto.ReleaseDate,
             PosterUrl = dto.PosterUrl,
             Language = dto.Language,
-            MinimumAge = dto.MinimumAge,
+            MinimumAge = (int)dto.MinimumAge,
             Genre = dto.Genre,
             Tags = string.Join(',', dto.Tags)
         };
