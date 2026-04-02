@@ -38,7 +38,7 @@ public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
                 ReleaseDate = DateOnly.FromDateTime(model.ReleaseDate!.Value),
                 PosterUrl = posterUri,
                 Language = model.Language!,
-                MinimumAge = (int)model.MinimumAge!.Value,
+                MinimumAge = model.MinimumAge!.Value,
                 Genre = model.Genre switch
                 {
                     Genre.Thriller => "thriller",

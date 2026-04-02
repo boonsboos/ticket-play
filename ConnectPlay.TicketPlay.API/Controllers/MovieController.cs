@@ -110,11 +110,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
             ModelState.AddModelError(nameof(dto.Language), "Language must be Nederlands or English.");
         }
 
-        if (!Enum.IsDefined(typeof(MinimumAgeRating), dto.MinimumAge))
-        {
-            ModelState.AddModelError(nameof(dto.MinimumAge), "Invalid minimum age.");
-        }
-
         if (!ModelState.IsValid)
         {
             return ValidationProblem(ModelState);
