@@ -35,7 +35,7 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("decimal(65,2)");
 
                     b.Property<byte>("Type")
                         .HasColumnType("tinyint unsigned");
@@ -164,8 +164,8 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint unsigned");
 
-                    b.Property<float>("Total")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(65,2)");
 
                     b.HasKey("Id");
 
