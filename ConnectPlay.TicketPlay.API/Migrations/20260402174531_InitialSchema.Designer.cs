@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectPlay.TicketPlay.API.Migrations
 {
     [DbContext(typeof(TicketPlayContext))]
-    [Migration("20260327230302_OrderArrangements")]
-    partial class OrderArrangements
+    [Migration("20260402174531_InitialSchema")]
+    partial class InitialSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,8 +167,8 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.Property<byte>("Status")
                         .HasColumnType("tinyint unsigned");
 
-                    b.Property<float>("Total")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
@@ -292,7 +292,7 @@ namespace ConnectPlay.TicketPlay.API.Migrations
                     b.HasOne("ConnectPlay.TicketPlay.Models.Arrangement", "Arrangement")
                         .WithMany()
                         .HasForeignKey("ArrangementId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ConnectPlay.TicketPlay.Models.Order", "Order")
