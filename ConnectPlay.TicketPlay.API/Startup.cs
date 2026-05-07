@@ -54,9 +54,6 @@ public class Startup(IConfiguration configuration)
 
     private void ConfigureAuthentication(IServiceCollection services)
     {
-        // READ: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-api-authorization?view=aspnetcore-10.0#see-also
-        // READ: https://github.com/dotnet/AspNetCore.Docs.Samples/blob/main/samples/ngIdentity/ngIdentity.Server/Program.cs
-
         services.AddIdentityCore<IdentityUser<Guid>>()
             .AddEntityFrameworkStores<AuthenticationContext>();
 

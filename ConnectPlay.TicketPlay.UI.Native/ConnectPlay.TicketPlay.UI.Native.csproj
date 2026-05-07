@@ -32,7 +32,7 @@
         <ApplicationTitle>Ticket &amp; Play</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>nl.connectplay.ticketplay.ui.native</ApplicationId>
+        <ApplicationId>nl.connectplay.ticketplay.nativeui</ApplicationId>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
