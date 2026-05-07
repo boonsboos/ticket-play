@@ -4,7 +4,11 @@ using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.API.Repositories;
 using ConnectPlay.TicketPlay.API.Services;
 using ConnectPlay.TicketPlay.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ConnectPlay.TicketPlay.API;
 
@@ -17,6 +21,12 @@ public class Startup(IConfiguration configuration)
             app.UseDeveloperExceptionPage();
         }
         app.UseRouting();
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
@@ -24,14 +34,15 @@ public class Startup(IConfiguration configuration)
             {
                 endpoints.MapOpenApi();
             }
+            endpoints.MapIdentityApi<IdentityUser>();
         });
-
-        app.UseHttpsRedirection();
     }
 
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+
+        ConfigureAuthentication(services);
 
         ConfigureDatabase(services);
 
@@ -41,12 +52,51 @@ public class Startup(IConfiguration configuration)
         ConfigureTicketPlayServices(services);
     }
 
-    public void ConfigureDatabase(IServiceCollection services)
+    private void ConfigureAuthentication(IServiceCollection services)
+    {
+        // READ: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity-api-authorization?view=aspnetcore-10.0#see-also
+        // READ: https://github.com/dotnet/AspNetCore.Docs.Samples/blob/main/samples/ngIdentity/ngIdentity.Server/Program.cs
+
+        services.AddIdentityCore<IdentityUser<Guid>>()
+            .AddEntityFrameworkStores<AuthenticationContext>();
+
+        services.AddIdentityApiEndpoints<IdentityUser<Guid>>()
+            .AddEntityFrameworkStores<AuthenticationContext>();
+        
+        var section = configuration.GetRequiredSection("JWT");
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidIssuer = section.GetValue<string>("Issuer"),
+                ValidAudience = section.GetValue<string>("Audience"),
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(section.GetValue<string>("Secret")
+                        ?? throw new InvalidOperationException("JWT Secret is empty."))
+                ),
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuer = true
+            };
+        });
+
+        services.AddAuthorization();
+    }
+
+    private void ConfigureDatabase(IServiceCollection services)
     {
         var connString = configuration.GetConnectionString("TicketPlayDb");
         var version = new MariaDbServerVersion(new Version(12, 0, 2));
 
-        services.AddDbContextFactory<TicketPlayContext>(o => o.UseMySql(connString, version));
+        services
+            .AddDbContextFactory<AuthenticationContext>(o => o.UseMySql(connString, version))
+            .AddDbContextFactory<TicketPlayContext>(o => o.UseMySql(connString, version));
     }
 
     private void ConfigureRepositories(IServiceCollection services)
