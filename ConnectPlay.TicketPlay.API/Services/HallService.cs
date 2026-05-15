@@ -4,7 +4,7 @@ using ConnectPlay.TicketPlay.Contracts.Hall;
 
 namespace ConnectPlay.TicketPlay.API.Services;
 
-public class HallOrderService(IHallRepository hallRepository, ILogger<HallOrderService> logger) : IHallService
+public class HallOrderService(IHallRepository hallRepository) : IHallService
 {
     /// <summary>
     /// Gets the layout of a hall by its ID.

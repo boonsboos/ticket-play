@@ -1,9 +1,11 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
+using ConnectPlay.TicketPlay.API.Configuration;
 using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.API.Repositories;
 using ConnectPlay.TicketPlay.API.Services;
 using ConnectPlay.TicketPlay.Extensions;
+using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,7 +36,6 @@ public class Startup(IConfiguration configuration)
             {
                 endpoints.MapOpenApi();
             }
-            endpoints.MapIdentityApi<IdentityUser>();
         });
     }
 
@@ -54,13 +55,15 @@ public class Startup(IConfiguration configuration)
 
     private void ConfigureAuthentication(IServiceCollection services)
     {
-        services.AddIdentityCore<IdentityUser<Guid>>()
-            .AddEntityFrameworkStores<AuthenticationContext>();
-
-        services.AddIdentityApiEndpoints<IdentityUser<Guid>>()
+        services.AddIdentityCore<User>()
+            .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<AuthenticationContext>();
         
         var section = configuration.GetRequiredSection("JWT");
+        services.AddOptions<JWTOptions>()
+            .Bind(section)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
         services.AddAuthentication(options =>
         {
@@ -108,6 +111,8 @@ public class Startup(IConfiguration configuration)
             .AddScoped<INewsletterRepository, NewsletterRepository>()
             .AddScoped<IArrangementRepository, ArrangementRepository>()
             .AddScoped<IOrderArrangementRepository, OrderArrangementRepository>();
+
+        services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();
     }
 
     private void ConfigureTicketPlayServices(IServiceCollection services)
@@ -116,6 +121,7 @@ public class Startup(IConfiguration configuration)
             .AddScoped<IOrderService, OrderService>()
             .AddScoped<IHallService, HallOrderService>()
             .AddSingleton<IAnalyticsService, AnalyticsService>()
-            .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>();
+            .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>()
+            .AddSingleton<IAuthorizationService, AuthorizationService>();
     }
 }
