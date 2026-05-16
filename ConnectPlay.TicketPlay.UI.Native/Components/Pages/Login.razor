@@ -1,0 +1,19 @@
+@inherits ComponentBase
+@page "/login"
+
+<div class="container d-flex flex-column align-items-center justify-content-center g-2">
+    <h1 class="text-center">@AppResources.Login_Action</h1>
+
+    <EditForm Model="@LoginForm" FormName="LoginForm" class="d-flex flex-column g-2">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+        <div class="d-flex py-2">
+            <InputText class="form-control" DisplayName="@AppResources.Login_Email" @bind-Value="LoginForm.Email" placeholder="@AppResources.Login_Email" />
+        </div>
+        <div class="d-flex py-2">
+            <InputText type="password" class="form-control" DisplayName="@AppResources.Login_Password" @bind-Value="LoginForm.Password" placeholder="@AppResources.Login_Password" />
+        </div>
+    </EditForm>
+
+    <button class="btn btn-outline-primary my-4" @onclick="SubmitLogin">@AppResources.Login_Action</button>
+</div>

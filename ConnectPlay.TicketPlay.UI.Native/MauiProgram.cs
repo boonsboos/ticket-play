@@ -1,4 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ConnectPlay.TicketPlay.Extensions;
+using ConnectPlay.TicketPlay.UI.Native.Abstract;
+using ConnectPlay.TicketPlay.UI.Native.Resources;
+using ConnectPlay.TicketPlay.UI.Native.Services;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace ConnectPlay.TicketPlay.UI.Native;
 
@@ -6,6 +11,9 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        var logConfig = new LoggerConfiguration()
+            .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}");
+
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
@@ -15,12 +23,34 @@ public static class MauiProgram
             });
 
         builder.Services.AddMauiBlazorWebView();
+        builder.Services.AddLogging();
 
 #if DEBUG
-		builder.Services.AddBlazorWebViewDeveloperTools();
-		builder.Logging.AddDebug();
+        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
+        builder.Services.AddBlazorWebViewDeveloperTools();
+        builder.Services.AddSerilog((services, config) => config = logConfig);
+        builder.Logging.AddDebug();
+        builder.Logging.AddSerilog(logConfig.CreateLogger());
+#else 
+        builder.builder.Services.AddTicketPlayApi(AppResources.Production_BaseUrl);
 #endif
 
+        AddAppServices(builder.Services);
+        AddMauiStuff(builder.Services);
+
         return builder.Build();
+    }
+
+    private static void AddAppServices(IServiceCollection services)
+    {
+        services.AddSingleton<IApiService, ApiService>();
+
+        services.AddHostedService<ApiService>(serviceProvider => (serviceProvider.GetRequiredService<IApiService>() as ApiService)!);
+    }
+
+    private static void AddMauiStuff(IServiceCollection services)
+    {
+        services.AddSingleton<ISecureStorage>(SecureStorage.Default);
+        services.AddSingleton<IConnectivity>(Connectivity.Current);
     }
 }

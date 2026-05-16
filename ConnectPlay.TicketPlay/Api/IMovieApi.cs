@@ -2,7 +2,7 @@
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.Api;
+namespace ConnectPlay.TicketPlay.Api;
 
 // Refit will generate an implementation of this interface at runtime to facilitate HTTP requests
 

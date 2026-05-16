@@ -1,6 +1,6 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
+using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.Extensions;
-using ConnectPlay.TicketPlay.UI.Api;
 using ConnectPlay.TicketPlay.UI.Configuration;
 using ConnectPlay.TicketPlay.UI.Repositories;
 using ConnectPlay.TicketPlay.UI.Services;

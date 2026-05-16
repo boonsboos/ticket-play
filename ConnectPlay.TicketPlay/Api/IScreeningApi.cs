@@ -2,7 +2,7 @@ using ConnectPlay.TicketPlay.Contracts.Screening;
 using ConnectPlay.TicketPlay.Models;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.Api;
+namespace ConnectPlay.TicketPlay.Api;
 
 public interface IScreeningApi
 {

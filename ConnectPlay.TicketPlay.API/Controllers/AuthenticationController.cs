@@ -60,6 +60,7 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] RegistrationRequest login)
     {
         var user = await _userManager.FindByEmailAsync(login.Email);
@@ -81,6 +82,7 @@ public class AuthenticationController : ControllerBase
 
     [HttpPost]
     [Route("refresh")]
+    [AllowAnonymous]
     public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
     {
         if (!HttpContext.TryGetUserId(out var userId))

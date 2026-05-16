@@ -2,7 +2,7 @@ using ConnectPlay.TicketPlay.Contracts.Analytics.Financial;
 using ConnectPlay.TicketPlay.Contracts.Analytics.MovieHall;
 using Refit;
 
-namespace ConnectPlay.TicketPlay.UI.Api;
+namespace ConnectPlay.TicketPlay.Api;
 
 public interface IAnalyticsApi
 {
