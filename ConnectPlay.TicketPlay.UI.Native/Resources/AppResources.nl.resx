@@ -126,13 +126,28 @@
   <data name="Development_BaseUrl" xml:space="preserve">
     <value>https://localhost:7284</value>
   </data>
+  <data name="Home_Current" xml:space="preserve">
+    <value>Nu in de bioscoop</value>
+  </data>
+  <data name="Home_Header" xml:space="preserve">
+    <value>Wat gaan we vandaag kijken?</value>
+  </data>
   <data name="Login_Action" xml:space="preserve">
     <value>Log in</value>
   </data>
   <data name="Login_Email" xml:space="preserve">
     <value>E-mailadres</value>
   </data>
+  <data name="Login_Fail" xml:space="preserve">
+    <value>Kon niet inloggen. Controller de gegevens en probeer het opnieuw.</value>
+  </data>
   <data name="Login_Password" xml:space="preserve">
     <value>Wachtwoord</value>
+  </data>
+  <data name="Tickets_Header" xml:space="preserve">
+    <value>Kaartjes</value>
+  </data>
+  <data name="You_Header" xml:space="preserve">
+    <value>Jouw instellingen</value>
   </data>
 </root>

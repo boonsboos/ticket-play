@@ -88,6 +88,24 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Now in cinema.
+        /// </summary>
+        internal static string Home_Current {
+            get {
+                return ResourceManager.GetString("Home_Current", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What would you like to see?.
+        /// </summary>
+        internal static string Home_Header {
+            get {
+                return ResourceManager.GetString("Home_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         internal static string Login_Action {
@@ -106,11 +124,38 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to log in. Check your credentials and try again..
+        /// </summary>
+        internal static string Login_Fail {
+            get {
+                return ResourceManager.GetString("Login_Fail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         internal static string Login_Password {
             get {
                 return ResourceManager.GetString("Login_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tickets.
+        /// </summary>
+        internal static string Tickets_Header {
+            get {
+                return ResourceManager.GetString("Tickets_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your settings.
+        /// </summary>
+        internal static string You_Header {
+            get {
+                return ResourceManager.GetString("You_Header", resourceCulture);
             }
         }
     }

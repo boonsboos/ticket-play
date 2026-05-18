@@ -67,6 +67,14 @@
     </ItemGroup>
 
     <ItemGroup>
+      <AndroidResource Remove="wwwroot\lib\bootstrap\dist\NewFolder\**" />
+      <Compile Remove="wwwroot\lib\bootstrap\dist\NewFolder\**" />
+      <Content Remove="wwwroot\lib\bootstrap\dist\NewFolder\**" />
+      <EmbeddedResource Remove="wwwroot\lib\bootstrap\dist\NewFolder\**" />
+      <None Remove="wwwroot\lib\bootstrap\dist\NewFolder\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />

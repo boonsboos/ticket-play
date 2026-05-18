@@ -1,25 +1,34 @@
 ﻿using ConnectPlay.TicketPlay.UI.Native.Abstract;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ConnectPlay.TicketPlay.UI.Native.Components.Pages;
 
 public partial class Login : ComponentBase
 {
     private readonly IApiService _apiService;
+    private readonly NavigationManager _navigationManager;
+
     private LoginFormModel LoginForm = new();
 
-    public Login(IApiService apiService)
+    private int Attempt = 0;
+
+    public Login(IApiService apiService, NavigationManager navigationManager)
     {
         this._apiService = apiService;
+        this._navigationManager = navigationManager;
     }
 
     private async Task SubmitLogin()
     {
         await this._apiService.LoginAsync(LoginForm.Email, LoginForm.Password);
+
+        if (_apiService.IsAuthenticated)
+        {
+            _navigationManager.NavigateTo("/");
+        }
+
+        Attempt++;
     }
 
     private class LoginFormModel

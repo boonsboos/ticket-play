@@ -1,0 +1,19 @@
+@inherits ComponentBase
+
+
+<div class="fixed-bottom z-3 px-2 py-4 bg-secondary">
+    <div class="d-flex justify-content-around text-center bottom-nav-icons">
+
+        <div class="bottom-nav-button @(_current == CurrentView.You ? "bottom-nav-highlight" : "")" >
+            <i class="bi bi-person-circle " @onclick="NavigateYou"></i>
+        </div>
+
+        <div class="bottom-nav-button @(_current == CurrentView.Home ? "bottom-nav-highlight" : "")">
+            <i class="bi bi-house" @onclick="NavigateHome"></i>
+        </div>
+
+        <div class="bottom-nav-button @(_current == CurrentView.Tickets ? "bottom-nav-highlight" : "")">
+            <i class="bi bi-ticket-perforated" @onclick="NavigateTickets"></i>
+        </div>
+    </div>
+</div>

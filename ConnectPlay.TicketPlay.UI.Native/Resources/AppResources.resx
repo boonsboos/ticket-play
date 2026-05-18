@@ -128,13 +128,28 @@
     <value>https://localhost:7284</value>
     <comment>DEVELOPMENT ONLY</comment>
   </data>
+  <data name="Home_Current" xml:space="preserve">
+    <value>Now in cinema</value>
+  </data>
+  <data name="Home_Header" xml:space="preserve">
+    <value>What would you like to see?</value>
+  </data>
   <data name="Login_Action" xml:space="preserve">
     <value>Login</value>
   </data>
   <data name="Login_Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="Login_Fail" xml:space="preserve">
+    <value>Failed to log in. Check your credentials and try again.</value>
+  </data>
   <data name="Login_Password" xml:space="preserve">
     <value>Password</value>
+  </data>
+  <data name="Tickets_Header" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="You_Header" xml:space="preserve">
+    <value>Your settings</value>
   </data>
 </root>

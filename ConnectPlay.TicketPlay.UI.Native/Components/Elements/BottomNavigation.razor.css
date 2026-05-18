@@ -1,0 +1,18 @@
+.bottom-nav-icons {
+    font-size: 40px !important;
+}
+
+.bottom-nav-highlight {
+    border-radius: 50%;
+    background-color: white;
+}
+
+.bottom-nav-button {
+    width: 60px;
+    height: 60px;
+}
+
+.bottom-nav-button:hover {
+    border-radius: 50%;
+    background-color: darkgray;
+}

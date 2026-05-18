@@ -4,6 +4,11 @@
 <div class="container d-flex flex-column align-items-center justify-content-center g-2">
     <h1 class="text-center">@AppResources.Login_Action</h1>
 
+    @if (!_apiService.IsAuthenticated && Attempt > 0)
+    {
+        <p class="text-danger">@AppResources.Login_Fail</p>
+    }
+
     <EditForm Model="@LoginForm" FormName="LoginForm" class="d-flex flex-column g-2">
         <DataAnnotationsValidator/>
         <ValidationSummary/>

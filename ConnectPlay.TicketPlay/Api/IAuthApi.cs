@@ -5,15 +5,15 @@ namespace ConnectPlay.TicketPlay.Api;
 
 public interface IAuthApi
 {
-    [Get("/auth/login")]
+    [Post("/auth/login")]
     public Task<ApiResponse<TokenResponse>> LoginAsync([Body] RegistrationRequest request);
 
-    [Get("/auth/refresh")]
+    [Post("/auth/refresh")]
     public Task<ApiResponse<TokenResponse>> RefreshAsync([Body] RefreshRequest request);
 
-    [Get("/auth/register")]
+    [Post("/auth/register")]
     public Task<ApiResponse<ProblemDetails?>> RegisterAsync([Body] RegistrationRequest request);
 
-    [Get("/auth/logout")]
+    [Put("/auth/logout")]
     public Task<TokenResponse> LogoutAsync([Header("Authorization")] string token);
 }
