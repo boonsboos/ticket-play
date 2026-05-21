@@ -14,4 +14,14 @@ public static class GenreExtensions
             "science_fiction" => AppResources.Genre_ScienceFiction,
             _ => movie.Genre
         };
+
+    public static string GetTranslatedGenre(this MovieDetailResponse movie)
+    => movie.Genre switch
+    {
+        "thriller" => AppResources.Genre_Thriller,
+        "family" => AppResources.Genre_Family,
+        "drama" => AppResources.Genre_Drama,
+        "science_fiction" => AppResources.Genre_ScienceFiction,
+        _ => movie.Genre
+    };
 }

@@ -21,10 +21,10 @@ public interface IMovieApi
     Task<IEnumerable<OverviewMovie>> GetTodayMoviesAsync();
 
     [Get("/movie/{id}")]
-    Task<MovieDetailResponse> GetMovieByIdAsync(int id, [Query] string language);
+    Task<ApiResponse<MovieDetailResponse>> GetMovieByIdAsync(int id, [Query] string language);
 
     [Get("/movie/preview")]
-    Task<PreviewMovieDetailResponse> GetMoviePreviewAsync();
+    Task<ApiResponse<PreviewMovieDetailResponse>> GetMoviePreviewAsync();
 
     [Post("/movie")]
     Task CreateMovieAsync(CreateMovieRequest movie);

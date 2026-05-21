@@ -1,0 +1,205 @@
+﻿@page "/order/overview"
+@inherits ComponentBase
+
+<div class="container mt-4 col-6 offset-3 d-flex flex-column justify-content-center">
+
+    <h2 class="text-center">@AppResources.OrderOverview_Title</h2>
+
+    <div class="card d-flex justify-content-center">
+        <div class="row g-0 pt-2" id="screening-details">
+            @if (Movie is not null)
+            {
+                <div class="col-4 d-flex justify-content-center p-3">
+                    <img src="@DisplayPosterUrl" alt="@DisplayTitle poster" class="img-fluid rounded" />
+                </div>
+                <div class="col-8 d-flex flex-column">
+                    <h2>@DisplayTitle</h2>
+                    <p class="text-muted">@Movie.Genre • @Movie.Duration min • @Movie.MinimumAge+</p>
+
+                    @if (Screening is not null)
+                    {
+                        <p>@T["orderOverview.inHall"] @Screening.Hall.HallNumber @T["orderOverview.atTime"] @StartTime</p>
+                    }
+
+                    @if (Seats.Any())
+                    {
+                        <p>
+                            <b>@T["orderOverview.yourSeats"]</b><br />
+                            @(string.Join(", ", Seats))
+                        </p>
+                    }
+                    <button class="btn btn-outline-secondary w-50" data-bs-toggle="modal"
+                            data-bs-target="#seatSelectionModal">
+                        @T["orderOverview.modal:changeSeatsButton"]
+                    </button>
+                </div>
+            }
+        </div>
+        <hr />
+        <div class="row p-4" id="bill">
+            <h3 class="text-center">@T["orderOverview.toPay"]</h3>
+
+            @foreach (var (ticketType, amount) in Tickets.GroupBy(t => t).Select(group => (group.Key, group.Count())))
+            {
+                <div class="d-flex flex-row justify-content-between">
+                    <p><b>@ticketType</b></p>
+                    <p>
+                        @amount x @(orderFlowService.GetPrice(ticketType).ToString("C")) = @((amount *
+                        orderFlowService.GetPrice(ticketType)).ToString("C"))
+                    </p>
+                </div>
+            }
+
+            @if (Arrangements.Any())
+            {
+                <hr />
+                @foreach (var arrangement in Arrangements)
+                {
+                    <div class="d-flex flex-row justify-content-between">
+                        <p><b>@arrangement.Arrangement.Name</b></p>
+                        <p>
+                            @arrangement.Amount x @(arrangement.Arrangement.Price.ToString("C")) =
+                            @((arrangement.Amount * arrangement.Arrangement.Price).ToString("C"))
+                        </p>
+                    </div>
+                }
+            }
+
+            @if (Is3D)
+            {
+                <hr />
+                <div class="d-flex flex-row justify-content-between">
+                    <p><b>@T["orderOverview.threeDFee"]</b></p>
+                    <p>
+                        @(2.50m.ToString("C"))
+                    </p>
+                </div>
+            }
+
+            <hr />
+            <div class="d-flex flex-row justify-content-between">
+                <p><b>@T["orderOverview.total"]</b></p>
+                <p>@Order.Total.ToString("C")</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container d-flex justify-content-between m-3">
+        <button class="btn btn-outline-primary" @onclick="ToTickets">@T["orderOverview.back"]</button>
+        <button class="btn btn-primary" @onclick="ToPayment">@T["orderOverview.next"]</button>
+    </div>
+
+    <div class="modal fade" tabindex="-1" id="seatSelectionModal">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content shadow-lg rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">@T["orderOverview.modal:title"]</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body pt-2">
+                    <div class="text-center mb-4">
+                        <div class="bg-dark text-white py-2 rounded-pill w-50 mx-auto small">
+                            <p class="mb-0">@AppResources.SeatModal_Screen</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        @if (HallLayout is not null && Screening is not null)
+                        {
+                            @for (var i = 1; i <= HallLayout.Layout.Count; i++)
+                            {
+                                <div class="d-flex justify-content-center gap-2">
+                                    @for (var j = 1; j <= HallLayout.Layout[i - 1]; j++)
+                                    {
+                                        var row = i;
+                                        var seatNumber = j;
+                                        var isWheelchairSeat = HallLayout.WheelchairSeat.Row == row &&
+                            HallLayout.WheelchairSeat.Seat == seatNumber;
+                                        var takenSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
+                            s.IsTaken);
+                                        var reservedSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
+                            s.IsReserved);
+                                        var selectedSeat = SelectedSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
+                            s.IsForWheelchair == isWheelchairSeat);
+
+                                        <div class="seat@(selectedSeat ? " selected" : takenSeat ? " taken" : reservedSeat ? " reserved" : "")"
+                                             style="@(takenSeat ? "pointer-events: none;" : "")"
+                                             @onclick="() => ToggleSeatSelection(row, seatNumber, isWheelchairSeat)">
+
+                                            @if (isWheelchairSeat)
+                                            {
+                                                <WheelchairIcon />
+                                            }
+                                            else
+                                            {
+                                                <ChairIcon />
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-4 mt-4 small">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="seat legend"></div>
+                            <span>@AppResources.SeatModal_LegendAvailable</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="seat legend selected"></div>
+                            <span>@AppResources.SeatModal_LegendSelected</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="seat legend reserved"></div>
+                            <span>@AppResources.SeatModal_LegendReserved</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="seat legend taken"></div>
+                            <span>@AppResources.SeatModal_LegendOccupied</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 pt-3 border-top">
+                        <div class="w-100 mx-auto" style="max-width: 32rem;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="small text-muted fw-semibold mb-0">
+                                    @T["orderOverview.modal.summary.SelectedSeats"]</p>
+                                    <span class="badge text-bg-dark">@SelectedSeats.Count / @Tickets.Count()</span>
+                                </div>
+
+                                @if (SelectedSeats.Any())
+                                {
+                                    var selectedSeatSummary = string.Join(", ", SelectedSeats
+                                        .OrderBy(s => s.Row)
+                                        .ThenBy(s => s.SeatNumber)
+                                        .Select(s => FormatPlacement(s)));
+                                    <p class="small text-secondary mb-0 mt-2">@selectedSeatSummary</p>
+                                }
+                                else
+                                {
+                                    <p class="small text-muted mb-0 mt-2">@AppResources.SeatModal_SummaryEmpty</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer border-0 pt-2">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
+                                @onclick="ResetSelectedSeats">
+                            @T["orderOverview.modal.cancel"]
+                        </button>
+                        <button type="button" class="btn btn-primary px-4" @onclick="HandleUpdateSeats"
+                                disabled="@(!SelectedSeats.Any() || SelectedSeats.Count != Tickets.Count())"
+                                data-bs-dismiss="modal">
+                            @T["orderOverview.modal.confirm"]
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>

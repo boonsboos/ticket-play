@@ -1,0 +1,40 @@
+.seat {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border-color: #ced4da;
+    background-color: #f1f3f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.seat:hover {
+    transform: scale(1.1);
+    background-color: #dee2e6;
+}
+
+.seat.selected {
+    background-color: #198754;
+    color: white;
+}
+
+.seat.taken {
+    background-color: #dc3545;
+    color: white;
+    cursor: not-allowed;
+}
+
+.seat.reserved {
+    background-color: #ffc107;
+    color: white;
+    cursor: not-allowed;
+}
+
+.seat.legend {
+    width: 20px;
+    height: 20px;
+    cursor: default;
+}

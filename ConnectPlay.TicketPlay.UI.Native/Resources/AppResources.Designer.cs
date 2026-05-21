@@ -187,6 +187,186 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Back.
+        /// </summary>
+        internal static string MovieDetail_BackButton {
+            get {
+                return ResourceManager.GetString("MovieDetail_BackButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hall {0}.
+        /// </summary>
+        internal static string MovieDetail_HallHeader {
+            get {
+                return ResourceManager.GetString("MovieDetail_HallHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To tickets.
+        /// </summary>
+        internal static string MovieDetail_NextButton {
+            get {
+                return ResourceManager.GetString("MovieDetail_NextButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are currently no screenings for this film..
+        /// </summary>
+        internal static string MovieDetail_NoScreenings {
+            get {
+                return ResourceManager.GetString("MovieDetail_NoScreenings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Film not found :(.
+        /// </summary>
+        internal static string MovieDetail_NotFound {
+            get {
+                return ResourceManager.GetString("MovieDetail_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screenings.
+        /// </summary>
+        internal static string MovieDetail_ScreeningsHeader {
+            get {
+                return ResourceManager.GetString("MovieDetail_ScreeningsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A mystery movie! The full details will be revealed on the day of the screening..
+        /// </summary>
+        internal static string MovieDetail_SneakPreviewDescription {
+            get {
+                return ResourceManager.GetString("MovieDetail_SneakPreviewDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sneak preview.
+        /// </summary>
+        internal static string MovieDetail_SneakPreviewTitle {
+            get {
+                return ResourceManager.GetString("MovieDetail_SneakPreviewTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In hall {0} at {1:HHmm}.
+        /// </summary>
+        internal static string OrderOverview_Location {
+            get {
+                return ResourceManager.GetString("OrderOverview_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order overview.
+        /// </summary>
+        internal static string OrderOverview_Title {
+            get {
+                return ResourceManager.GetString("OrderOverview_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available.
+        /// </summary>
+        internal static string SeatModal_LegendAvailable {
+            get {
+                return ResourceManager.GetString("SeatModal_LegendAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occupied.
+        /// </summary>
+        internal static string SeatModal_LegendOccupied {
+            get {
+                return ResourceManager.GetString("SeatModal_LegendOccupied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reserved.
+        /// </summary>
+        internal static string SeatModal_LegendReserved {
+            get {
+                return ResourceManager.GetString("SeatModal_LegendReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected.
+        /// </summary>
+        internal static string SeatModal_LegendSelected {
+            get {
+                return ResourceManager.GetString("SeatModal_LegendSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Row.
+        /// </summary>
+        internal static string SeatModal_Row {
+            get {
+                return ResourceManager.GetString("SeatModal_Row", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Screen.
+        /// </summary>
+        internal static string SeatModal_Screen {
+            get {
+                return ResourceManager.GetString("SeatModal_Screen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seat.
+        /// </summary>
+        internal static string SeatModal_Seat {
+            get {
+                return ResourceManager.GetString("SeatModal_Seat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No seats chosen.
+        /// </summary>
+        internal static string SeatModal_SummaryEmpty {
+            get {
+                return ResourceManager.GetString("SeatModal_SummaryEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected seats.
+        /// </summary>
+        internal static string SeatModal_SummaryTitle {
+            get {
+                return ResourceManager.GetString("SeatModal_SummaryTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wheelchair.
+        /// </summary>
+        internal static string SeatModal_Wheelchair {
+            get {
+                return ResourceManager.GetString("SeatModal_Wheelchair", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tickets.
         /// </summary>
         internal static string Tickets_Header {

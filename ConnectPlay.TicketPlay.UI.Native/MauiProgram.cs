@@ -26,14 +26,19 @@ public static class MauiProgram
         builder.Services.AddLogging();
 
 #if DEBUG
-        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
+
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Services.AddSerilog((services, config) => config = logConfig);
         builder.Logging.AddDebug();
-        builder.Logging.AddSerilog(logConfig.CreateLogger());
+
 #else 
+
         builder.builder.Services.AddTicketPlayApi(AppResources.Production_BaseUrl);
+
 #endif
+
+        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
+        builder.Services.AddTicketPlayServices();
 
         AddAppServices(builder.Services);
         AddMauiStuff(builder.Services);
@@ -47,7 +52,9 @@ public static class MauiProgram
 
         services.AddHostedService<ApiService>(serviceProvider => (serviceProvider.GetRequiredService<IApiService>() as ApiService)!);
 
-        services.AddSingleton<IHomeService, HomeService>();
+        services
+            .AddSingleton<IHomeService, HomeService>()
+            .AddSingleton<IOrderFlowService, OrderFlowService>();
     }
 
     private static void AddMauiStuff(IServiceCollection services)
