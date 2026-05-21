@@ -46,6 +46,8 @@ public static class MauiProgram
         services.AddSingleton<IApiService, ApiService>();
 
         services.AddHostedService<ApiService>(serviceProvider => (serviceProvider.GetRequiredService<IApiService>() as ApiService)!);
+
+        services.AddSingleton<IHomeService, HomeService>();
     }
 
     private static void AddMauiStuff(IServiceCollection services)

@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 ﻿using ConnectPlay.TicketPlay.Contracts.Overview;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Refit;
 

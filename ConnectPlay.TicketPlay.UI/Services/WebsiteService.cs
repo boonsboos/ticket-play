@@ -4,7 +4,7 @@ using ConnectPlay.TicketPlay.Contracts.Hall;
 using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Services;
 

@@ -126,6 +126,18 @@
   <data name="Development_BaseUrl" xml:space="preserve">
     <value>https://localhost:7284</value>
   </data>
+  <data name="Genre_Drama" xml:space="preserve">
+    <value>Drama</value>
+  </data>
+  <data name="Genre_Family" xml:space="preserve">
+    <value>Familie</value>
+  </data>
+  <data name="Genre_ScienceFiction" xml:space="preserve">
+    <value>Sciencefiction</value>
+  </data>
+  <data name="Genre_Thriller" xml:space="preserve">
+    <value>Thriller</value>
+  </data>
   <data name="Home_Current" xml:space="preserve">
     <value>Nu in de bioscoop</value>
   </data>
@@ -144,8 +156,14 @@
   <data name="Login_Password" xml:space="preserve">
     <value>Wachtwoord</value>
   </data>
+  <data name="Movie_SeeMore" xml:space="preserve">
+    <value>Meer</value>
+  </data>
   <data name="Tickets_Header" xml:space="preserve">
     <value>Kaartjes</value>
+  </data>
+  <data name="Tickets_ScreeningLocation" xml:space="preserve">
+    <value>Zaal {0} om {1}</value>
   </data>
   <data name="You_Header" xml:space="preserve">
     <value>Jouw instellingen</value>

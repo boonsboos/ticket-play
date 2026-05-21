@@ -60,6 +60,8 @@ public class ApiService : IApiService, IHostedService, IDisposable
                 return;
             }
 
+            _logger.LogInformation("Logged in succesfully");
+
             await this._secureStorage.SetAsync(TokenKey, response.Content!.Token);
             await this._secureStorage.SetAsync(RefreshKey, response.Content!.RefreshToken);
             await this._secureStorage.SetAsync(ExpiresKey, response.Content!.ExpiresIn.ToString());

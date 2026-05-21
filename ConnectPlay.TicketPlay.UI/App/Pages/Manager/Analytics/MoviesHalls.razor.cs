@@ -1,6 +1,6 @@
 using ConnectPlay.TicketPlay.Contracts.Analytics.MovieHall;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Refit;
 

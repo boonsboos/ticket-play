@@ -99,3 +99,7 @@ h1:focus {
         padding-left: env(safe-area-inset-left);
     }
 }
+
+.bottomnav-comp {
+    margin-bottom: calc(3rem + 60px);
+}

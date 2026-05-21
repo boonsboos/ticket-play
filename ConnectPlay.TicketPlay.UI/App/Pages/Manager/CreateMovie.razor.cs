@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;

@@ -128,6 +128,18 @@
     <value>https://localhost:7284</value>
     <comment>DEVELOPMENT ONLY</comment>
   </data>
+  <data name="Genre_Drama" xml:space="preserve">
+    <value>Drama</value>
+  </data>
+  <data name="Genre_Family" xml:space="preserve">
+    <value>Family</value>
+  </data>
+  <data name="Genre_ScienceFiction" xml:space="preserve">
+    <value>Science-fiction</value>
+  </data>
+  <data name="Genre_Thriller" xml:space="preserve">
+    <value>Thriller</value>
+  </data>
   <data name="Home_Current" xml:space="preserve">
     <value>Now in cinema</value>
   </data>
@@ -146,8 +158,14 @@
   <data name="Login_Password" xml:space="preserve">
     <value>Password</value>
   </data>
+  <data name="Movie_SeeMore" xml:space="preserve">
+    <value>See more</value>
+  </data>
   <data name="Tickets_Header" xml:space="preserve">
     <value>Tickets</value>
+  </data>
+  <data name="Tickets_ScreeningLocation" xml:space="preserve">
+    <value>Hall {0} at {1}</value>
   </data>
   <data name="You_Header" xml:space="preserve">
     <value>Your settings</value>

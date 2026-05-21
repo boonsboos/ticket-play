@@ -1,4 +1,4 @@
-﻿using ConnectPlay.TicketPlay.UI.Api;
+﻿using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.Configuration;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;

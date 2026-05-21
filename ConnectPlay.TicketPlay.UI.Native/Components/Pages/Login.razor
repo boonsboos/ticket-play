@@ -1,8 +1,8 @@
 @inherits ComponentBase
 @page "/login"
 
-<div class="container d-flex flex-column align-items-center justify-content-center g-2">
-    <h1 class="text-center">@AppResources.Login_Action</h1>
+<div class="d-flex flex-column align-items-center justify-content-center g-2">
+    <h1 class="text-center my-2">@AppResources.Login_Action</h1>
 
     @if (!_apiService.IsAuthenticated && Attempt > 0)
     {

@@ -1,6 +1,6 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Services;
 

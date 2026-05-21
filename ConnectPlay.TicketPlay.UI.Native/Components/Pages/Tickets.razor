@@ -1,0 +1,25 @@
+@page "/tickets"
+@using ConnectPlay.TicketPlay.UI.Native.Components.Elements
+@inherits ComponentBase
+
+<div>
+    <h1 class="text-center">@AppResources.Tickets_Header</h1>
+
+    <div>
+        @foreach (var ticket in this._tickets)
+        {
+            <div class="card card-body">
+                <h2 class="card-header">@ticket.Screening.Movie.Title</h2>
+                <h3 class="card-footer">
+                    @string.Format(
+                        AppResources.Tickets_ScreeningLocation,
+                        ticket.Screening.Hall.HallNumber,
+                        ticket.Screening.StartTime.ToString("t")
+                    )
+                </h3>
+            </div>
+        }
+    </div>
+</div>
+
+<BottomNavigation Current="BottomNavigation.CurrentView.Tickets"/>

@@ -1,7 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.Contracts.Movie;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 
 namespace ConnectPlay.TicketPlay.UI.Repositories;
 

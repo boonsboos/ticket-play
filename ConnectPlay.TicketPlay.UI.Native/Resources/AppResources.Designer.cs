@@ -88,6 +88,42 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Drama.
+        /// </summary>
+        internal static string Genre_Drama {
+            get {
+                return ResourceManager.GetString("Genre_Drama", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Family.
+        /// </summary>
+        internal static string Genre_Family {
+            get {
+                return ResourceManager.GetString("Genre_Family", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Science-fiction.
+        /// </summary>
+        internal static string Genre_ScienceFiction {
+            get {
+                return ResourceManager.GetString("Genre_ScienceFiction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thriller.
+        /// </summary>
+        internal static string Genre_Thriller {
+            get {
+                return ResourceManager.GetString("Genre_Thriller", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Now in cinema.
         /// </summary>
         internal static string Home_Current {
@@ -142,11 +178,29 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to See more.
+        /// </summary>
+        internal static string Movie_SeeMore {
+            get {
+                return ResourceManager.GetString("Movie_SeeMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tickets.
         /// </summary>
         internal static string Tickets_Header {
             get {
                 return ResourceManager.GetString("Tickets_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hall {0} at {1}.
+        /// </summary>
+        internal static string Tickets_ScreeningLocation {
+            get {
+                return ResourceManager.GetString("Tickets_ScreeningLocation", resourceCulture);
             }
         }
         

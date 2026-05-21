@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Hall;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using Refit;
 

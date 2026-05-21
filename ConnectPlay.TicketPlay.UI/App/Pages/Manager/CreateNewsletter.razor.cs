@@ -1,5 +1,5 @@
 ﻿using ConnectPlay.TicketPlay.Contracts.Newsletter;
-using ConnectPlay.TicketPlay.UI.Api;
+using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
 using System.ComponentModel.DataAnnotations;
 using Refit;

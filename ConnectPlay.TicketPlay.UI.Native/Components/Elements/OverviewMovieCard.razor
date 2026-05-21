@@ -1,0 +1,35 @@
+@using ConnectPlay.TicketPlay.UI.Native.Extensions;
+
+<NavLink class="col-md-4 col-lg-4 col-sm-12 col-xxl-3 overflow-x-hidden" href="@($"/movies/{CardMovie.Id}")">
+    <div class="card p-3">
+        <img src="@CardMovie.PosterUrl" alt="@CardMovie.Title" height="300px" class="rounded image-aspect-ratio mb-2" />
+        <h5 class="mb-1">@CardMovie.Title</h5>
+        
+        <p class="text-muted mb-2">@CardMovie.GetTranslatedGenre()</p>
+
+        <div class="d-flex gap-2 flex-wrap">
+            @{
+                // Materialize up to 4 screening times to avoid multiple enumeration
+                var screeningTimes = CardMovie.ScreeningTimes.Take(4).ToList();
+                var visibleTimes = screeningTimes.Take(3);
+                var hasMoreScreenings = screeningTimes.Count > 3;
+            }
+            @foreach (var startTime in visibleTimes)
+            {
+                @if (startTime < DateTimeOffset.UtcNow)
+                {
+                    <span class="badge bg-secondary">@startTime.ToLocalTime().ToString("HH:mm")</span>
+                }
+                else
+                {
+                    <span class="badge bg-primary">@startTime.ToLocalTime().ToString("HH:mm")</span>
+                }
+            }
+
+            @if (hasMoreScreenings)
+            {
+                <span class="badge bg-secondary">@AppResources.Movie_SeeMore</span>
+            }
+        </div>
+    </div>
+</NavLink>
