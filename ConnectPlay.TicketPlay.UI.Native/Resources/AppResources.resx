@@ -225,9 +225,90 @@
     <value>Wheelchair</value>
   </data>
   <data name="OrderOverview_Location" xml:space="preserve">
-    <value>In hall {0} at {1:HHmm}</value>
+    <value>In hall {0} at {1}</value>
   </data>
   <data name="SeatModal_Screen" xml:space="preserve">
     <value>Screen</value>
+  </data>
+  <data name="OrderTickets_Regular" xml:space="preserve">
+    <value>Regular</value>
+  </data>
+  <data name="OrderTickets_Child" xml:space="preserve">
+    <value>Children</value>
+  </data>
+  <data name="OrderTickets_Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="OrderTickets_Senior" xml:space="preserve">
+    <value>Senior</value>
+  </data>
+  <data name="OrderTickets_Title" xml:space="preserve">
+    <value>Choose your tickets</value>
+  </data>
+  <data name="OrderTickets_Movie" xml:space="preserve">
+    <value>Movie</value>
+  </data>
+  <data name="OrderTickets_Hall" xml:space="preserve">
+    <value>Hall</value>
+  </data>
+  <data name="OrderTickets_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="OrderTickets_3DYes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="OrderTickets_Back" xml:space="preserve">
+    <value>To screenings</value>
+  </data>
+  <data name="OrderTickets_Next" xml:space="preserve">
+    <value>To payment</value>
+  </data>
+  <data name="OrderOverview_YourSeats" xml:space="preserve">
+    <value>Your seats:</value>
+  </data>
+  <data name="SeatModal_ChangeSeats" xml:space="preserve">
+    <value>Change seats</value>
+  </data>
+  <data name="OrderOverview_AmountDue" xml:space="preserve">
+    <value>Amount due</value>
+  </data>
+  <data name="OrderOverview_3DFee" xml:space="preserve">
+    <value>3D Fee</value>
+  </data>
+  <data name="OrderOverview_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="SeatModal_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="SeatModal_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SeatModal_SummarySelected" xml:space="preserve">
+    <value>Selected:</value>
+  </data>
+  <data name="SeatModal_Title" xml:space="preserve">
+    <value>Change your seats</value>
+  </data>
+  <data name="OrderOverview_Next" xml:space="preserve">
+    <value>To payment</value>
+  </data>
+  <data name="OrderOverview_Back" xml:space="preserve">
+    <value>Back to tickets</value>
+  </data>
+  <data name="Arrangements_Title" xml:space="preserve">
+    <value>Arrangements</value>
+  </data>
+  <data name="Arrangements_Description" xml:space="preserve">
+    <value>Choose an arrangement here, and we'll get it to your seat before the movie starts!</value>
+  </data>
+  <data name="Arrangements_Snacks" xml:space="preserve">
+    <value>Snacks</value>
+  </data>
+  <data name="Arrangements_Drinks" xml:space="preserve">
+    <value>Drinks</value>
+  </data>
+  <data name="Arrangements_Specials" xml:space="preserve">
+    <value>Specials</value>
   </data>
 </root>

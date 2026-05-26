@@ -22,7 +22,7 @@
 		<NoWarn>CA1873;</NoWarn>
 		
 		<!-- Required for WinRT compatibility -->
-		<AllowUnsafeBlocks></AllowUnsafeBlocks>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
         <!-- Enable XAML source generation for faster build times and improved performance.
              This generates C# code from XAML at compile time instead of runtime inflation.

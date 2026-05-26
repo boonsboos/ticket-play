@@ -1,14 +1,15 @@
 using ConnectPlay.TicketPlay.Models;
-using ConnectPlay.TicketPlay.UI.App.Components;
-using ConnectPlay.TicketPlay.UI.App.Components.Base;
-using ConnectPlay.TicketPlay.UI.Services;
+using ConnectPlay.TicketPlay.UI.Native.Abstract;
+using ConnectPlay.TicketPlay.UI.Native.Components.Elements;
+using ConnectPlay.TicketPlay.UI.Native.Resources;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 
-namespace ConnectPlay.TicketPlay.UI.App.Pages.OrderPages;
+namespace ConnectPlay.TicketPlay.UI.Native.Components.Pages.OrderPages;
 
-public partial class TicketOrder : TranslatableComponent
+public partial class TicketOrder : ComponentBase
 {
-    private readonly WebsiteService websiteService;
+    private readonly IOrderFlowService orderFlowService;
     private readonly NavigationManager navigationManager;
     private readonly ILogger<TicketOrder> logger;
 
@@ -19,24 +20,24 @@ public partial class TicketOrder : TranslatableComponent
     protected List<WebsiteTicket> Tickets { get; set; } = [];
 
     private bool IsPreview => Screening.SneakPreview;
-    private string DisplayTitle => !IsPreview ? Screening.Movie.Title : T["movieDetail.sneakPreview.title"];
+    private string DisplayTitle => !IsPreview ? Screening.Movie.Title : AppResources.MovieDetail_SneakPreviewTitle;
 
-    public TicketOrder(WebsiteService websiteService, NavigationManager navigationManager, ILogger<TicketOrder> logger)
+    public TicketOrder(IOrderFlowService orderFlowService, NavigationManager navigationManager, ILogger<TicketOrder> logger)
     {
-        this.websiteService = websiteService;
+        this.orderFlowService = orderFlowService;
         this.navigationManager = navigationManager;
         this.logger = logger;
     }
 
     protected override void OnInitialized()
     {
-        if (websiteService.SelectedScreening == null)
+        if (orderFlowService.Screening == null)
         {
             navigationManager.NavigateTo("/");
             return;
         }
 
-        Screening = websiteService.SelectedScreening;
+        Screening = orderFlowService.Screening;
         base.OnInitialized();
     }
 
@@ -45,21 +46,19 @@ public partial class TicketOrder : TranslatableComponent
         try
         {
             // get selected arrangements from the subcomponent
-            websiteService.SelectedArrangements = arrangementSelector?.GetSelectedArrangements() ?? [];
+            orderFlowService.Arrangements = arrangementSelector?.GetSelectedArrangements() ?? [];
 
             // map tickets to the count of each ticket type so it becomes [Regular,Regular,Student,...] instead of [{Type: Regular, Count: 2}, {Type: Student, Count: 1}, ...]
-            websiteService.Tickets = [.. this.Tickets.SelectMany(t => Enumerable.Repeat(t.Type, t.Count))];
-            await websiteService.PlaceOrder();
+            orderFlowService.Tickets = [.. this.Tickets.SelectMany(t => Enumerable.Repeat(t.Type, t.Count))];
+            await orderFlowService.PlaceOrderAsync();
 
-            var currentOrderId = websiteService.CurrentOrderId;
+            var currentOrderId = orderFlowService.Order?.Id;
             if (currentOrderId is null || currentOrderId <= 0)
             {
                 logger.LogError("Failed to place order for screening {ScreeningId}: no valid order id returned.", Screening.Id);
                 return;
             }
 
-            await websiteService.LoadLayout(Screening.Hall.Id);
-            await websiteService.LoadTakenSeats(Screening.Id, currentOrderId.Value);
             navigationManager.NavigateTo("/order/overview");
         }
         catch (Exception ex)

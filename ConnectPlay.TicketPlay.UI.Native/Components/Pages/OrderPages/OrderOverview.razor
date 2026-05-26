@@ -18,26 +18,26 @@
 
                     @if (Screening is not null)
                     {
-                        <p>@T["orderOverview.inHall"] @Screening.Hall.HallNumber @T["orderOverview.atTime"] @StartTime</p>
+                        <p>@(string.Format(AppResources.OrderOverview_Location, Screening.Hall.HallNumber, StartTime))</p>
                     }
 
                     @if (Seats.Any())
                     {
                         <p>
-                            <b>@T["orderOverview.yourSeats"]</b><br />
+                            <b>@AppResources.OrderOverview_YourSeats</b><br />
                             @(string.Join(", ", Seats))
                         </p>
                     }
                     <button class="btn btn-outline-secondary w-50" data-bs-toggle="modal"
                             data-bs-target="#seatSelectionModal">
-                        @T["orderOverview.modal:changeSeatsButton"]
+                        @AppResources.SeatModal_ChangeSeats
                     </button>
                 </div>
             }
         </div>
         <hr />
         <div class="row p-4" id="bill">
-            <h3 class="text-center">@T["orderOverview.toPay"]</h3>
+            <h3 class="text-center">@AppResources.OrderOverview_AmountDue</h3>
 
             @foreach (var (ticketType, amount) in Tickets.GroupBy(t => t).Select(group => (group.Key, group.Count())))
             {
@@ -69,7 +69,7 @@
             {
                 <hr />
                 <div class="d-flex flex-row justify-content-between">
-                    <p><b>@T["orderOverview.threeDFee"]</b></p>
+                    <p><b>@AppResources.OrderOverview_3DFee</b></p>
                     <p>
                         @(2.50m.ToString("C"))
                     </p>
@@ -78,7 +78,7 @@
 
             <hr />
             <div class="d-flex flex-row justify-content-between">
-                <p><b>@T["orderOverview.total"]</b></p>
+                <p><b>@AppResources.OrderOverview_Total</b></p>
                 <p>@Order.Total.ToString("C")</p>
             </div>
 
@@ -86,15 +86,15 @@
     </div>
 
     <div class="container d-flex justify-content-between m-3">
-        <button class="btn btn-outline-primary" @onclick="ToTickets">@T["orderOverview.back"]</button>
-        <button class="btn btn-primary" @onclick="ToPayment">@T["orderOverview.next"]</button>
+        <button class="btn btn-outline-primary" @onclick="ToTickets">@AppResources.OrderOverview_Back</button>
+        <button class="btn btn-primary" @onclick="ToPayment">@AppResources.OrderOverview_Next</button>
     </div>
 
     <div class="modal fade" tabindex="-1" id="seatSelectionModal">
         <div class="modal-dialog modal-dialog-centered modal-xl">
             <div class="modal-content shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold">@T["orderOverview.modal:title"]</h5>
+                    <h5 class="modal-title fw-bold">@AppResources.SeatModal_Title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -130,11 +130,11 @@
 
                                             @if (isWheelchairSeat)
                                             {
-                                                <WheelchairIcon />
+                                                <i class="bi bi-person-wheelchair"></i>
                                             }
                                             else
                                             {
-                                                <ChairIcon />
+                                                <i class= "bi bi-person-workspace"></i>
                                             }
                                         </div>
                                     }
@@ -166,7 +166,7 @@
                         <div class="w-100 mx-auto" style="max-width: 32rem;">
                             <div class="d-flex justify-content-between align-items-center">
                                 <p class="small text-muted fw-semibold mb-0">
-                                    @T["orderOverview.modal.summary.SelectedSeats"]</p>
+                                    @AppResources.SeatModal_SummarySelected</p>
                                     <span class="badge text-bg-dark">@SelectedSeats.Count / @Tickets.Count()</span>
                                 </div>
 
@@ -190,12 +190,12 @@
                     <div class="modal-footer border-0 pt-2">
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"
                                 @onclick="ResetSelectedSeats">
-                            @T["orderOverview.modal.cancel"]
+                            @AppResources.SeatModal_Cancel
                         </button>
                         <button type="button" class="btn btn-primary px-4" @onclick="HandleUpdateSeats"
                                 disabled="@(!SelectedSeats.Any() || SelectedSeats.Count != Tickets.Count())"
                                 data-bs-dismiss="modal">
-                            @T["orderOverview.modal.confirm"]
+                            @AppResources.SeatModal_Confirm
                         </button>
                     </div>
 

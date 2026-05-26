@@ -223,9 +223,90 @@
     <value>Rolstoel</value>
   </data>
   <data name="OrderOverview_Location" xml:space="preserve">
-    <value>In zaal {0} om {1:HHmm}</value>
+    <value>In zaal {0} om {1}</value>
   </data>
   <data name="SeatModal_Screen" xml:space="preserve">
     <value>Scherm</value>
+  </data>
+  <data name="OrderTickets_Regular" xml:space="preserve">
+    <value>Standaard</value>
+  </data>
+  <data name="OrderTickets_Child" xml:space="preserve">
+    <value>Kind</value>
+  </data>
+  <data name="OrderTickets_Student" xml:space="preserve">
+    <value>Student</value>
+  </data>
+  <data name="OrderTickets_Senior" xml:space="preserve">
+    <value>Senioren</value>
+  </data>
+  <data name="OrderTickets_Title" xml:space="preserve">
+    <value>Kies je kaartjes</value>
+  </data>
+  <data name="OrderTickets_Movie" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="OrderTickets_Hall" xml:space="preserve">
+    <value>Zaal</value>
+  </data>
+  <data name="OrderTickets_Time" xml:space="preserve">
+    <value>Tijd</value>
+  </data>
+  <data name="OrderTickets_3DYes" xml:space="preserve">
+    <value>Ja</value>
+  </data>
+  <data name="OrderTickets_Back" xml:space="preserve">
+    <value>Terug naar voorstellingen</value>
+  </data>
+  <data name="OrderTickets_Next" xml:space="preserve">
+    <value>Betalen</value>
+  </data>
+  <data name="OrderOverview_YourSeats" xml:space="preserve">
+    <value>Je stoelen:</value>
+  </data>
+  <data name="SeatModal_ChangeSeats" xml:space="preserve">
+    <value>Kies stoelen</value>
+  </data>
+  <data name="OrderOverview_AmountDue" xml:space="preserve">
+    <value>Te betalen</value>
+  </data>
+  <data name="OrderOverview_3DFee" xml:space="preserve">
+    <value>3D-toeslag</value>
+  </data>
+  <data name="OrderOverview_Total" xml:space="preserve">
+    <value>Totaal</value>
+  </data>
+  <data name="SeatModal_Confirm" xml:space="preserve">
+    <value>Bevestigen</value>
+  </data>
+  <data name="SeatModal_Cancel" xml:space="preserve">
+    <value>Annuleren</value>
+  </data>
+  <data name="SeatModal_SummarySelected" xml:space="preserve">
+    <value>Gekozen stoelen:</value>
+  </data>
+  <data name="SeatModal_Title" xml:space="preserve">
+    <value>Kies andere stoelen</value>
+  </data>
+  <data name="OrderOverview_Next" xml:space="preserve">
+    <value>Betalen</value>
+  </data>
+  <data name="OrderOverview_Back" xml:space="preserve">
+    <value>Tickets</value>
+  </data>
+  <data name="Arrangements_Title" xml:space="preserve">
+    <value>Arrangementen</value>
+  </data>
+  <data name="Arrangements_Description" xml:space="preserve">
+    <value>Kies hier iets lekkers uit en wij zorgen ervoor dat het klaarstaat voor de film begint!</value>
+  </data>
+  <data name="Arrangements_Snacks" xml:space="preserve">
+    <value>Snacks</value>
+  </data>
+  <data name="Arrangements_Drinks" xml:space="preserve">
+    <value>Dranken</value>
+  </data>
+  <data name="Arrangements_Specials" xml:space="preserve">
+    <value>Specials</value>
   </data>
 </root>

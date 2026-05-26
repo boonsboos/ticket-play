@@ -54,7 +54,7 @@ public static class MauiProgram
 
         services
             .AddSingleton<IHomeService, HomeService>()
-            .AddSingleton<IOrderFlowService, OrderFlowService>();
+            .AddScoped<IOrderFlowService, OrderFlowService>();
     }
 
     private static void AddMauiStuff(IServiceCollection services)

@@ -70,6 +70,51 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose an arrangement here, and we&apos;ll get it to your seat before the movie starts!.
+        /// </summary>
+        internal static string Arrangements_Description {
+            get {
+                return ResourceManager.GetString("Arrangements_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drinks.
+        /// </summary>
+        internal static string Arrangements_Drinks {
+            get {
+                return ResourceManager.GetString("Arrangements_Drinks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Snacks.
+        /// </summary>
+        internal static string Arrangements_Snacks {
+            get {
+                return ResourceManager.GetString("Arrangements_Snacks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specials.
+        /// </summary>
+        internal static string Arrangements_Specials {
+            get {
+                return ResourceManager.GetString("Arrangements_Specials", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Arrangements.
+        /// </summary>
+        internal static string Arrangements_Title {
+            get {
+                return ResourceManager.GetString("Arrangements_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to https://api.connect-en-play.nl.
         /// </summary>
         internal static string BaseUrl {
@@ -259,11 +304,47 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to In hall {0} at {1:HHmm}.
+        ///   Looks up a localized string similar to 3D Fee.
+        /// </summary>
+        internal static string OrderOverview_3DFee {
+            get {
+                return ResourceManager.GetString("OrderOverview_3DFee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Amount due.
+        /// </summary>
+        internal static string OrderOverview_AmountDue {
+            get {
+                return ResourceManager.GetString("OrderOverview_AmountDue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back to tickets.
+        /// </summary>
+        internal static string OrderOverview_Back {
+            get {
+                return ResourceManager.GetString("OrderOverview_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In hall {0} at {1}.
         /// </summary>
         internal static string OrderOverview_Location {
             get {
                 return ResourceManager.GetString("OrderOverview_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To payment.
+        /// </summary>
+        internal static string OrderOverview_Next {
+            get {
+                return ResourceManager.GetString("OrderOverview_Next", resourceCulture);
             }
         }
         
@@ -273,6 +354,150 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         internal static string OrderOverview_Title {
             get {
                 return ResourceManager.GetString("OrderOverview_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        internal static string OrderOverview_Total {
+            get {
+                return ResourceManager.GetString("OrderOverview_Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your seats:.
+        /// </summary>
+        internal static string OrderOverview_YourSeats {
+            get {
+                return ResourceManager.GetString("OrderOverview_YourSeats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Yes.
+        /// </summary>
+        internal static string OrderTickets_3DYes {
+            get {
+                return ResourceManager.GetString("OrderTickets_3DYes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To screenings.
+        /// </summary>
+        internal static string OrderTickets_Back {
+            get {
+                return ResourceManager.GetString("OrderTickets_Back", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Children.
+        /// </summary>
+        internal static string OrderTickets_Child {
+            get {
+                return ResourceManager.GetString("OrderTickets_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hall.
+        /// </summary>
+        internal static string OrderTickets_Hall {
+            get {
+                return ResourceManager.GetString("OrderTickets_Hall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movie.
+        /// </summary>
+        internal static string OrderTickets_Movie {
+            get {
+                return ResourceManager.GetString("OrderTickets_Movie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To payment.
+        /// </summary>
+        internal static string OrderTickets_Next {
+            get {
+                return ResourceManager.GetString("OrderTickets_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Regular.
+        /// </summary>
+        internal static string OrderTickets_Regular {
+            get {
+                return ResourceManager.GetString("OrderTickets_Regular", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Senior.
+        /// </summary>
+        internal static string OrderTickets_Senior {
+            get {
+                return ResourceManager.GetString("OrderTickets_Senior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Student.
+        /// </summary>
+        internal static string OrderTickets_Student {
+            get {
+                return ResourceManager.GetString("OrderTickets_Student", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Time.
+        /// </summary>
+        internal static string OrderTickets_Time {
+            get {
+                return ResourceManager.GetString("OrderTickets_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose your tickets.
+        /// </summary>
+        internal static string OrderTickets_Title {
+            get {
+                return ResourceManager.GetString("OrderTickets_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string SeatModal_Cancel {
+            get {
+                return ResourceManager.GetString("SeatModal_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change seats.
+        /// </summary>
+        internal static string SeatModal_ChangeSeats {
+            get {
+                return ResourceManager.GetString("SeatModal_ChangeSeats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm.
+        /// </summary>
+        internal static string SeatModal_Confirm {
+            get {
+                return ResourceManager.GetString("SeatModal_Confirm", resourceCulture);
             }
         }
         
@@ -349,11 +574,29 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected:.
+        /// </summary>
+        internal static string SeatModal_SummarySelected {
+            get {
+                return ResourceManager.GetString("SeatModal_SummarySelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Selected seats.
         /// </summary>
         internal static string SeatModal_SummaryTitle {
             get {
                 return ResourceManager.GetString("SeatModal_SummaryTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change your seats.
+        /// </summary>
+        internal static string SeatModal_Title {
+            get {
+                return ResourceManager.GetString("SeatModal_Title", resourceCulture);
             }
         }
         

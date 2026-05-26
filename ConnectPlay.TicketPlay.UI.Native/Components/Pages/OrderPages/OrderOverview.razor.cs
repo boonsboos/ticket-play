@@ -37,23 +37,23 @@ public partial class OrderOverview : ComponentBase
         this.logger = logger;
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         if (orderFlowService.Order is null) { navigationManager.NavigateTo("/"); return; }
 
         this.Order = orderFlowService.Order;
 
-        this.Movie = orderFlowService.Movie!;
+        this.Movie = orderFlowService.Screening!.Movie;
         this.Seats = orderFlowService.Seats;
         this.Tickets = orderFlowService.Tickets;
-        this.Screening = orderFlowService.SelectedScreening!;
-        this.Arrangements = orderFlowService.ReservedArrangements;
+        this.Screening = orderFlowService.Screening!;
+        this.Arrangements = orderFlowService.Order.Arrangements;
 
         this.StartTime = Screening?.StartTime.ToLocalTime().ToString("HH:mm") ?? "??:??";
         this.Is3D = Screening?.Hall?.Has3DProjector ?? false;
 
-        this.HallLayout = orderFlowService.HallLayout;
-        this.TakenSeats = orderFlowService.TakenSeats;
+        this.HallLayout = await orderFlowService.GetHallLayoutAsync();
+        this.TakenSeats = await orderFlowService.GetTakenSeatsAsync();
         SelectedSeats.Clear();
         SelectedSeats.AddRange(orderFlowService.Seats);
 
@@ -115,8 +115,7 @@ public partial class OrderOverview : ComponentBase
 
     private async Task HandleUpdateSeats()
     {
-        var isUpdated = await orderFlowService.ApplySeatSelection(SelectedSeats);
-        if (!isUpdated) return;
+        await orderFlowService.SelectSeatsAsync(SelectedSeats);
 
         Seats = orderFlowService.Seats.ToList();
         SelectedSeats.Clear();
