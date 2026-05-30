@@ -1,0 +1,13 @@
+﻿﻿@using Microsoft.AspNetCore.Components.Forms
+@using System.Linq.Expressions
+
+@if (Messages != null)
+{
+    @* Loop through each validation message and display the translated text *@
+    foreach (var messageKey in Messages)
+    {
+        <div class="validation-message">
+            @Translate(messageKey) <!-- Translated error message -->
+        </div>
+    }
+}

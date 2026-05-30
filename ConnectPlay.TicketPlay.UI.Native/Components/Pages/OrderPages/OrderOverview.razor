@@ -1,7 +1,7 @@
 ﻿@page "/order/overview"
 @inherits ComponentBase
 
-<div class="container mt-4 col-6 offset-3 d-flex flex-column justify-content-center">
+<div class="container col-md-8 offset-md-2 col-lg-6 offset-lg-3 col-sm-12 d-flex flex-column justify-content-center">
 
     <h2 class="text-center">@AppResources.OrderOverview_Title</h2>
 
@@ -91,56 +91,59 @@
     </div>
 
     <div class="modal fade" tabindex="-1" id="seatSelectionModal">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
             <div class="modal-content shadow-lg rounded-4">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold">@AppResources.SeatModal_Title</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-body pt-2">
+                <div class="modal-body pt-2 ">
                     <div class="text-center mb-4">
                         <div class="bg-dark text-white py-2 rounded-pill w-50 mx-auto small">
                             <p class="mb-0">@AppResources.SeatModal_Screen</p>
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column align-items-center gap-2">
-                        @if (HallLayout is not null && Screening is not null)
-                        {
-                            @for (var i = 1; i <= HallLayout.Layout.Count; i++)
+                    <!-- wrapper div to allow the hall layout to be horizontally scrollable -->
+                    <div class="overflow-x-auto d-flex flex-column justify-content-center">
+                        <div class="d-flex flex-column align-items-center gap-2 py-1 overflow-x-auto" style="width: max-content">
+                            @if (HallLayout is not null && Screening is not null)
                             {
-                                <div class="d-flex justify-content-center gap-2">
-                                    @for (var j = 1; j <= HallLayout.Layout[i - 1]; j++)
-                                    {
-                                        var row = i;
-                                        var seatNumber = j;
-                                        var isWheelchairSeat = HallLayout.WheelchairSeat.Row == row &&
-                            HallLayout.WheelchairSeat.Seat == seatNumber;
-                                        var takenSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
-                            s.IsTaken);
-                                        var reservedSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
-                            s.IsReserved);
-                                        var selectedSeat = SelectedSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
-                            s.IsForWheelchair == isWheelchairSeat);
+                                @for (var i = 1; i <= HallLayout.Layout.Count; i++)
+                                {
+                                    <div class="d-flex justify-content-md-center justify-content-sm-start gap-2 mx-5">
+                                        @for (var j = 1; j <= HallLayout.Layout[i - 1]; j++)
+                                        {
+                                            var row = i;
+                                            var seatNumber = j;
+                                            var isWheelchairSeat = HallLayout.WheelchairSeat.Row == row &&
+                                HallLayout.WheelchairSeat.Seat == seatNumber;
+                                            var takenSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
+                                s.IsTaken);
+                                            var reservedSeat = TakenSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
+                                s.IsReserved);
+                                            var selectedSeat = SelectedSeats.Any(s => s.Row == row && s.SeatNumber == seatNumber &&
+                                s.IsForWheelchair == isWheelchairSeat);
 
-                                        <div class="seat@(selectedSeat ? " selected" : takenSeat ? " taken" : reservedSeat ? " reserved" : "")"
-                                             style="@(takenSeat ? "pointer-events: none;" : "")"
-                                             @onclick="() => ToggleSeatSelection(row, seatNumber, isWheelchairSeat)">
+                                            <div class="seat@(selectedSeat ? " selected" : takenSeat ? " taken" : reservedSeat ? " reserved" : "")"
+                                                 style="@(takenSeat ? "pointer-events: none;" : "")"
+                                                 @onclick="() => ToggleSeatSelection(row, seatNumber, isWheelchairSeat)">
 
-                                            @if (isWheelchairSeat)
-                                            {
-                                                <i class="bi bi-person-wheelchair"></i>
-                                            }
-                                            else
-                                            {
-                                                <i class= "bi bi-person-workspace"></i>
-                                            }
-                                        </div>
-                                    }
-                                </div>
+                                                @if (isWheelchairSeat)
+                                                {
+                                                    <i class="bi bi-person-wheelchair"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i class= "bi bi-person-workspace"></i>
+                                                }
+                                            </div>
+                                        }
+                                    </div>
+                                }
                             }
-                        }
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-center gap-4 mt-4 small">

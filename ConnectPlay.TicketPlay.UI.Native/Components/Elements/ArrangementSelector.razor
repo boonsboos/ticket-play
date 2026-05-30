@@ -15,9 +15,9 @@
                     @foreach (var item in SnackOptions)
                     {
                         <div class="row g-4 mb-3 d-flex flex-sm-wrap">
-                            <div class="col-md-8 col-sm-4 text-start">@item.Name</div>
-                            <div class="col-2">@item.Price.ToString("C")</div>
-                            <div class="col-md-2 col-sm-6  d-flex flex-row align-items-center justify-content-end gap-2">
+                            <div class="col-md-6 col-sm-4 text-start">@item.Name</div>
+                            <div class="col-md-3 col-sm-2">@item.Price.ToString("C")</div>
+                            <div class="col-md-3 col-sm-4  d-flex flex-row align-items-center justify-content-end gap-2">
                                 <button class="btn btn-outline-secondary" @onclick="() => { if (item.Quantity > 0) item.Quantity--; }">
                                     <i class="bi bi-dash"></i>
                                 </button>
@@ -39,9 +39,9 @@
                     @foreach (var item in DrinkOptions)
                     {
                         <div class="row g-4 mb-3 d-flex flex-sm-wrap">
-                            <div class="col-md-8 col-sm-4 text-start">@item.Name</div>
-                            <div class="col-2">@item.Price.ToString("C")</div>
-                            <div class="col-md-2 col-sm-6 d-flex flex-row align-items-center justify-content-end gap-2">
+                            <div class="col-md-6 col-sm-4 text-start">@item.Name</div>
+                            <div class="col-md-3 col-sm-2">@item.Price.ToString("C")</div>
+                            <div class="col-md-3 col-sm-4  d-flex flex-row align-items-center justify-content-end gap-2">
                                 <button class="btn btn-outline-secondary" @onclick="() => { if (item.Quantity > 0) item.Quantity--; }">
                                     <i class="bi bi-dash"></i>
                                 </button>
@@ -63,9 +63,9 @@
                     @foreach (var special in SpecialsOptions)
                     {
                         <div class="row g-4 mb-3 d-flex flex-sm-wrap">
-                            <div class="col-md-8 col-sm-4 text-start">@special.Name</div>
-                            <div class="col-2">@special.Price.ToString("C")</div>
-                            <div class="col-md-2 col-sm-6  d-flex flex-row align-items-center justify-content-end gap-2">
+                            <div class="col-md-6 col-sm-4 text-start">@special.Name</div>
+                            <div class="col-md-3 col-sm-2">@special.Price.ToString("C")</div>
+                            <div class="col-md-3 col-sm-4  d-flex flex-row align-items-center justify-content-end gap-2">
                                 <button class="btn btn-outline-secondary" @onclick="() => { if (special.Quantity > 0) special.Quantity--; }">
                                     <i class="bi bi-dash"></i>
                                 </button>

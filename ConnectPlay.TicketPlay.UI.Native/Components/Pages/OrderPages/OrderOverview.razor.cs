@@ -128,7 +128,7 @@ public partial class OrderOverview : ComponentBase
         SelectedSeats.AddRange(orderFlowService.Seats);
     }
 
-    protected string FormatPlacement(Seat seat)
+    protected static string FormatPlacement(Seat seat)
     {
         var rowWord = AppResources.SeatModal_Row;
         var seatWord = AppResources.SeatModal_Seat;

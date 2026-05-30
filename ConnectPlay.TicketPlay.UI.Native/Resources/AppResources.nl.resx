@@ -309,4 +309,76 @@
   <data name="Arrangements_Specials" xml:space="preserve">
     <value>Specials</value>
   </data>
+  <data name="Screening_ShareMessage" xml:space="preserve">
+    <value>Ik ga {1} naar {0} om bij {2}!</value>
+  </data>
+  <data name="Payment_Title" xml:space="preserve">
+    <value>Betalen</value>
+  </data>
+  <data name="Payment_SelectBank" xml:space="preserve">
+    <value>Kies je bank</value>
+  </data>
+  <data name="Payment_BankPlaceholder" xml:space="preserve">
+    <value>-- Bank --</value>
+  </data>
+  <data name="Payment_PayIdeal" xml:space="preserve">
+    <value>Betaal met iDeal/Wero</value>
+  </data>
+  <data name="Payment_CardFormName" xml:space="preserve">
+    <value>Naam kaarthouder</value>
+  </data>
+  <data name="Payment_CardFormNumber" xml:space="preserve">
+    <value>Kaartnummer</value>
+  </data>
+  <data name="Payment_CardFormExpiry" xml:space="preserve">
+    <value>Vervaldatum</value>
+  </data>
+  <data name="Payment_CardFormCVC" xml:space="preserve">
+    <value>CVC/CID</value>
+  </data>
+  <data name="Payment_PayCreditCard" xml:space="preserve">
+    <value>Betaal met creditcard</value>
+  </data>
+  <data name="Payment_Required" xml:space="preserve">
+    <value>Vereist</value>
+  </data>
+  <data name="Payment_ValidateExpiryRequired" xml:space="preserve">
+    <value>Vervaldatum is vereist</value>
+  </data>
+  <data name="Payment_ValidateExpiryDue" xml:space="preserve">
+    <value>Deze kaart is vervallen</value>
+  </data>
+  <data name="Payment_ValidateNameRequired" xml:space="preserve">
+    <value>Naam kaarthouder is verreist</value>
+  </data>
+  <data name="Payment_ValidateNumberRequired" xml:space="preserve">
+    <value>Kaartnummer is verist</value>
+  </data>
+  <data name="Payment_ValidateNumberInvalid" xml:space="preserve">
+    <value>Kaartnummer is ongeldig</value>
+  </data>
+  <data name="Payment_ValidateCvcRequired" xml:space="preserve">
+    <value>CVC/CIC is vereist</value>
+  </data>
+  <data name="Payment_ValidateCvcInvalid" xml:space="preserve">
+    <value>CVC/CIC is ongeldig</value>
+  </data>
+  <data name="PaymentSuccess_Title" xml:space="preserve">
+    <value>Betaald!</value>
+  </data>
+  <data name="PaymentSuccess_RememberTickets" xml:space="preserve">
+    <value>Vergeet niet je kaartjes te downloaden!</value>
+  </data>
+  <data name="PaymentSuccess_PrintTickets" xml:space="preserve">
+    <value>Print tickets</value>
+  </data>
+  <data name="PaymentSuccess_ShareOn" xml:space="preserve">
+    <value>Deel op {0}</value>
+  </data>
+  <data name="PaymentSuccess_PosterAlt" xml:space="preserve">
+    <value>Poster voor {0}</value>
+  </data>
+  <data name="PaymentSuccess_Share" xml:space="preserve">
+    <value>Delen</value>
+  </data>
 </root>

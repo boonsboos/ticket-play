@@ -18,7 +18,7 @@
         <div class="d-flex py-2">
             <InputText type="password" class="form-control" DisplayName="@AppResources.Login_Password" @bind-Value="LoginForm.Password" placeholder="@AppResources.Login_Password" />
         </div>
-    </EditForm>
 
-    <button class="btn btn-outline-primary my-4" @onclick="SubmitLogin">@AppResources.Login_Action</button>
+        <button type="submit" class="btn btn-outline-primary my-4" @onclick="SubmitLogin">@AppResources.Login_Action</button>
+    </EditForm>
 </div>

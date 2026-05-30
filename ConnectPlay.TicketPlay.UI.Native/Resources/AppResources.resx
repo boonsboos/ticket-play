@@ -311,4 +311,76 @@
   <data name="Arrangements_Specials" xml:space="preserve">
     <value>Specials</value>
   </data>
+  <data name="Screening_ShareMessage" xml:space="preserve">
+    <value>I'm going to see {0} on {1} at {2}!</value>
+  </data>
+  <data name="Payment_Title" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="Payment_SelectBank" xml:space="preserve">
+    <value>Select your bank</value>
+  </data>
+  <data name="Payment_BankPlaceholder" xml:space="preserve">
+    <value>-- Bank --</value>
+  </data>
+  <data name="Payment_PayIdeal" xml:space="preserve">
+    <value>Pay with iDeal/Wero</value>
+  </data>
+  <data name="Payment_CardFormName" xml:space="preserve">
+    <value>Name cardholder</value>
+  </data>
+  <data name="Payment_CardFormNumber" xml:space="preserve">
+    <value>Credit card number</value>
+  </data>
+  <data name="Payment_CardFormExpiry" xml:space="preserve">
+    <value>Expiry</value>
+  </data>
+  <data name="Payment_CardFormCVC" xml:space="preserve">
+    <value>CVC/CID</value>
+  </data>
+  <data name="Payment_PayCreditCard" xml:space="preserve">
+    <value>Pay with credit card</value>
+  </data>
+  <data name="Payment_Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="Payment_ValidateExpiryRequired" xml:space="preserve">
+    <value>Expiry is required</value>
+  </data>
+  <data name="Payment_ValidateExpiryDue" xml:space="preserve">
+    <value>This card is expired</value>
+  </data>
+  <data name="Payment_ValidateNameRequired" xml:space="preserve">
+    <value>Cardholder name is required</value>
+  </data>
+  <data name="Payment_ValidateNumberRequired" xml:space="preserve">
+    <value>Card number is required</value>
+  </data>
+  <data name="Payment_ValidateNumberInvalid" xml:space="preserve">
+    <value>Card number is invalid</value>
+  </data>
+  <data name="Payment_ValidateCvcRequired" xml:space="preserve">
+    <value>CVC/CIC is required</value>
+  </data>
+  <data name="Payment_ValidateCvcInvalid" xml:space="preserve">
+    <value>CVC/CIC is invalid</value>
+  </data>
+  <data name="PaymentSuccess_Title" xml:space="preserve">
+    <value>All done!</value>
+  </data>
+  <data name="PaymentSuccess_RememberTickets" xml:space="preserve">
+    <value>Don't forget to download your tickets!</value>
+  </data>
+  <data name="PaymentSuccess_PrintTickets" xml:space="preserve">
+    <value>Print tickets</value>
+  </data>
+  <data name="PaymentSuccess_ShareOn" xml:space="preserve">
+    <value>Share on {0}</value>
+  </data>
+  <data name="PaymentSuccess_PosterAlt" xml:space="preserve">
+    <value>Poster for {0}</value>
+  </data>
+  <data name="PaymentSuccess_Share" xml:space="preserve">
+    <value>Share</value>
+  </data>
 </root>

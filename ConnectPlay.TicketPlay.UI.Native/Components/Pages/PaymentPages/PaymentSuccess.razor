@@ -1,0 +1,26 @@
+﻿@page "/payment/success"
+
+<div class="d-flex justify-content-center align-items-center h-100 flex-column m-5 pt-5">
+    <div class="text-center">
+
+        <h1>@AppResources.PaymentSuccess_Title</h1>
+
+        <h2>@DisplayTitle</h2>
+
+        <p>@AppResources.PaymentSuccess_RememberTickets</p>
+        <img class="tickets" src="@DisplayPosterUrl" alt="@string.Format(AppResources.PaymentSuccess_PosterAlt, DisplayTitle)" />
+    </div>
+
+    @if (_orderFlowService.Order is not null)
+    {
+        <div class="row">
+            <a class="btn btn-primary mt-3" href="@GetTicketFileUrl()" target="_blank" rel="noopener noreferrer">
+                <i class="bi bi-printer"></i>&nbsp;@AppResources.PaymentSuccess_PrintTickets
+            </a>
+        </div>
+    }
+
+    <div class="d-flex gap-3 m-5">
+        <button class="btn btn-secondary" @onclick="ShareAsync">@AppResources.PaymentSuccess_Share</button>
+    </div>
+</div>

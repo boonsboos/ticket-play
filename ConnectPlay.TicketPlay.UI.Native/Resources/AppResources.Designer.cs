@@ -475,6 +475,222 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to -- Bank --.
+        /// </summary>
+        internal static string Payment_BankPlaceholder {
+            get {
+                return ResourceManager.GetString("Payment_BankPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CVC/CID.
+        /// </summary>
+        internal static string Payment_CardFormCVC {
+            get {
+                return ResourceManager.GetString("Payment_CardFormCVC", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expiry.
+        /// </summary>
+        internal static string Payment_CardFormExpiry {
+            get {
+                return ResourceManager.GetString("Payment_CardFormExpiry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name cardholder.
+        /// </summary>
+        internal static string Payment_CardFormName {
+            get {
+                return ResourceManager.GetString("Payment_CardFormName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Credit card number.
+        /// </summary>
+        internal static string Payment_CardFormNumber {
+            get {
+                return ResourceManager.GetString("Payment_CardFormNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pay with credit card.
+        /// </summary>
+        internal static string Payment_PayCreditCard {
+            get {
+                return ResourceManager.GetString("Payment_PayCreditCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pay with iDeal/Wero.
+        /// </summary>
+        internal static string Payment_PayIdeal {
+            get {
+                return ResourceManager.GetString("Payment_PayIdeal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required.
+        /// </summary>
+        internal static string Payment_Required {
+            get {
+                return ResourceManager.GetString("Payment_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select your bank.
+        /// </summary>
+        internal static string Payment_SelectBank {
+            get {
+                return ResourceManager.GetString("Payment_SelectBank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Payment.
+        /// </summary>
+        internal static string Payment_Title {
+            get {
+                return ResourceManager.GetString("Payment_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CVC/CIC is invalid.
+        /// </summary>
+        internal static string Payment_ValidateCvcInvalid {
+            get {
+                return ResourceManager.GetString("Payment_ValidateCvcInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CVC/CIC is required.
+        /// </summary>
+        internal static string Payment_ValidateCvcRequired {
+            get {
+                return ResourceManager.GetString("Payment_ValidateCvcRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This card is expired.
+        /// </summary>
+        internal static string Payment_ValidateExpiryDue {
+            get {
+                return ResourceManager.GetString("Payment_ValidateExpiryDue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expiry is required.
+        /// </summary>
+        internal static string Payment_ValidateExpiryRequired {
+            get {
+                return ResourceManager.GetString("Payment_ValidateExpiryRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cardholder name is required.
+        /// </summary>
+        internal static string Payment_ValidateNameRequired {
+            get {
+                return ResourceManager.GetString("Payment_ValidateNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Card number is invalid.
+        /// </summary>
+        internal static string Payment_ValidateNumberInvalid {
+            get {
+                return ResourceManager.GetString("Payment_ValidateNumberInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Card number is required.
+        /// </summary>
+        internal static string Payment_ValidateNumberRequired {
+            get {
+                return ResourceManager.GetString("Payment_ValidateNumberRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Poster for {0}.
+        /// </summary>
+        internal static string PaymentSuccess_PosterAlt {
+            get {
+                return ResourceManager.GetString("PaymentSuccess_PosterAlt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print tickets.
+        /// </summary>
+        internal static string PaymentSuccess_PrintTickets {
+            get {
+                return ResourceManager.GetString("PaymentSuccess_PrintTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t forget to download your tickets!.
+        /// </summary>
+        internal static string PaymentSuccess_RememberTickets {
+            get {
+                return ResourceManager.GetString("PaymentSuccess_RememberTickets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Share.
+        /// </summary>
+        internal static string PaymentSuccess_Share {
+            get {
+                return ResourceManager.GetString("PaymentSuccess_Share", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Share on {0}.
+        /// </summary>
+        internal static string PaymentSuccess_ShareOn {
+            get {
+                return ResourceManager.GetString("PaymentSuccess_ShareOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All done!.
+        /// </summary>
+        internal static string PaymentSuccess_Title {
+            get {
+                return ResourceManager.GetString("PaymentSuccess_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I&apos;m going to see {0} on {1} at {2}!.
+        /// </summary>
+        internal static string Screening_ShareMessage {
+            get {
+                return ResourceManager.GetString("Screening_ShareMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         internal static string SeatModal_Cancel {
