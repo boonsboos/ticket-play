@@ -109,6 +109,7 @@ public class Startup(IConfiguration configuration)
             .AddScoped<IOrderRepository, OrderRepository>()
             .AddScoped<INewsletterRepository, NewsletterRepository>()
             .AddScoped<IArrangementRepository, ArrangementRepository>()
+            .AddSingleton<IFavoritesRepository, FavoritesRepository>()
             .AddScoped<IOrderArrangementRepository, OrderArrangementRepository>();
 
         services.AddSingleton<IRefreshTokenRepository, RefreshTokenRepository>();

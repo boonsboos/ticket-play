@@ -4,6 +4,7 @@ using ConnectPlay.TicketPlay.UI.Native.Abstract;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Refit;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace ConnectPlay.TicketPlay.UI.Native.Services;
 
@@ -41,6 +42,15 @@ public class ApiService : IApiService, IHostedService, IDisposable
     public bool IsOffline => this._offline;
 
     public Task<string> GetTokenAsync() => this._secureStorage.GetAsync(TokenKey)!;
+
+    public async Task<Guid> GetUserIdAsync()
+    {
+        var token = await GetTokenAsync();
+
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+
+        return Guid.Parse(jwt.Claims.First(c => c.Type == JwtRegisteredClaimNames.Sub).Value);
+    }
 
     public async Task LoginAsync(string email, string password)
     {

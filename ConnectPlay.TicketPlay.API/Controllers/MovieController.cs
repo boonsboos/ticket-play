@@ -1,6 +1,7 @@
 using ConnectPlay.TicketPlay.Abstract.Repositories;
-using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.Contracts.Movie;
+using ConnectPlay.TicketPlay.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -12,10 +13,12 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 public class MovieController : ControllerBase // Controllerbase provides useful utility methods for returning HTTP responses
 {
     private readonly IMovieRepository _movieRepository;
+    private readonly IFavoritesRepository _favoritesRepository;
 
-    public MovieController(IMovieRepository movieRepository)
+    public MovieController(IMovieRepository movieRepository, IFavoritesRepository favoritesRepository)
     {
         _movieRepository = movieRepository;
+        _favoritesRepository = favoritesRepository;
     }
 
     // ProducesResponseType is not required, but is useful for API documentation and tools like Swagger to understand what this endpoint returns.
@@ -91,13 +94,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(movie);
     }
 
-    [HttpGet]
-    [Route("search")]
-    public async Task<IActionResult> Search([FromQuery] string movie, [FromBody] MovieFilters? filters)
-    {
-        return NotFound();
-    }
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -117,5 +113,57 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
 
         await _movieRepository.CreateMovieAsync(dto);
         return StatusCode(StatusCodes.Status201Created); // "Movie was created", no payload given.
+    }
+
+    [Authorize]
+    [HttpPost("{movieId:int}/favorite")]
+    public async Task<IActionResult> AddFavoriteAsync([FromRoute] int movieId)
+    {
+        if(this.HttpContext.TryGetUserId(out var userId))
+        {
+            return Problem("Malformatted user id");
+        }
+
+        var movie = await _movieRepository.GetMovieByIdAsync(movieId, "en");
+
+        if (movie == null)
+            return NotFound();
+
+        await this._favoritesRepository.AddFavoriteAsync(userId, movieId);
+
+        return Created();
+    }
+
+    [Authorize]
+    [HttpDelete("{movieId:int}/favorite")]
+    public async Task<IActionResult> RemoveFavoriteAsync([FromRoute] int movieId)
+    {
+        if (this.HttpContext.TryGetUserId(out var userId))
+        {
+            return Problem("Malformatted user id");
+        }
+
+        var movie = await _movieRepository.GetMovieByIdAsync(movieId, "en");
+
+        if (movie == null)
+            return NotFound();
+
+        await this._favoritesRepository.RemoveFavoriteAsync(userId, movieId);
+
+        return NoContent();
+    }
+
+    [Authorize]
+    [HttpGet("favorites")]
+    public async Task<IActionResult> GetUserFavoritesAsync([FromRoute] int movieId)
+    {
+        if (this.HttpContext.TryGetUserId(out var userId))
+        {
+            return Problem("Malformatted user id");
+        }
+
+        var favorites = await this._favoritesRepository.GetFavoritesAsync(userId);
+
+        return Ok(favorites);
     }
 }
