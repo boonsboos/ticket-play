@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConnectPlay.TicketPlay.Models;
@@ -8,9 +9,11 @@ public record Order
 {
     [Key]
     public int Id { get; set; }
+    public User? Orderer { get; set; }
     public ICollection<Ticket> Tickets { get; set; } = [];
     public ICollection<OrderArrangement> Arrangements { get; set; } = [];
     public OrderStatus Status { get; set; } = OrderStatus.Pending; // change to set because we need to update the status and with init it cant be changed
+    [Precision(16,2)]
     public required decimal Total { get; set; }
     public string OrderCode { get; set; } = GenerateOrderCode();
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
-public class RefreshTokenRepository(IDbContextFactory<AuthenticationContext> contextFactory) : IRefreshTokenRepository
+public class RefreshTokenRepository(IDbContextFactory<TicketPlayContext> contextFactory) : IRefreshTokenRepository
 {
     public async Task<RefreshToken> AddRefreshTokenAsync(Guid userId, string token, DateTime? expiresAt = null)
     {

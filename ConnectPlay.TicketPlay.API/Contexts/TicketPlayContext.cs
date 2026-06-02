@@ -1,10 +1,13 @@
 ﻿using ConnectPlay.TicketPlay.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ConnectPlay.TicketPlay.API.Contexts;
 
-public class TicketPlayContext : DbContext
+public class TicketPlayContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<Movie> Movies { get; set; }
     public DbSet<Seat> Seats { get; set; }
     public DbSet<Hall> Halls { get; set; }
@@ -31,5 +34,7 @@ public class TicketPlayContext : DbContext
         modelBuilder.Entity<Movie>()
             .HasIndex(m => m.Title)
             .IsUnique();
+
+        base.OnModelCreating(modelBuilder);
     }
 }

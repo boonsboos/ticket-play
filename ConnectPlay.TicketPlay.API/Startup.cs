@@ -57,7 +57,7 @@ public class Startup(IConfiguration configuration)
     {
         services.AddIdentityCore<User>()
             .AddRoles<IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<AuthenticationContext>();
+            .AddEntityFrameworkStores<TicketPlayContext>();
         
         var section = configuration.GetRequiredSection("JWT");
         services.AddOptions<JWTOptions>()
@@ -95,7 +95,6 @@ public class Startup(IConfiguration configuration)
         var version = new MariaDbServerVersion(new Version(12, 0, 2));
 
         services
-            .AddDbContextFactory<AuthenticationContext>(o => o.UseMySql(connString, version))
             .AddDbContextFactory<TicketPlayContext>(o => o.UseMySql(connString, version));
     }
 

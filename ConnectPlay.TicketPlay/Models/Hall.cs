@@ -12,7 +12,5 @@ public record Hall
     public int Capacity { get; set; } = 0;
     public required bool WheelchairAccessible { get; init; }
     public required bool Has3DProjector { get; init; }
-
     public ICollection<Seat> Seats { get; set; } = [];
-
 }

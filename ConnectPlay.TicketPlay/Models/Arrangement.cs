@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ConnectPlay.TicketPlay.Models;
@@ -8,6 +9,8 @@ public record Arrangement
 {
     [Key]
     public int Id { get; set; }
+
+    [Precision(16, 2)]
     public required decimal Price { get; init; }
     public required string Name { get; init; }
     public required ArrangementType Type { get; init; }
