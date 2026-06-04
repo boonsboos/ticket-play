@@ -23,6 +23,17 @@ else
                     @if (!string.IsNullOrWhiteSpace(DisplayMovieMetaText))
                     {
                         <p class="text-muted">@DisplayMovieMetaText</p>
+                        <button class="btn btn-outline-primary mb-2" @onclick="ToggleFavoriteAsync">
+                            @if (!apiService.FavouriteMovies.Any(m => m.Id == Id))
+                            {
+                                <i class="bi bi-heart"></i>
+                            }
+                            else
+                            {
+                                <i class="bi bi-heart-fill"></i>
+                            }
+
+                        </button>
                     }
                     @if (ShowStandardMovieDetails)
                     {
@@ -34,11 +45,6 @@ else
                                     <span class="badge rounded-pill bg-purple me-1">@tag</span>
                                 }
                             </div>
-                        }
-
-                        @if ()
-                        {
-                            
                         }
                     }
                     @if (!string.IsNullOrWhiteSpace(DisplayDescription))

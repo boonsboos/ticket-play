@@ -48,6 +48,8 @@ public partial class CreateArrangement : TranslatableComponent
             await ShowError(T["createArrangement.error"]);
         } finally {
             isSubmitting = false;
+
+            await HideToastAfterDelay();
         }
     }
 
@@ -56,8 +58,6 @@ public partial class CreateArrangement : TranslatableComponent
         toastMessage = message;
         toastColor = "bg-success";
         showToast = true;
-
-        await HideToastAfterDelay();
     }
 
     private async Task ShowError(string message)
@@ -65,13 +65,10 @@ public partial class CreateArrangement : TranslatableComponent
         toastMessage = message;
         toastColor = "bg-danger";
         showToast = true;
-
-        await HideToastAfterDelay();
     }
 
     private async Task HideToastAfterDelay()
     {
-        // delay hiding the toast
         await Task.Delay(5000);
 
         await InvokeAsync(() =>

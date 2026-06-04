@@ -18,6 +18,8 @@ public class TicketPlayContext : IdentityDbContext<User, IdentityRole<Guid>, Gui
     public DbSet<Arrangement> Arrangements { get; set; }
     public DbSet<OrderArrangement> OrderArrangements { get; set; }
 
+    public DbSet<Favorite> Favorites { get; set; }
+
     public TicketPlayContext(DbContextOptions options) : base(options)
     {
     }

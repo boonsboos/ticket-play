@@ -3,10 +3,11 @@ using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.UI.App.Components.Base;
+using Refit;
 
 namespace ConnectPlay.TicketPlay.UI.App.Pages.Manager;
 
-public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
+public partial class CreateMovie(IMovieApi movieApi, ILogger<CreateMovie> logger) : TranslatableComponent
 {
     protected CreateMovieFormModel model = new();
 
@@ -55,6 +56,10 @@ public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
             successMessage = "Movie has been created successfully";
             model = new();
         }
+        catch (ApiException apiEx)
+        {
+            logger.LogError(apiEx, "OOPS! {Error}", apiEx.Content);
+        } 
         catch (Exception ex)
         {
             errorMessage = $"Unexpected error: {ex.Message}";
@@ -94,7 +99,6 @@ public partial class CreateMovie(IMovieApi movieApi) : TranslatableComponent
         public string? Language { get; set; }
 
         [Required]
-        [Range(0, 18)]
         public MinimumAgeRating? MinimumAge { get; set; }
 
         /// <summary>

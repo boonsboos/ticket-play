@@ -1,6 +1,9 @@
-﻿namespace ConnectPlay.TicketPlay.Models;
+﻿using System.Text.Json.Serialization;
 
-public enum MinimumAgeRating: byte
+namespace ConnectPlay.TicketPlay.Models;
+
+[JsonConverter(typeof(JsonStringEnumConverter<MinimumAgeRating>))]
+public enum MinimumAgeRating : byte
 {
     AL = 0,
     Age6 = 6,

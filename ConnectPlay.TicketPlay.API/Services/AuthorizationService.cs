@@ -76,10 +76,10 @@ public class AuthorizationService : IAuthorizationService
         return await MakeJwtAsync(user, hash);
     }
 
-    private string GenerateRefreshToken() =>
+    private static string GenerateRefreshToken() =>
         Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
-    private string HashRefreshToken(string token)
+    private static string HashRefreshToken(string token)
     {
         var bytes = Encoding.UTF8.GetBytes(token);
         var hash = SHA256.HashData(bytes);

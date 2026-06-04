@@ -28,4 +28,13 @@ public interface IMovieApi
 
     [Post("/movie")]
     Task CreateMovieAsync(CreateMovieRequest movie);
+
+    [Post("/movie/{id}/favorite")]
+    Task AddMovieAsFavoriteAsync([Header("Authorization")] string jwt, int id);
+
+    [Delete("/movie/{id}/favorite")]
+    Task RemoveMovieAsFavoriteAsync([Header("Authorization")] string jwt, int id);
+
+    [Post("/movie/favorites")]
+    Task<ApiResponse<IEnumerable<Movie>>> GetFavoriteMoviesAsync([Header("Authorization")] string jwt);
 }

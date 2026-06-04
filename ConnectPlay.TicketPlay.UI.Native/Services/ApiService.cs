@@ -1,5 +1,6 @@
 using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.Contracts.Authentication;
+using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Native.Abstract;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -10,7 +11,7 @@ namespace ConnectPlay.TicketPlay.UI.Native.Services;
 
 public class ApiService : IApiService, IHostedService, IDisposable
 {
-    private SemaphoreSlim _refreshLock = new(1, 1);
+    private readonly SemaphoreSlim _refreshLock = new(1, 1);
     private bool disposedValue;
 
     private Timer? _refreshTimer;
@@ -18,6 +19,7 @@ public class ApiService : IApiService, IHostedService, IDisposable
     private bool _authenticated = false;
 
     private readonly IAuthApi _authApi;
+    private readonly IMovieApi _movieApi;
     private readonly ISecureStorage _secureStorage;
     private readonly ILogger<ApiService> _logger;
     private readonly IConnectivity _connectivity;
@@ -28,11 +30,13 @@ public class ApiService : IApiService, IHostedService, IDisposable
 
     public ApiService(
         IAuthApi authApi,
+        IMovieApi movieApi,
         ISecureStorage secureStorage,
         IConnectivity connectivity,
         ILogger<ApiService> logger)
     {
         this._authApi = authApi;
+        this._movieApi = movieApi;
         this._secureStorage = secureStorage;
         this._logger = logger;
         this._connectivity = connectivity;
@@ -40,6 +44,8 @@ public class ApiService : IApiService, IHostedService, IDisposable
 
     public bool IsAuthenticated => this._authenticated;
     public bool IsOffline => this._offline;
+
+    public IEnumerable<Movie> FavouriteMovies { get; private set; } = [];
 
     public Task<string> GetTokenAsync() => this._secureStorage.GetAsync(TokenKey)!;
 
@@ -72,7 +78,7 @@ public class ApiService : IApiService, IHostedService, IDisposable
 
             _logger.LogInformation("Logged in succesfully");
 
-            await this._secureStorage.SetAsync(TokenKey, response.Content!.Token);
+            await this._secureStorage.SetAsync(TokenKey, $"Bearer {response.Content!.Token}");
             await this._secureStorage.SetAsync(RefreshKey, response.Content!.RefreshToken);
             await this._secureStorage.SetAsync(ExpiresKey, response.Content!.ExpiresIn.ToString());
 
@@ -129,6 +135,39 @@ public class ApiService : IApiService, IHostedService, IDisposable
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        await StartAuthenticationLoopAsync();
+
+        if (IsAuthenticated)
+        {
+            await FetchFavoriteMovies();
+        }
+    }
+
+    public async Task RefreshAccountDataAsync()
+    {
+        if (!IsAuthenticated)
+        {
+            this._logger.LogError("Unable to refresh account data as the user is unauthenticated.");
+            return;
+        }
+
+        await FetchFavoriteMovies();
+    }
+
+    private async Task FetchFavoriteMovies()
+    {
+        var response = await this._movieApi.GetFavoriteMoviesAsync(await this.GetTokenAsync());
+
+        if (!response.IsSuccessStatusCode)
+        {
+            this._logger.LogError("Failed to fetch favorited movies for user: {Error}", response.Error);
+        }
+
+        this.FavouriteMovies = response.Content ?? [];
+    }
+
+    private async Task StartAuthenticationLoopAsync()
+    {
         this._logger.LogDebug("Checking authentication status");
 
         // if we are not connected, check if our credentials are set
@@ -142,7 +181,8 @@ public class ApiService : IApiService, IHostedService, IDisposable
                 // we can assume we have never been logged in
                 this._logger.LogInformation("Application is offline and appears to not have been authenticated");
                 this._authenticated = false;
-            } else
+            }
+            else
             {
                 // we assume that we are logged in
                 this._logger.LogInformation("Application is offline, we cannot refresh the token. Assuming we have been logged in at some point");

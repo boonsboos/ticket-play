@@ -24,11 +24,16 @@ public class FavoritesRepository : IFavoritesRepository
         var user = await dbContext.Users.Where(u =>  u.Id == userId).FirstOrDefaultAsync()
             ?? throw new ArgumentOutOfRangeException($"User {userId} does not exist anymore while adding a favorite?");
 
-        if (user.Favorites.Contains(movie)) {
+        if (user.Favorites.Any(f => f.Movie.Id == movieId)) {
             return;
         }
 
-        user.Favorites.Add(movie);
+        dbContext.Favorites.Add(new Favorite
+        {
+            Id = Guid.NewGuid(),
+            Movie = movie,
+            User = user
+        });
 
         await dbContext.SaveChangesAsync();
     }
@@ -37,10 +42,12 @@ public class FavoritesRepository : IFavoritesRepository
     {
         await using var dbContext = await this._dbContextFactory.CreateDbContextAsync();
 
-        var user = await dbContext.Users.Include(u => u.Favorites).Where(u => u.Id == userId).FirstOrDefaultAsync()
-            ?? throw new ArgumentOutOfRangeException($"User {userId} does not exist anymore while fetching favorites?");
-
-        return user.Favorites;
+        return await dbContext.Favorites
+            .Include(f => f.Movie)
+            .Include(f => f.User)
+            .Where(f => f.User.Id == userId)
+            .Select(f => f.Movie)
+            .ToListAsync();
     }
 
     public async Task RemoveFavoriteAsync(Guid userId, int movieId)
@@ -53,7 +60,9 @@ public class FavoritesRepository : IFavoritesRepository
         var user = await dbContext.Users.Where(u => u.Id == userId).FirstOrDefaultAsync()
             ?? throw new ArgumentOutOfRangeException($"User {userId} does not exist anymore while removing favorites?");
 
-        user.Favorites.Remove(movie);
+        var fav = user.Favorites.First(f => f.Movie.Id == movie.Id && f.User.Id == user.Id);
+
+        user.Favorites.Remove(fav);
 
         await dbContext.SaveChangesAsync();
     }

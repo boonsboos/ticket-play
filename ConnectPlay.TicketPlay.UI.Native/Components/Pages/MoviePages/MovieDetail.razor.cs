@@ -6,6 +6,7 @@ using ConnectPlay.TicketPlay.UI.Native.Extensions;
 using ConnectPlay.TicketPlay.UI.Native.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.Design;
 using System.Globalization;
 
 namespace ConnectPlay.TicketPlay.UI.Native.Components.Pages.MoviePages;
@@ -18,6 +19,7 @@ public partial class MovieDetail : ComponentBase
     private readonly IMovieApi movieRepository;
     private readonly IScreeningApi screeningRepository;
     private readonly NavigationManager navigationManager;
+    private readonly IApiService apiService;
     private readonly ILogger<MovieDetail> logger;
 
     private MovieDetailResponse? movie;
@@ -56,12 +58,14 @@ public partial class MovieDetail : ComponentBase
         IMovieApi movieRepository,
         IScreeningApi screeningRepository,
         NavigationManager navigationManager,
+        IApiService apiService,
         ILogger<MovieDetail> logger)
     {
         this.orderFlowService = orderFlowService;
         this.movieRepository = movieRepository;
         this.screeningRepository = screeningRepository;
         this.navigationManager = navigationManager;
+        this.apiService = apiService;
         this.logger = logger;
     }
 
@@ -132,5 +136,19 @@ public partial class MovieDetail : ComponentBase
         }
 
         return movie!.GetTranslatedGenre();
+    }
+
+    private async Task ToggleFavoriteAsync()
+    {
+        if (!apiService.FavouriteMovies.Any(m => m.Id == Id))
+        {
+            await this.movieRepository.AddMovieAsFavoriteAsync(await apiService.GetTokenAsync(), Id);
+        } else
+        {
+            await this.movieRepository.RemoveMovieAsFavoriteAsync(await apiService.GetTokenAsync(), Id);
+        }
+
+        await apiService.RefreshAccountDataAsync();
+        StateHasChanged();
     }
 }

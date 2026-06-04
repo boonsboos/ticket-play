@@ -2,6 +2,7 @@ using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -14,11 +15,13 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
 {
     private readonly IMovieRepository _movieRepository;
     private readonly IFavoritesRepository _favoritesRepository;
+    private readonly UserManager<User> _userManager;
 
-    public MovieController(IMovieRepository movieRepository, IFavoritesRepository favoritesRepository)
+    public MovieController(IMovieRepository movieRepository, IFavoritesRepository favoritesRepository, UserManager<User> userManager)
     {
         _movieRepository = movieRepository;
         _favoritesRepository = favoritesRepository;
+        _userManager = userManager;
     }
 
     // ProducesResponseType is not required, but is useful for API documentation and tools like Swagger to understand what this endpoint returns.
@@ -119,10 +122,7 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpPost("{movieId:int}/favorite")]
     public async Task<IActionResult> AddFavoriteAsync([FromRoute] int movieId)
     {
-        if(this.HttpContext.TryGetUserId(out var userId))
-        {
-            return Problem("Malformatted user id");
-        }
+        var userId = Guid.Parse(_userManager.GetUserId(HttpContext.User)!);
 
         var movie = await _movieRepository.GetMovieByIdAsync(movieId, "en");
 
@@ -138,10 +138,7 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpDelete("{movieId:int}/favorite")]
     public async Task<IActionResult> RemoveFavoriteAsync([FromRoute] int movieId)
     {
-        if (this.HttpContext.TryGetUserId(out var userId))
-        {
-            return Problem("Malformatted user id");
-        }
+        var userId = Guid.Parse(_userManager.GetUserId(HttpContext.User)!);
 
         var movie = await _movieRepository.GetMovieByIdAsync(movieId, "en");
 
@@ -155,12 +152,9 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
 
     [Authorize]
     [HttpGet("favorites")]
-    public async Task<IActionResult> GetUserFavoritesAsync([FromRoute] int movieId)
+    public async Task<IActionResult> GetUserFavoritesAsync()
     {
-        if (this.HttpContext.TryGetUserId(out var userId))
-        {
-            return Problem("Malformatted user id");
-        }
+        var userId = Guid.Parse(_userManager.GetUserId(HttpContext.User)!);
 
         var favorites = await this._favoritesRepository.GetFavoritesAsync(userId);
 
