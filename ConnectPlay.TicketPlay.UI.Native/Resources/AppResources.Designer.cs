@@ -304,6 +304,15 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ticket &amp; Play Notifications.
+        /// </summary>
+        internal static string Notification_ChannelDescription {
+            get {
+                return ResourceManager.GetString("Notification_ChannelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3D Fee.
         /// </summary>
         internal static string OrderOverview_3DFee {

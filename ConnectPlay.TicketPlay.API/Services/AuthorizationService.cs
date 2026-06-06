@@ -49,7 +49,7 @@ public class AuthorizationService : IAuthorizationService
 
         await refreshTokenRepository.AddRefreshTokenAsync(
             user.Id,
-            this.HashRefreshToken(refreshToken)
+            HashRefreshToken(refreshToken)
         );
 
         return new TokenResponse

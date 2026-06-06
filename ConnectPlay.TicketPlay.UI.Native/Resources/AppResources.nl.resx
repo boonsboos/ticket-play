@@ -381,4 +381,7 @@
   <data name="PaymentSuccess_Share" xml:space="preserve">
     <value>Delen</value>
   </data>
+  <data name="Notification_ChannelDescription" xml:space="preserve">
+    <value>Ticket &amp; Play push-meldingen</value>
+  </data>
 </root>

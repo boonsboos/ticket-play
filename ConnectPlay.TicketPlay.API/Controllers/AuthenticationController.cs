@@ -85,7 +85,7 @@ public class AuthenticationController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
     {
-        if (!HttpContext.TryGetUserId(out var userId))
+        if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User), out var userId))
         {
             return BadRequest("Invalid User Id");
         }
@@ -108,7 +108,7 @@ public class AuthenticationController : ControllerBase
     [Authorize]
     public async Task<IActionResult> Logout()
     {
-        if(!HttpContext.TryGetUserId(out var userId))
+        if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User), out var userId))
         {
             return BadRequest("Invalid User Id");
         }

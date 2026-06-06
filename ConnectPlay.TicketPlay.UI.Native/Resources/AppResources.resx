@@ -383,4 +383,7 @@
   <data name="PaymentSuccess_Share" xml:space="preserve">
     <value>Share</value>
   </data>
+  <data name="Notification_ChannelDescription" xml:space="preserve">
+    <value>Ticket &amp; Play Notifications</value>
+  </data>
 </root>

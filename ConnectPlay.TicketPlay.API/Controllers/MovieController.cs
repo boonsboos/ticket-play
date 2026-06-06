@@ -122,7 +122,10 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpPost("{movieId:int}/favorite")]
     public async Task<IActionResult> AddFavoriteAsync([FromRoute] int movieId)
     {
-        var userId = Guid.Parse(_userManager.GetUserId(HttpContext.User)!);
+        if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User)!, out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
 
         var movie = await _movieRepository.GetMovieByIdAsync(movieId, "en");
 
@@ -138,7 +141,10 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpDelete("{movieId:int}/favorite")]
     public async Task<IActionResult> RemoveFavoriteAsync([FromRoute] int movieId)
     {
-        var userId = Guid.Parse(_userManager.GetUserId(HttpContext.User)!);
+        if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User)!, out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
 
         var movie = await _movieRepository.GetMovieByIdAsync(movieId, "en");
 
@@ -154,7 +160,10 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
     [HttpGet("favorites")]
     public async Task<IActionResult> GetUserFavoritesAsync()
     {
-        var userId = Guid.Parse(_userManager.GetUserId(HttpContext.User)!);
+        if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User)!, out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
 
         var favorites = await this._favoritesRepository.GetFavoritesAsync(userId);
 

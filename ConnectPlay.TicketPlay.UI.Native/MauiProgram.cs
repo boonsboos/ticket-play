@@ -43,6 +43,13 @@ public static class MauiProgram
         AddAppServices(builder.Services);
         AddMauiStuff(builder.Services);
 
+#if ANDROID
+        builder.Services.AddSingleton<INotificationService, Platforms.Android.Services.AndroidNotificationService>();
+        builder.Services.AddSingleton<Platforms.Android.TimedNotificationHandler> ();
+#elif WINDOWS
+        // TODO: add windows notifications dummy
+#endif
+
         return builder.Build();
     }
 

@@ -17,8 +17,7 @@ public class HallServiceTests
         var hallRepository = Substitute.For<IHallRepository>();
         hallRepository.GetHallByIdAsync(Arg.Any<int>()).Returns((Hall?)null);
 
-        var logger = Substitute.For<ILogger<HallOrderService>>();
-        var service = new HallOrderService(hallRepository, logger);
+        var service = new HallOrderService(hallRepository);
 
         // Act
         var result = await service.GetHallLayoutAsync(99);
@@ -60,8 +59,7 @@ public class HallServiceTests
         };
         hallRepository.GetHallByIdAsync(1).Returns(hall);
 
-        var logger = Substitute.For<ILogger<HallOrderService>>();
-        var service = new HallOrderService(hallRepository, logger);
+        var service = new HallOrderService(hallRepository);
 
         // Act
         var result = await service.GetHallLayoutAsync(1);
@@ -98,8 +96,7 @@ public class HallServiceTests
         };
         hallRepository.GetHallByIdAsync(1).Returns(hall);
 
-        var logger = Substitute.For<ILogger<HallOrderService>>();
-        var service = new HallOrderService(hallRepository, logger);
+        var service = new HallOrderService(hallRepository);
 
         // Act
         var result = await service.GetHallLayoutAsync(1);
@@ -132,8 +129,7 @@ public class HallServiceTests
         };
         hallRepository.GetHallByIdAsync(1).Returns(hall);
 
-        var logger = Substitute.For<ILogger<HallOrderService>>();
-        var service = new HallOrderService(hallRepository, logger);
+        var service = new HallOrderService(hallRepository);
 
         // Act
         var result = await service.GetHallLayoutAsync(1);
@@ -160,8 +156,7 @@ public class HallServiceTests
         };
         hallRepository.GetHallByIdAsync(1).Returns(hall);
 
-        var logger = Substitute.For<ILogger<HallOrderService>>();
-        var service = new HallOrderService(hallRepository, logger);
+        var service = new HallOrderService(hallRepository);
 
         // Act
         var result = await service.GetHallLayoutAsync(1);
