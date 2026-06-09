@@ -9,13 +9,16 @@ public interface IScreeningApi
     [Post("/screening/new")]
     Task CreateScreeningAsync([Body] CreateScreeningRequest dto);
 
-    [Get("/screening/{movieId}/today")]
+    [Get("/screening/movie/{movieId}/today")]
     Task<IEnumerable<Screening>> GetTodayByMovieIdAsync(int movieId);
 
-    [Get("/screening/{movieId}")]
+    [Get("/screening/movie/{movieId}")]
     Task<IEnumerable<Screening>> GetScreeningsByMovieIdAsync(int movieId);
 
     [Get("/screening/preview")]
     Task<IEnumerable<Screening>> GetScreeningsForMoviePreviewAsync();
+
+    [Get("/screening/{id}")]
+    Task<ApiResponse<Screening>> GetScreeningById(int id);
 }
 

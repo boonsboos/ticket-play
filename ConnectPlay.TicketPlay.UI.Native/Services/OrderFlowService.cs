@@ -6,6 +6,8 @@ using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Native.Abstract;
+using ConnectPlay.TicketPlay.UI.Native.Notifications;
+using ConnectPlay.TicketPlay.UI.Native.Resources;
 using Microsoft.Extensions.Logging;
 using Refit;
 
@@ -18,6 +20,8 @@ public class OrderFlowService : IOrderFlowService
     private readonly IWebsiteApi _websiteApi;
     private readonly IHallApi _hallApi;
     private readonly IPriceCalculationService _priceCalculationService;
+    private readonly INotificationService _notificationService;
+    private readonly IApiService _apiService;
 
     public Screening? Screening { get; private set; }
 
@@ -33,18 +37,22 @@ public class OrderFlowService : IOrderFlowService
 
     public decimal Total { get; private set; } = 0;
 
-    public OrderFlowService(ILogger<OrderFlowService> logger, IOrderApi orderApi, IWebsiteApi websiteApi, IHallApi hallApi, IPriceCalculationService priceCalculationService)
+    public OrderFlowService(ILogger<OrderFlowService> logger, IOrderApi orderApi, IWebsiteApi websiteApi, IHallApi hallApi, IPriceCalculationService priceCalculationService, INotificationService notificationService, IApiService apiService)
     {
         this._logger = logger;
         this._orderApi = orderApi;
         this._websiteApi = websiteApi;
         this._hallApi = hallApi;
         this._priceCalculationService = priceCalculationService;
+        this._notificationService = notificationService;
+        this._apiService = apiService;
     }
 
     public async Task CancelOrderAsync()
     {
-        await this._orderApi.CancelOrderAsync(this.Order!.Id);
+        var token = await this._apiService.GetTokenAsync();
+
+        await this._orderApi.CancelOrderAsync(token, this.Order!.Id);
     }
 
     public void Cleanup()
@@ -63,7 +71,19 @@ public class OrderFlowService : IOrderFlowService
 
     public async Task PayOrderAsync()
     {
-        await this._orderApi.PayOrderAsync(this.Order!.Id);
+        // schedule a notification for 15 minutes before the movie starts
+        this._notificationService.SendNotification(
+            new BaseNotification {
+                Title = AppResources.Notification_MovieStartingTitle,
+                Message = string.Format(AppResources.Notification_MovieStarting, this.Screening!.Movie, this.Screening.Hall.HallNumber),
+                NotifyAt = this.Screening!.StartTime.AddMinutes(-15),
+                Path = $"/tickets/{Order!.Id}"
+            }
+        );
+
+        var token = await this._apiService.GetTokenAsync();
+
+        await this._orderApi.PayOrderAsync(token, this.Order!.Id);
     }
 
     public async Task PlaceOrderAsync()
@@ -73,7 +93,9 @@ public class OrderFlowService : IOrderFlowService
             return;
         }
 
-        var response = await _orderApi.ReserveSeatsAsync(Screening.Id, new NewOrder
+        var token = await this._apiService.GetTokenAsync();
+
+        var response = await _orderApi.ReserveSeatsAsync(token, Screening.Id, new NewOrder
         {
             Arrangements = this.Arrangements,
             Tickets = this.Tickets
@@ -114,7 +136,9 @@ public class OrderFlowService : IOrderFlowService
         }
 
         // Call the API to update the order with the new seat selections
-        var updateResponse = await _orderApi.UpdateOrderSeatsAsync(Order.Id, seats);
+
+        var token = await this._apiService.GetTokenAsync();
+        var updateResponse = await _orderApi.UpdateOrderSeatsAsync(token, Order.Id, seats);
 
         if (!updateResponse.IsSuccessStatusCode)
         {

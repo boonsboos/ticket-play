@@ -313,6 +313,24 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The doors for {0} will close in 15 minutes! Make your way to hall {1} soon!.
+        /// </summary>
+        internal static string Notification_MovieStarting {
+            get {
+                return ResourceManager.GetString("Notification_MovieStarting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your movie is about to start!.
+        /// </summary>
+        internal static string Notification_MovieStartingTitle {
+            get {
+                return ResourceManager.GetString("Notification_MovieStartingTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 3D Fee.
         /// </summary>
         internal static string OrderOverview_3DFee {
@@ -831,6 +849,42 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         internal static string SeatModal_Wheelchair {
             get {
                 return ResourceManager.GetString("SeatModal_Wheelchair", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We can&apos;t find your order. Try again later?.
+        /// </summary>
+        internal static string TicketDetail_ErrorDescription {
+            get {
+                return ResourceManager.GetString("TicketDetail_ErrorDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order not found....
+        /// </summary>
+        internal static string TicketDetail_ErrorTitle {
+            get {
+                return ResourceManager.GetString("TicketDetail_ErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show this to the attendant at the door!.
+        /// </summary>
+        internal static string TicketDetail_QrCodeInstruction {
+            get {
+                return ResourceManager.GetString("TicketDetail_QrCodeInstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your order.
+        /// </summary>
+        internal static string TicketDetail_Title {
+            get {
+                return ResourceManager.GetString("TicketDetail_Title", resourceCulture);
             }
         }
         

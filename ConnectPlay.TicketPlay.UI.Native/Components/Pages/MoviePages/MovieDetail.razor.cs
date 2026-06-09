@@ -6,7 +6,6 @@ using ConnectPlay.TicketPlay.UI.Native.Extensions;
 using ConnectPlay.TicketPlay.UI.Native.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
-using System.ComponentModel.Design;
 using System.Globalization;
 
 namespace ConnectPlay.TicketPlay.UI.Native.Components.Pages.MoviePages;

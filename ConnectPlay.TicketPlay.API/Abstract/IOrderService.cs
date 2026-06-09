@@ -6,7 +6,7 @@ namespace ConnectPlay.TicketPlay.API.Abstract;
 
 public interface IOrderService
 {
-    public Task<Order> ReserveAsync(int screeningId, NewOrder newOrder);
+    public Task<Order> ReserveAsync(int screeningId, NewOrder newOrder, User user);
     public Task CancelAsync(int orderId);
     public Task PayAsync(int orderId);
     public Task<Stream> PrintAsync(int orderId);

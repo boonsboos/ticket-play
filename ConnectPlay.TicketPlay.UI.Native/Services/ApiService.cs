@@ -105,7 +105,7 @@ public class ApiService : IApiService, IHostedService, IDisposable
                 return false;
             }
 
-            await this._secureStorage.SetAsync(TokenKey, response.Content!.Token);
+            await this._secureStorage.SetAsync(TokenKey, $"Bearer {response.Content!.Token}");
             await this._secureStorage.SetAsync(RefreshKey, response.Content!.RefreshToken);
             await this._secureStorage.SetAsync(ExpiresKey, DateTime.UtcNow.AddSeconds(response.Content!.ExpiresIn).ToString());
 

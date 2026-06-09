@@ -384,4 +384,22 @@
   <data name="Notification_ChannelDescription" xml:space="preserve">
     <value>Ticket &amp; Play push-meldingen</value>
   </data>
+  <data name="Notification_MovieStartingTitle" xml:space="preserve">
+    <value>De film begint bijna!</value>
+  </data>
+  <data name="Notification_MovieStarting" xml:space="preserve">
+    <value>De deuren sluiten over een kwartier voor {0}... Zorg ervoor dat je in zaal {1} klaar zit!</value>
+  </data>
+  <data name="TicketDetail_ErrorTitle" xml:space="preserve">
+    <value>Bestelling niet gevonden...</value>
+  </data>
+  <data name="TicketDetail_ErrorDescription" xml:space="preserve">
+    <value>We kunnen je bestelling niet vinden. Probeer het later opnieuw?</value>
+  </data>
+  <data name="TicketDetail_Title" xml:space="preserve">
+    <value>Je bestelling</value>
+  </data>
+  <data name="TicketDetail_QrCodeInstruction" xml:space="preserve">
+    <value>Laat dit aan de medewerker bij de deur zien!</value>
+  </data>
 </root>

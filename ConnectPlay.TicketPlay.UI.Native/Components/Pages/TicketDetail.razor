@@ -1,0 +1,68 @@
+@page "/ticket/{OrderId:int}"
+
+@inherits ComponentBase
+
+@if (loading)
+{
+
+}
+else if (order is null)
+{
+    <div class="container">
+
+        <h2 class="text-center">@AppResources.TicketDetail_ErrorTitle</h2>
+        <p class="text-center">@AppResources.TicketDetail_ErrorDescription</p>
+
+    </div>
+}
+else
+{
+    <div class="container gap-4">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="text-center">@AppResources.TicketDetail_Title</h2>
+            </div>
+            <div class="card-body">
+                <div class="d-flex flex-column gap-2 align-items-center justify-content-center">
+
+                    <div class="align-items-center col-6">
+                        @((MarkupString)QrCode)
+                        <div class="alert alert-info">
+                            @AppResources.TicketDetail_QrCodeInstruction
+                        </div>
+                    </div>
+
+                    <hr/>
+                    <div>
+                        <h3>@Screening.Movie.Title</h3>
+                        <p class="text-muted">@Screening!.Movie.Genre • @Screening.Movie.Duration min • @Screening.Movie.MinimumAge+</p>
+
+                        @if (Screening is not null)
+                        {
+                            <p>@(string.Format(AppResources.OrderOverview_Location, Hall!.HallNumber, StartTime))</p>
+                        }
+
+                        @if (order.Tickets.Select(t => t.Seat).Any())
+                        {
+                            <p>
+                                <b>@AppResources.OrderOverview_YourSeats</b><br />
+                                @(string.Join(", ", Seats))
+                            </p>
+                        }
+
+                        @foreach (var arrangement in order.Arrangements)
+                        {
+                            <div class="d-flex flex-row justify-content-between">
+                                <p><b>@arrangement.Amount x @arrangement.Arrangement.Name</b></p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-center align-items-center p-5">
+            <button class="btn btn-outline-secondary m-5" @onclick="Back">@AppResources.MovieDetail_BackButton</button>
+        </div>
+    </div>
+}

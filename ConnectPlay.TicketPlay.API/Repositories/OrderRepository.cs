@@ -29,6 +29,8 @@ public class OrderRepository : IOrderRepository
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
+        // NOTE: do not include orderer here, you will leak user data to the user
+
         // Return the order with all the tickets connected to this order
         return await dbContext.Orders
             .Include(order => order.Arrangements) // Fetch arrangement join table

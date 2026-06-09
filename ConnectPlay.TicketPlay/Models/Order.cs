@@ -10,6 +10,7 @@ public record Order
     [Key]
     public int Id { get; set; }
     public User? Orderer { get; set; }
+    public required Guid OrdererId { get; set; }
     public ICollection<Ticket> Tickets { get; set; } = [];
     public ICollection<OrderArrangement> Arrangements { get; set; } = [];
     public OrderStatus Status { get; set; } = OrderStatus.Pending; // change to set because we need to update the status and with init it cant be changed

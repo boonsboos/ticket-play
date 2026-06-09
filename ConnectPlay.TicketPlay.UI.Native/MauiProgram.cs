@@ -12,7 +12,7 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         var logConfig = new LoggerConfiguration()
-            .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}");
+            .WriteTo.Console(outputTemplate: "{Timestamp:HH:mm:ss} [{Level}] ({ThreadId}) {Message}{NewLine}{Exception}");
 
         var builder = MauiApp.CreateBuilder();
         builder
@@ -47,7 +47,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<INotificationService, Platforms.Android.Services.AndroidNotificationService>();
         builder.Services.AddSingleton<Platforms.Android.TimedNotificationHandler> ();
 #elif WINDOWS
-        // TODO: add windows notifications dummy
+        builder.Services.AddSingleton<INotificationService, Platforms.Windows.WindowsNotificationService>();
 #endif
 
         return builder.Build();
@@ -61,6 +61,7 @@ public static class MauiProgram
 
         services
             .AddSingleton<IHomeService, HomeService>()
+            .AddSingleton<NotificationRouter>()
             .AddScoped<IOrderFlowService, OrderFlowService>();
     }
 

@@ -2,6 +2,8 @@
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
@@ -12,24 +14,35 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService orderService;
     private readonly ILogger<OrderController> logger;
+    private readonly UserManager<User> userManager;
     private readonly IOrderRepository orderRepository;
 
-    public OrderController(IOrderService orderService, IOrderRepository orderRepository, ILogger<OrderController> logger)
+    public OrderController(IOrderService orderService, IOrderRepository orderRepository, ILogger<OrderController> logger, UserManager<User> userManager)
     {
         this.orderService = orderService;
         this.orderRepository = orderRepository;
         this.logger = logger;
+        this.userManager = userManager;
     }
 
+    [Authorize]
     [HttpPost]
     [Route("{screeningId}/reserve")] // /kiosk/1234/reserve
     public async Task<IActionResult> PlaceOrderAsync([FromRoute] int screeningId, [FromBody] NewOrder order)
     {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null) return Forbid();
+
         if (!order.Tickets.Any()) return BadRequest();
 
         try
         {
-            var placedOrder = await orderService.ReserveAsync(screeningId, order);
+            var placedOrder = await orderService.ReserveAsync(screeningId, order, user);
 
             return Ok(placedOrder);
         }
@@ -45,12 +58,25 @@ public class OrderController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut]
     [Route("{orderId}/cancel")]
     public async Task<IActionResult> CancelOrderAsync([FromRoute] int orderId) //FromRoute get the orderId from the url and use it as a parameter
     {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null) return Forbid();
+
         try
         {
+            var order = await orderRepository.GetOrderByIdAsync(orderId);
+
+            if (order?.Orderer != user) return Forbid();
+
             await orderService.CancelAsync(orderId); // Controller call the service to cancel the order
             return Ok(); // 200 code
         }
@@ -61,12 +87,25 @@ public class OrderController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut]
     [Route("{orderId}/pay")]
     public async Task<IActionResult> PayOrderAsync([FromRoute] int orderId)
     {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null) return Forbid();
+
         try
         {
+            var order = await orderRepository.GetOrderByIdAsync(orderId);
+
+            if (order?.OrdererId != userId) return Forbid();
+
             await orderService.PayAsync(orderId); // Set the order status to paid
             return Ok();
         }
@@ -77,12 +116,25 @@ public class OrderController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet]
     [Route("{orderId}/pdf")]
     public async Task<IActionResult> PrintTicketsAsync([FromRoute] int orderId)
     {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null) return Forbid();
+
         try
         {
+            var order = await orderRepository.GetOrderByIdAsync(orderId);
+
+            if (order?.Orderer != user) return Forbid();
+
             var pdfStream = await orderService.PrintAsync(orderId);
             return File(pdfStream, "application/pdf", $"TicketPlay_Order-{orderId}-Tickets.pdf");
         }
@@ -99,12 +151,39 @@ public class OrderController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{orderCode}")]
+    [Route("code/{orderCode}")]
     public async Task<IActionResult> GetOrderByOrderCodeAsync([FromRoute] string orderCode)
     {
         var order = await orderRepository.GetOrderByOrderCodeAsync(orderCode);
 
         if (order is null) return NotFound();
+
+        return Ok(order);
+    }
+
+    [Authorize]
+    [HttpGet]
+    [Route("{orderId}")]
+    public async Task<IActionResult> GetOrderByOrderIdAsync([FromRoute] int orderId)
+    {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null) 
+            return Forbid();
+
+        // small performance hit to do this lookup without providing the user, but the repository should not have to know about the user
+        var order = await orderRepository.GetOrderByIdAsync(orderId);
+
+        // do not allow enumeration of orders
+        if (order?.OrdererId != userId)
+            return Forbid();
+
+        if (order is null)
+            return NotFound();
 
         return Ok(order);
     }
@@ -125,12 +204,27 @@ public class OrderController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut]
     [Route("{orderId}/update-seats")]
     public async Task<IActionResult> UpdateOrderSeatsAsync([FromRoute] int orderId, [FromBody] IEnumerable<Seat> seats)
     {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+            return Forbid();
+
         try
         {
+            var order = await orderRepository.GetOrderByIdAsync(orderId);
+
+            if (order?.Orderer != user)
+                return Forbid();
+
             var updatedOrder = await orderService.UpdateSeatsAsync(orderId, seats);
             return Ok(updatedOrder);
         }

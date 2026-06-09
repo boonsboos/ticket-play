@@ -27,7 +27,7 @@ public class ScreeningController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
-    [Route("{movieId}/today")]
+    [Route("movie/{movieId}/today")]
     public async Task<IActionResult> GetTodayByMovieIdAsync(int movieId)
     {
         var todayScreenings = await _screeningRepository.GetTodayScreeningsFromMovieAsync(movieId);
@@ -37,7 +37,7 @@ public class ScreeningController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(Screening), StatusCodes.Status200OK)]
-    [Route("{movieId}")]
+    [Route("movie/{movieId}")]
     public async Task<IActionResult> GetScreeningsByMovieIdAsync(int movieId)
     {
         var todayScreenings = await _screeningRepository.GetScreeningsFromMovieAsync(movieId);
@@ -55,4 +55,16 @@ public class ScreeningController : ControllerBase
         return Ok(previewScreenings);
     }
 
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<IActionResult> GetScreeningById(int id)
+    {
+        var screening = await _screeningRepository.GetScreeningAsync(id);
+        if (screening is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(screening);
+    }
 }

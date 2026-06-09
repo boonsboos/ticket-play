@@ -386,4 +386,22 @@
   <data name="Notification_ChannelDescription" xml:space="preserve">
     <value>Ticket &amp; Play Notifications</value>
   </data>
+  <data name="Notification_MovieStartingTitle" xml:space="preserve">
+    <value>Your movie is about to start!</value>
+  </data>
+  <data name="Notification_MovieStarting" xml:space="preserve">
+    <value>The doors for {0} will close in 15 minutes! Make your way to hall {1} soon!</value>
+  </data>
+  <data name="TicketDetail_ErrorTitle" xml:space="preserve">
+    <value>Order not found...</value>
+  </data>
+  <data name="TicketDetail_ErrorDescription" xml:space="preserve">
+    <value>We can't find your order. Try again later?</value>
+  </data>
+  <data name="TicketDetail_Title" xml:space="preserve">
+    <value>Your order</value>
+  </data>
+  <data name="TicketDetail_QrCodeInstruction" xml:space="preserve">
+    <value>Show this to the attendant at the door!</value>
+  </data>
 </root>

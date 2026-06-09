@@ -21,7 +21,7 @@ public class OrderService(
         ILogger<OrderService> logger) : IOrderService
 {
 
-    public async Task<Order> ReserveAsync(int screeningId, NewOrder newOrder)
+    public async Task<Order> ReserveAsync(int screeningId, NewOrder newOrder, User user)
     {
         // find if screening is real
         var screening = await screeningRepository.GetScreeningAsync(screeningId)
@@ -46,6 +46,7 @@ public class OrderService(
         var order = new Order
         {
             Total = total,
+            OrdererId = user.Id,
             Status = OrderStatus.Pending,
             Tickets = tickets,
         };
@@ -110,13 +111,7 @@ public class OrderService(
         var order = await orderRepository.GetOrderByIdAsync(orderId)
             ?? throw new ArgumentException("Order does not exist");
 
-        if (order.Status == OrderStatus.Redeemed)
-        {
-            throw new InvalidOperationException($"Order {orderId} has already been redeemed");
-        }
-
-        // if order has already been redeemed, do not let the user print the tickets again
-        if (order.Status != OrderStatus.Paid)
+        if (order.Status != OrderStatus.Paid || order.Status != OrderStatus.Redeemed)
         {
             throw new InvalidOperationException($"Order {orderId} has not been paid yet");
         }
