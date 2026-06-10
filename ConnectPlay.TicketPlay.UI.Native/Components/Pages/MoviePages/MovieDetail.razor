@@ -23,17 +23,22 @@ else
                     @if (!string.IsNullOrWhiteSpace(DisplayMovieMetaText))
                     {
                         <p class="text-muted">@DisplayMovieMetaText</p>
-                        <button class="btn btn-outline-primary mb-2" @onclick="ToggleFavoriteAsync">
-                            @if (!apiService.FavouriteMovies.Any(m => m.Id == Id))
-                            {
-                                <i class="bi bi-heart"></i>
-                            }
-                            else
-                            {
-                                <i class="bi bi-heart-fill"></i>
-                            }
 
-                        </button>
+                        /* do not show the favorites button on sneak previews*/
+                        @if (ShowStandardMovieDetails)
+                        {
+                            <button class="btn btn-outline-primary mb-2" @onclick="ToggleFavoriteAsync">
+                                @if (!apiService.FavouriteMovies.Any(m => m.Id == Id))
+                                {
+                                    <i class="bi bi-heart"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-heart-fill"></i>
+                                }
+
+                            </button>
+                        }
                     }
                     @if (ShowStandardMovieDetails)
                     {

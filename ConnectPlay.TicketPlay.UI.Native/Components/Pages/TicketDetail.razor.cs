@@ -1,6 +1,7 @@
 ﻿using ConnectPlay.TicketPlay.Api;
 using ConnectPlay.TicketPlay.Models;
 using ConnectPlay.TicketPlay.UI.Native.Abstract;
+using ConnectPlay.TicketPlay.UI.Native.Resources;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using QRCoder;
@@ -26,7 +27,7 @@ public partial class TicketDetail : ComponentBase
     private Screening? Screening;
     private Hall? Hall;
     private List<Seat> Seats = [];
-    private string StartTime;
+    private string StartTime = string.Empty;
 
     public TicketDetail(IOrderApi orderApi, IApiService apiService, IScreeningApi screeningApi, NavigationManager navigationManager, ILogger<TicketDetail> logger)
     {
@@ -52,7 +53,7 @@ public partial class TicketDetail : ComponentBase
 
             Seats = [.. order.Tickets.Select(t => t.Seat)];
 
-            StartTime = Screening?.StartTime.ToLocalTime().ToString("HH:mm") ?? "??:??";
+            StartTime = Screening?.StartTime.ToLocalTime().ToString("HH:mm", AppResources.Culture) ?? "??:??";
         }
 
         loading = false;

@@ -5,18 +5,19 @@
 <div>
     <h1 class="text-center">@AppResources.Tickets_Header</h1>
 
-    <div>
-        @foreach (var ticket in this._tickets)
+    <div class="d-flex flex-column justify-content-center align-content-center gap-4">
+        @foreach (var order in this._orders)
         {
-            <div class="card card-body">
-                <h2 class="card-header">@ticket.Screening.Movie.Title</h2>
-                <h3 class="card-footer">
-                    @string.Format(
-                        AppResources.Tickets_ScreeningLocation,
-                        ticket.Screening.Hall.HallNumber,
-                        ticket.Screening.StartTime.ToString("t")
-                    )
-                </h3>
+            <div class="card">
+                <div class="card-header">
+                    @{ var screening = _screenings[order.Id]; }
+                    <h2>@(screening.SneakPreview ? AppResources.MovieDetail_SneakPreviewTitle : screening.Movie.Title)</h2>
+                    <h3 class="text-muted">@(screening.StartTime.ToLocalTime().ToString("f", AppResources.Culture))</h3>
+                </div>
+                <div class="card-footer">
+                    <button class="btn btn-primary" @onclick="() => ToTicket(order.Id)">@AppResources.Tickets_ToTicket</button>
+                    
+                </div>
             </div>
         }
     </div>

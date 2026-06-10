@@ -49,7 +49,7 @@ public class WebsiteService
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
 
-        var response = await orderApi.ReserveSeatsAsync(SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets });
+        var response = await orderApi.ReserveSeatsAsync("",SelectedScreening.Id, new NewOrder { Arrangements = this.SelectedArrangements, Tickets = this.Tickets });
         if (response.IsSuccessStatusCode)
         {
             CurrentOrder = response.Content;
@@ -66,7 +66,7 @@ public class WebsiteService
         var orderId = CurrentOrderId ?? throw new InvalidOperationException("Cannot cancel order when there is none");
 
         // Call the api to cancel the order
-        var cancelResponse = await orderApi.CancelOrderAsync(orderId);
+        var cancelResponse = await orderApi.CancelOrderAsync("", orderId);
 
         if (cancelResponse.IsSuccessStatusCode)
         {
@@ -81,7 +81,7 @@ public class WebsiteService
     {
         var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
 
-        var payResponse = await orderApi.PayOrderAsync(orderId);
+        var payResponse = await orderApi.PayOrderAsync("", orderId);
 
         // if the response is not OK (200)
         if (!payResponse.IsSuccessStatusCode)
@@ -132,7 +132,7 @@ public class WebsiteService
         if (selectedSeats.Count != CurrentOrder.Tickets.Count) throw new InvalidOperationException("Seat count must match ticket count");
 
         // Call the API to update the order with the new seat selections
-        var updateResponse = await orderApi.UpdateOrderSeatsAsync(CurrentOrder.Id, selectedSeats);
+        var updateResponse = await orderApi.UpdateOrderSeatsAsync("", CurrentOrder.Id, selectedSeats);
 
         if (!updateResponse.IsSuccessStatusCode)
         {

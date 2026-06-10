@@ -8,4 +8,5 @@ public interface IOrderRepository
     public Task<Order?> GetOrderByIdAsync(int orderId);
     public Task UpdateOrderStatusAsync(int orderId, OrderStatus status);
     public Task<Order?> GetOrderByOrderCodeAsync(string orderCode);
+    public Task<IEnumerable<Order>> GetOrdersAsync(Guid ordererId);
 }

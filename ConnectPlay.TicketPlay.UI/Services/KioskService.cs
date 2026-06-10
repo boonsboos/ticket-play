@@ -34,7 +34,7 @@ public class KioskService
         ArgumentNullException.ThrowIfNull(SelectedScreening, nameof(SelectedScreening));
         if (!Tickets.Any()) throw new ArgumentException("Tickets cannot be empty");
 
-        var response = await orderApi.ReserveSeatsAsync(
+        var response = await orderApi.ReserveSeatsAsync("",
             SelectedScreening.Id, 
             new NewOrder
             {
@@ -61,7 +61,7 @@ public class KioskService
         // kioskApi is the API Client injected into the service
         // CancelOrderAsync() send a resuqest to the API to cancel the order
         // With await we wait for the respone frome the api
-        var cancelResponse = await orderApi.CancelOrderAsync(orderId);
+        var cancelResponse = await orderApi.CancelOrderAsync("", orderId);
 
         if (cancelResponse.IsSuccessStatusCode)
         {
@@ -77,7 +77,7 @@ public class KioskService
     {
         var orderId = CurrentOrderId ?? throw new ArgumentNullException(nameof(CurrentOrderId));
 
-        var payResponse = await orderApi.PayOrderAsync(orderId);
+        var payResponse = await orderApi.PayOrderAsync("", orderId);
 
 
         // if the response is not OK (200)
@@ -117,5 +117,5 @@ public class KioskService
         };
     }
 
-    private float RegularPrice(Movie movie) => movie.Duration > 120 ? 9.00f : 8.50f;
+    private static float RegularPrice(Movie movie) => movie.Duration > 120 ? 9.00f : 8.50f;
 }

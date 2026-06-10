@@ -239,4 +239,22 @@ public class OrderController : ControllerBase
             return BadRequest(invalidOpException.Message);
         }
     }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> GetOrdersAsync()
+    {
+        if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
+        {
+            return BadRequest("Invalid User Id");
+        }
+
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+            return Forbid();
+
+        var orders = await orderRepository.GetOrdersAsync(userId);
+
+        return Ok(orders);
+    }
 }

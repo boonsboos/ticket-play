@@ -22,16 +22,6 @@ public class MovieRepository : IMovieRepository
         return await _movieApi.GetAllMoviesAsync();
     }
 
-    public Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
-    {
-        return Task.FromResult<IEnumerable<Movie>>([]);
-    }
-
-    public Task<IEnumerable<Movie>> GetNewMoviesAsync()
-    {
-        return Task.FromResult<IEnumerable<Movie>>([]);
-    }
-
     public async Task<IEnumerable<OverviewMovie>> GetTodaysMoviesAsync()
     {
         return await _movieApi.GetTodayMoviesAsync();
@@ -76,12 +66,14 @@ public class MovieRepository : IMovieRepository
             return null;
         }
     }
-    public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
-    {
-        throw new NotImplementedException();
-    }
+
     public async Task CreateMovieAsync(CreateMovieRequest dto)
     {
         await _movieApi.CreateMovieAsync(dto);
+    }
+
+    public Task<IEnumerable<Movie>> GetMoviesWithTagAsync(string tag)
+    {
+        throw new NotImplementedException();
     }
 }

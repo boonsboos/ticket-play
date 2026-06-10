@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
             .AddRefitClient<INewsletterApi>()
             .AddRefitClient<IWebsiteApi>()
             .AddRefitClient<IAuthApi>()
+            .AddRefitClient<IRecommendationApi>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(baseUrl));
 
         return services;

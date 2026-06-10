@@ -27,4 +27,7 @@ public interface IOrderApi
 
     [Get("/order/{id}")]
     public Task<ApiResponse<Order>> GetOrderByIdAsync([Header("Authorization")] string token, int id);
+
+    [Get("/order")]
+    public Task<ApiResponse<IEnumerable<Order>>> GetOrdersAsync([Header("Authorization")] string token);
 }

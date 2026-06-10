@@ -205,7 +205,7 @@
     <value>Zaal {0} om {1}</value>
   </data>
   <data name="You_Header" xml:space="preserve">
-    <value>Jouw instellingen</value>
+    <value>Jouw pagina</value>
   </data>
   <data name="SeatModal_SummaryEmpty" xml:space="preserve">
     <value>Geen stoelen gekozen</value>
@@ -401,5 +401,20 @@
   </data>
   <data name="TicketDetail_QrCodeInstruction" xml:space="preserve">
     <value>Laat dit aan de medewerker bij de deur zien!</value>
+  </data>
+  <data name="Tickets_ToTicket" xml:space="preserve">
+    <value>Ticket</value>
+  </data>
+  <data name="You_Favorites" xml:space="preserve">
+    <value>Je favoriete films</value>
+  </data>
+  <data name="You_Recommendations" xml:space="preserve">
+    <value>Films die je misschien leuk vindt</value>
+  </data>
+  <data name="You_NoFavorites" xml:space="preserve">
+    <value>Je hebt nog geen films toegevoegd als favoriet...</value>
+  </data>
+  <data name="You_NoRecommendations" xml:space="preserve">
+    <value>We hebben geen andere films om je aan te raden</value>
   </data>
 </root>

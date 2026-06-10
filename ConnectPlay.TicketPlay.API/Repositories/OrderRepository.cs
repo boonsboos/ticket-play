@@ -29,7 +29,7 @@ public class OrderRepository : IOrderRepository
     {
         await using var dbContext = await dbContextFactory.CreateDbContextAsync();
 
-        // NOTE: do not include orderer here, you will leak user data to the user
+        // NOTE: do not include orderer here, you will leak user data
 
         // Return the order with all the tickets connected to this order
         return await dbContext.Orders
@@ -50,6 +50,19 @@ public class OrderRepository : IOrderRepository
         return await dbContext.Orders
             .Where(order => order.OrderCode == orderCode)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<IEnumerable<Order>> GetOrdersAsync(Guid ordererId)
+    {
+        await using var dbContext = await dbContextFactory.CreateDbContextAsync();
+
+        return await dbContext.Orders
+            .Include(order => order.Tickets)
+            .ThenInclude(ticket => ticket.Screening)
+            .ThenInclude(screening => screening.Movie)
+            .Where(order => order.OrdererId == ordererId)
+            .OrderBy(order => order.Tickets.First().Screening.StartTime)
+            .ToListAsync();
     }
 
     public async Task UpdateOrderStatusAsync(int orderId, OrderStatus status)

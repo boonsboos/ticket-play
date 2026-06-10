@@ -35,6 +35,6 @@ public interface IMovieApi
     [Delete("/movie/{id}/favorite")]
     Task RemoveMovieAsFavoriteAsync([Header("Authorization")] string jwt, int id);
 
-    [Post("/movie/favorites")]
+    [Get("/movie/favorites")]
     Task<ApiResponse<IEnumerable<Movie>>> GetFavoriteMoviesAsync([Header("Authorization")] string jwt);
 }

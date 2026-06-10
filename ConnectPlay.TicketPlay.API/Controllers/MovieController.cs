@@ -36,17 +36,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         return Ok(movies);
     }
 
-    // ProducesResponseType is not required, but is useful for API documentation and tools like Swagger to understand what this endpoint returns.
-    [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)] // Document that this endpoint returns a list of movies on HTTP OK
-    [HttpGet] // Register a GET endpoint
-    [Route("current")] // At route /movie/current
-    public async Task<IActionResult> GetCurrentAsync() // Always suffix async methods with "Async"
-    {
-        var currentMovies = await _movieRepository.GetCurrentMoviesAsync();
-
-        // HTTP OK
-        return Ok(currentMovies);
-    }
 
     [ProducesResponseType(typeof(IEnumerable<OverviewMovie>), StatusCodes.Status200OK)]
     [HttpGet] // This is the Get endpoint.
@@ -56,16 +45,6 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         var todaysMovies = await _movieRepository.GetTodaysMoviesAsync();
 
         return Ok(todaysMovies); // Ok() is short for OkObjectResult and creates a Http 200 response object with the data in it
-    }
-
-    [ProducesResponseType(typeof(IEnumerable<Movie>), StatusCodes.Status200OK)]
-    [HttpGet]
-    [Route("new")]
-    public async Task<IActionResult> GetNewAsync()
-    {
-        // Returns a empty list if no movies are available
-        var newMovies = await _movieRepository.GetNewMoviesAsync();
-        return Ok(newMovies);
     }
 
     [HttpGet("preview")]

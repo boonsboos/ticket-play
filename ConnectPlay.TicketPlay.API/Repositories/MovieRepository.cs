@@ -3,6 +3,7 @@ using ConnectPlay.TicketPlay.API.Contexts;
 using ConnectPlay.TicketPlay.Contracts.Movie;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Immutable;
 
 namespace ConnectPlay.TicketPlay.API.Repositories;
 
@@ -24,21 +25,6 @@ public class MovieRepository : IMovieRepository
 
         return await dbContext.Movies.ToListAsync();
     }
-
-    public async Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
-    {
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-
-        return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.Current)).ToListAsync();
-    }
-
-    public async Task<IEnumerable<Movie>> GetNewMoviesAsync()
-    {
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-
-        return await dbContext.Movies.Where(movie => movie.Tags.Contains(ReservedTags.New)).ToListAsync();
-    }
-
 
     public async Task<MovieDetailResponse?> GetMovieByIdAsync(int id, string languageCode)
     {
@@ -75,11 +61,6 @@ public class MovieRepository : IMovieRepository
                 MinimumAge = s.Movie.MinimumAge,
             })
             .FirstOrDefaultAsync();
-    }
-
-    public Task<IEnumerable<Movie>> SearchForMoviesAsync(string query, MovieFilters? filters)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task CreateMovieAsync(CreateMovieRequest dto)
@@ -135,5 +116,20 @@ public class MovieRepository : IMovieRepository
                     };
                 })
         ];
+    }
+
+    public async Task<IEnumerable<Movie>> GetMoviesWithTagAsync(string tag)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+
+        var roughSearch = await dbContext.Movies
+            .Where(movie => movie.Tags.Contains(tag, StringComparison.OrdinalIgnoreCase))
+            .ToListAsync();
+
+        var preciseSearch = roughSearch
+            .Where(movie => movie.Tags.Split(",").Any(movieTag => tag.Equals(movieTag, StringComparison.OrdinalIgnoreCase)))
+            .ToHashSet();
+
+        return preciseSearch;
     }
 }

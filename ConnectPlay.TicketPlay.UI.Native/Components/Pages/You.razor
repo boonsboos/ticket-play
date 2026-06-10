@@ -2,6 +2,37 @@
 
 @inherits ComponentBase
 
-<!-- TODO: list of favorites -->
+<div class="d-flex flex-column">
+    <h1 class="text-center">@AppResources.You_Header</h1>
+
+    <h2 class="py-2">@AppResources.You_Favorites</h2>
+    @if (Favorites.Any())
+    {
+        <div class="d-flex flex-row gap-4 overflow-x-auto">
+            @foreach (var movie in Favorites)
+            {
+                <MovieCard CardMovie="movie"></MovieCard>
+            }
+        </div>
+    } else
+    {
+        <p>@AppResources.You_NoFavorites</p>
+    }
+
+
+    <h2 class="py-2">@AppResources.You_Recommendations</h2>
+    @if (Recommendations.Any())
+    {
+        <div class="d-flex flex-row gap-4 overflow-x-auto">
+            @foreach (var movie in Recommendations)
+            {
+                <MovieCard CardMovie="movie"></MovieCard>
+            }
+        </div>
+    } else
+    {
+        <p>@AppResources.You_NoRecommendations</p>
+    }
+</div>
 
 <BottomNavigation Current="BottomNavigation.CurrentView.You"/>

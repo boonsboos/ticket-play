@@ -103,3 +103,7 @@ h1:focus {
 .bottomnav-comp {
     margin-bottom: calc(3rem + 60px);
 }
+
+.image-aspect-ratio {
+    object-fit: contain;
+}

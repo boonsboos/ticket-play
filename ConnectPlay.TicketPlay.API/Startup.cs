@@ -120,6 +120,7 @@ public class Startup(IConfiguration configuration)
         services.AddScoped<ISeatAssignmentService, SeatAssignmentService>()
             .AddScoped<IOrderService, OrderService>()
             .AddScoped<IHallService, HallOrderService>()
+            .AddScoped<IRecommendationService, RecommendationService>()
             .AddSingleton<IAnalyticsService, AnalyticsService>()
             .AddSingleton<ITicketPrintingService, PdfTicketPrintingService>()
             .AddSingleton<IAuthorizationService, AuthorizationService>();

@@ -907,11 +907,56 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your settings.
+        ///   Looks up a localized string similar to Ticket.
+        /// </summary>
+        internal static string Tickets_ToTicket {
+            get {
+                return ResourceManager.GetString("Tickets_ToTicket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your favorite movies.
+        /// </summary>
+        internal static string You_Favorites {
+            get {
+                return ResourceManager.GetString("You_Favorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your page.
         /// </summary>
         internal static string You_Header {
             get {
                 return ResourceManager.GetString("You_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You haven&apos;t added any movies as favorites yet....
+        /// </summary>
+        internal static string You_NoFavorites {
+            get {
+                return ResourceManager.GetString("You_NoFavorites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We don&apos;t have any movies to recommend....
+        /// </summary>
+        internal static string You_NoRecommendations {
+            get {
+                return ResourceManager.GetString("You_NoRecommendations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movies we think you&apos;ll like.
+        /// </summary>
+        internal static string You_Recommendations {
+            get {
+                return ResourceManager.GetString("You_Recommendations", resourceCulture);
             }
         }
     }

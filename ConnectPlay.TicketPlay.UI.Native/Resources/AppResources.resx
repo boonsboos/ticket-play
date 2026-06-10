@@ -207,7 +207,7 @@
     <value>Hall {0} at {1}</value>
   </data>
   <data name="You_Header" xml:space="preserve">
-    <value>Your settings</value>
+    <value>Your page</value>
   </data>
   <data name="SeatModal_SummaryEmpty" xml:space="preserve">
     <value>No seats chosen</value>
@@ -403,5 +403,20 @@
   </data>
   <data name="TicketDetail_QrCodeInstruction" xml:space="preserve">
     <value>Show this to the attendant at the door!</value>
+  </data>
+  <data name="Tickets_ToTicket" xml:space="preserve">
+    <value>Ticket</value>
+  </data>
+  <data name="You_Favorites" xml:space="preserve">
+    <value>Your favorite movies</value>
+  </data>
+  <data name="You_Recommendations" xml:space="preserve">
+    <value>Movies we think you'll like</value>
+  </data>
+  <data name="You_NoFavorites" xml:space="preserve">
+    <value>You haven't added any movies as favorites yet...</value>
+  </data>
+  <data name="You_NoRecommendations" xml:space="preserve">
+    <value>We don't have any movies to recommend...</value>
   </data>
 </root>
