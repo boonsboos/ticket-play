@@ -27,17 +27,18 @@ else
                         /* do not show the favorites button on sneak previews*/
                         @if (ShowStandardMovieDetails)
                         {
-                            <button class="btn btn-outline-primary mb-2" @onclick="ToggleFavoriteAsync">
-                                @if (!apiService.FavouriteMovies.Any(m => m.Id == Id))
-                                {
+                            @if (!apiService.FavouriteMovies.Any(m => m.Id == Id))
+                            {
+                                <button class="btn btn-outline-primary mb-2" @onclick="ToggleFavoriteAsync">
                                     <i class="bi bi-heart"></i>
-                                }
-                                else
-                                {
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary mb-2" @onclick="ToggleFavoriteAsync">
                                     <i class="bi bi-heart-fill"></i>
-                                }
-
-                            </button>
+                                </button>
+                            }
                         }
                     }
                     @if (ShowStandardMovieDetails)
