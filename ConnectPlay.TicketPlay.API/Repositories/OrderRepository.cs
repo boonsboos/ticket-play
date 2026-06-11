@@ -60,7 +60,7 @@ public class OrderRepository : IOrderRepository
             .Include(order => order.Tickets)
             .ThenInclude(ticket => ticket.Screening)
             .ThenInclude(screening => screening.Movie)
-            .Where(order => order.OrdererId == ordererId)
+            .Where(order => order.OrdererId == ordererId && order.Tickets.First().Screening.StartTime <= DateTimeOffset.UtcNow.AddHours(3)) // 2 hours grace period
             .OrderBy(order => order.Tickets.First().Screening.StartTime)
             .ToListAsync();
     }

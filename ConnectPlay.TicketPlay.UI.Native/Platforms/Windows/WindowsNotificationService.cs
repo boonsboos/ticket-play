@@ -31,9 +31,9 @@ public class WindowsNotificationService : INotificationService
     {
         _logger.LogInformation("Showing a notification");
 
-        Task.Run(() =>
+        Task.Run(async () =>
         {
-            Task.Delay(2000);
+            await Task.Delay(2000);
 
             NotificationReceived?.Invoke(this, new NotificationEventArgs { Notification = baseNotification });
         });

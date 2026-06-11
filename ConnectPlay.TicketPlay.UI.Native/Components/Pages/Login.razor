@@ -1,7 +1,7 @@
 @inherits ComponentBase
 @page "/login"
 
-<div class="d-flex flex-column align-items-center justify-content-center g-2">
+<div class="d-flex flex-column align-items-center justify-content-center g-2 container">
     <h1 class="text-center my-2">@AppResources.Login_Action</h1>
 
     @if (!_apiService.IsAuthenticated && Attempt > 0)
@@ -21,4 +21,6 @@
 
         <button type="submit" class="btn btn-outline-primary my-4" @onclick="SubmitLogin">@AppResources.Login_Action</button>
     </EditForm>
+
+    <NavLink href="/register">@AppResources.Login_ToRegister</NavLink>
 </div>

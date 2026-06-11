@@ -1,24 +1,26 @@
 ﻿using ConnectPlay.TicketPlay.UI.Native.Abstract;
 using ConnectPlay.TicketPlay.UI.Native.Events;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace ConnectPlay.TicketPlay.UI.Native.Services;
 
-public class NotificationRouter : IDisposable
+public class NotificationRouter : IHostedService
 {
     private readonly INotificationService _notificationService;
     private readonly NavigationManager _navigationManager;
     private readonly ILogger<NotificationRouter> _logger;
-
-    private bool disposedValue;
 
     public NotificationRouter(INotificationService notificationService, NavigationManager navigationManager, ILogger<NotificationRouter> logger)
     {
         this._notificationService = notificationService;
         this._navigationManager = navigationManager;
         this._logger = logger;
+    }
 
+    public async Task StartAsync(CancellationToken cancellationToken)
+    {
         this._notificationService.NotificationReceived += HandleNotification;
     }
 
@@ -28,25 +30,11 @@ public class NotificationRouter : IDisposable
 
         this._logger.LogInformation("Notification target is {Path}", target);
 
-        this._navigationManager.NavigateTo(target);
+        this._navigationManager.NavigateTo(target, replace: true);
     }
 
-    protected virtual void Dispose(bool disposing)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
-        if (!disposedValue)
-        {
-            if (disposing)
-            {
-                this._notificationService.NotificationReceived -= HandleNotification;
-            }
-
-            disposedValue = true;
-        }
-    }
-
-    public void Dispose()
-    {
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
+        this._notificationService.NotificationReceived -= HandleNotification;
     }
 }

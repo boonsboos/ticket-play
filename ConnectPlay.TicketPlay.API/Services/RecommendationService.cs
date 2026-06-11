@@ -20,6 +20,9 @@ public class RecommendationService : IRecommendationService
         // get the favorites
         var favorites = await _favoritesRepository.GetFavoritesAsync(userId);
 
+        if (!favorites.Any())
+            return [];
+
         // get the tags, removing duplicates
         var favoriteTags = favorites.SelectMany(movie => movie.Tags.Split(",")).ToHashSet();
 

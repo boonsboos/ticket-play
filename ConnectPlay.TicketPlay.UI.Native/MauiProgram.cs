@@ -4,6 +4,7 @@ using ConnectPlay.TicketPlay.UI.Native.Resources;
 using ConnectPlay.TicketPlay.UI.Native.Services;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using System.Diagnostics;
 
 namespace ConnectPlay.TicketPlay.UI.Native;
 
@@ -23,13 +24,14 @@ public static class MauiProgram
             });
 
         builder.Services.AddMauiBlazorWebView();
-        builder.Services.AddLogging();
+        builder.Services.AddLogging(configure => { configure.AddDebug(); configure.AddSerilog(); builder.Services.AddSerilog((services, config) => config = logConfig); });
 
 #if DEBUG
 
+        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
         builder.Services.AddBlazorWebViewDeveloperTools();
-        builder.Services.AddSerilog((services, config) => config = logConfig);
-        builder.Logging.AddDebug();
+        //builder.Services.AddSerilog((services, config) => config = logConfig);
+        //builder.Logging.AddDebug();
 
 #else 
 
@@ -37,7 +39,6 @@ public static class MauiProgram
 
 #endif
 
-        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
         builder.Services.AddTicketPlayServices();
 
         AddAppServices(builder.Services);
@@ -47,21 +48,37 @@ public static class MauiProgram
         builder.Services.AddSingleton<INotificationService, Platforms.Android.Services.AndroidNotificationService>();
         builder.Services.AddSingleton<Platforms.Android.TimedNotificationHandler> ();
 #elif WINDOWS
+        Debug.WriteLine("Windows!");
         builder.Services.AddSingleton<INotificationService, Platforms.Windows.WindowsNotificationService>();
 #endif
 
-        return builder.Build();
+        var app = builder.Build();
+
+        // hack to eagerly start these services
+        // the DI container doesn't see that these services are used anywhere, so they have to be manually star
+        using (var scope = app.Services.CreateScope())
+        {
+            var hs1 = scope.ServiceProvider.GetRequiredService<NotificationRouter>();
+            var hs2 = scope.ServiceProvider.GetRequiredService<GeolocationService>();
+            hs1.StartAsync(default).GetAwaiter().GetResult();
+            hs2.StartAsync(default).GetAwaiter().GetResult();
+        }
+
+        return app;
     }
 
     private static void AddAppServices(IServiceCollection services)
     {
         services.AddSingleton<IApiService, ApiService>();
+        services.AddSingleton<NotificationRouter>();
+        services.AddSingleton<GeolocationService>();
 
         services.AddHostedService<ApiService>(serviceProvider => (serviceProvider.GetRequiredService<IApiService>() as ApiService)!);
+        services.AddHostedService<NotificationRouter>(serviceProvider => serviceProvider.GetRequiredService<NotificationRouter>());
+        services.AddHostedService<GeolocationService>(serviceProvider => serviceProvider.GetRequiredService<GeolocationService>());
 
         services
             .AddSingleton<IHomeService, HomeService>()
-            .AddSingleton<NotificationRouter>()
             .AddScoped<IOrderFlowService, OrderFlowService>();
     }
 
@@ -69,5 +86,6 @@ public static class MauiProgram
     {
         services.AddSingleton<ISecureStorage>(SecureStorage.Default);
         services.AddSingleton<IConnectivity>(Connectivity.Current);
+        services.AddSingleton<IGeolocation>(Geolocation.Default);
     }
 }

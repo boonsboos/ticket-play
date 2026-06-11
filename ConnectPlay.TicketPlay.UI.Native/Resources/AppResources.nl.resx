@@ -147,13 +147,25 @@
   <data name="Login_Action" xml:space="preserve">
     <value>Log in</value>
   </data>
+  <data name="Register_Action" xml:space="preserve">
+    <value>Aanmelden</value>
+  </data>
   <data name="Login_Email" xml:space="preserve">
+    <value>E-mailadres</value>
+  </data>
+  <data name="Register_Email" xml:space="preserve">
     <value>E-mailadres</value>
   </data>
   <data name="Login_Fail" xml:space="preserve">
     <value>Kon niet inloggen. Controller de gegevens en probeer het opnieuw.</value>
   </data>
+  <data name="Register_Fail" xml:space="preserve">
+    <value>Een wachtwoord heeft minstens 1 hoofdletter, 1 cijfer, en 1 speciaal teken nodig.</value>
+  </data>
   <data name="Login_Password" xml:space="preserve">
+    <value>Wachtwoord</value>
+  </data>
+  <data name="Register_Password" xml:space="preserve">
     <value>Wachtwoord</value>
   </data>
   <data name="MovieDetail_BackButton" xml:space="preserve">
@@ -416,5 +428,23 @@
   </data>
   <data name="You_NoRecommendations" xml:space="preserve">
     <value>We hebben geen andere films om je aan te raden</value>
+  </data>
+  <data name="Notification_CloseTitle" xml:space="preserve">
+    <value>Je bent in de buurt!</value>
+  </data>
+  <data name="Notification_Close" xml:space="preserve">
+    <value>Ben je in de bioscoop-stemming?</value>
+  </data>
+  <data name="Register_PasswordRepeat" xml:space="preserve">
+    <value>Herhaal wachtwoord</value>
+  </data>
+  <data name="Register_NoMatch" xml:space="preserve">
+    <value>Wachtwoorden komen niet overeen!</value>
+  </data>
+  <data name="Login_ToRegister" xml:space="preserve">
+    <value>Nog geen account? Meld je hier aan</value>
+  </data>
+  <data name="Register_ToLogin" xml:space="preserve">
+    <value>Heb je al een account? Log hier in</value>
   </data>
 </root>

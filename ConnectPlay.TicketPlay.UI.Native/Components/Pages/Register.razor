@@ -1,0 +1,34 @@
+﻿@page "/register"
+@inherits ComponentBase
+
+<div class="d-flex flex-column align-items-center justify-content-center g-2 container">
+    <h1 class="text-center my-2">@AppResources.Register_Action</h1>
+
+    @if (!MatchingPasswords && Attempt > 0)
+    {
+        <p class="text-danger">@AppResources.Register_NoMatch</p>
+    }
+
+    @if (!Registered && RegisterAttempt > 0)
+    {
+        <p class="text-danger">@AppResources.Register_Fail</p>
+    }
+
+    <EditForm Model="@RegisterForm" FormName="RegisterForm" class="d-flex flex-column g-2">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="d-flex py-2">
+            <InputText class="form-control" DisplayName="@AppResources.Login_Email" @bind-Value="RegisterForm.Email" placeholder="@AppResources.Login_Email" />
+        </div>
+        <div class="d-flex py-2">
+            <InputText type="password" class="form-control" DisplayName="@AppResources.Register_Password" @bind-Value="RegisterForm.Password" placeholder="@AppResources.Register_Password" />
+        </div>
+        <div class="d-flex py-2">
+            <InputText type="password" class="form-control" DisplayName="@AppResources.Register_PasswordRepeat" @bind-Value="RegisterForm.PasswordRepeat" placeholder="@AppResources.Register_PasswordRepeat" />
+        </div>
+
+        <button type="submit" class="btn btn-outline-primary my-4" @onclick="SubmitRegister">@AppResources.Register_Action</button>
+    </EditForm>
+
+    <NavLink href="/login">@AppResources.Register_ToLogin</NavLink>
+</div>

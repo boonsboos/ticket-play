@@ -29,6 +29,9 @@ public partial class You : ComponentBase
 
         Favorites = _apiService.FavouriteMovies;
 
+        if (!Favorites.Any())
+            return;
+
         var token = await _apiService.GetTokenAsync();
 
         var response = await _recommendationApi.GetRecommendations(token);

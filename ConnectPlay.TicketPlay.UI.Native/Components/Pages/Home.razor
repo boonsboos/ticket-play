@@ -1,22 +1,24 @@
 ﻿@page "/"
 @using ConnectPlay.TicketPlay.UI.Native.Components.Elements
 
-<h1 class="text-center">@AppResources.Home_Header</h1>
+<div class="container">
+    <h1 class="text-center">@AppResources.Home_Header</h1>
 
-<div class="bottomnav-comp">
-    @foreach (var day in movieDays)
-    {
-        <div class="my-5 d-flex flex-column">
-            <h2>@day.Day.ToLocalTime().ToString("dd-MM-yyyy")</h2>
+    <div class="bottomnav-comp">
+        @foreach (var day in movieDays)
+        {
+            <div class="my-5 d-flex flex-column">
+                <h2>@day.Day.ToLocalTime().ToString("dd-MM-yyyy")</h2>
 
-            <div class="row g-4 pb-2 overflow-x-auto d-flex flex-row flex-nowrap">
-                @foreach (var movie in day.Offerings)
-                {
-                    <OverviewMovieCard CardMovie="@movie" />
-                }
+                <div class="row g-4 pb-2 overflow-x-auto d-flex flex-row flex-nowrap">
+                    @foreach (var movie in day.Offerings)
+                    {
+                        <OverviewMovieCard CardMovie="@movie" />
+                    }
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
 
 <BottomNavigation Current="BottomNavigation.CurrentView.Home"/>

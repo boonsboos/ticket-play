@@ -223,6 +223,15 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t have an account? Register here.
+        /// </summary>
+        internal static string Login_ToRegister {
+            get {
+                return ResourceManager.GetString("Login_ToRegister", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to See more.
         /// </summary>
         internal static string Movie_SeeMore {
@@ -309,6 +318,24 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         internal static string Notification_ChannelDescription {
             get {
                 return ResourceManager.GetString("Notification_ChannelDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you in the mood for a movie?.
+        /// </summary>
+        internal static string Notification_Close {
+            get {
+                return ResourceManager.GetString("Notification_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re in the neighbourhood!.
+        /// </summary>
+        internal static string Notification_CloseTitle {
+            get {
+                return ResourceManager.GetString("Notification_CloseTitle", resourceCulture);
             }
         }
         
@@ -705,6 +732,69 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         internal static string PaymentSuccess_Title {
             get {
                 return ResourceManager.GetString("PaymentSuccess_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        internal static string Register_Action {
+            get {
+                return ResourceManager.GetString("Register_Action", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        internal static string Register_Email {
+            get {
+                return ResourceManager.GetString("Register_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A password needs at least 1 capital letter, 1 number and 1 special character..
+        /// </summary>
+        internal static string Register_Fail {
+            get {
+                return ResourceManager.GetString("Register_Fail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Passwords don&apos;t match!.
+        /// </summary>
+        internal static string Register_NoMatch {
+            get {
+                return ResourceManager.GetString("Register_NoMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Register_Password {
+            get {
+                return ResourceManager.GetString("Register_Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Repeat password.
+        /// </summary>
+        internal static string Register_PasswordRepeat {
+            get {
+                return ResourceManager.GetString("Register_PasswordRepeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Have an account already? Log in.
+        /// </summary>
+        internal static string Register_ToLogin {
+            get {
+                return ResourceManager.GetString("Register_ToLogin", resourceCulture);
             }
         }
         

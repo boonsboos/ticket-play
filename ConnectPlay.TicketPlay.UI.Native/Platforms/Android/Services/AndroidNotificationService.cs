@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace ConnectPlay.TicketPlay.UI.Native.Platforms.Android.Services;
 
 // Adapted from the MAUI Local Notifications tutorial
-
+// Note: this implementation does not recreate the notification alarms/broadcasts when the device is restarted.
 internal class AndroidNotificationService : INotificationService
 {
     const string channelId = "ticketplay";
@@ -63,7 +63,6 @@ internal class AndroidNotificationService : INotificationService
 
         PendingIntent pendingIntent = PendingIntent.GetBroadcast(Platform.AppContext, pendingIntentId++, intent, pendingIntentFlags)!;
 
-        // struct nullability is still a joke in C# 14
         long triggerTime = GetNotifyTime((DateTimeOffset)baseNotification.NotifyAt);
         AlarmManager alarmManager = (AlarmManager) Platform.AppContext.GetSystemService(Context.AlarmService)!;
         alarmManager.Set(AlarmType.RtcWakeup, triggerTime, pendingIntent);

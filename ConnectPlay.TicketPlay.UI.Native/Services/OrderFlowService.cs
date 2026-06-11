@@ -77,7 +77,7 @@ public class OrderFlowService : IOrderFlowService
                 Title = AppResources.Notification_MovieStartingTitle,
                 Message = string.Format(AppResources.Notification_MovieStarting, this.Screening!.Movie, this.Screening.Hall.HallNumber),
                 NotifyAt = this.Screening!.StartTime.AddMinutes(-15),
-                Path = $"/tickets/{Order!.Id}"
+                Path = $"/ticket/{Order!.Id}"
             }
         );
 
