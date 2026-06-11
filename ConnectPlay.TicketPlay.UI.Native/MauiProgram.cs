@@ -55,7 +55,7 @@ public static class MauiProgram
         var app = builder.Build();
 
         // hack to eagerly start these services
-        // the DI container doesn't see that these services are used anywhere, so they have to be manually star
+        // the DI container doesn't see that these services are used anywhere, so they have to be manually started
         using (var scope = app.Services.CreateScope())
         {
             var hs1 = scope.ServiceProvider.GetRequiredService<NotificationRouter>();
