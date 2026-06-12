@@ -449,4 +449,7 @@
   <data name="Register_ToLogin" xml:space="preserve">
     <value>Have an account already? Log in</value>
   </data>
+  <data name="TicketDetail_RouteDescription" xml:space="preserve">
+    <value>Route description</value>
+  </data>
 </root>

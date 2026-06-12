@@ -18,6 +18,7 @@ public partial class TicketDetail : ComponentBase
     private readonly IApiService apiService;
     private readonly IScreeningApi screeningApi;
     private readonly NavigationManager navigationManager;
+    private readonly IMap map;
     private readonly ILogger<TicketDetail> logger;
 
     private bool loading = true;
@@ -29,12 +30,26 @@ public partial class TicketDetail : ComponentBase
     private List<Seat> Seats = [];
     private string StartTime = string.Empty;
 
-    public TicketDetail(IOrderApi orderApi, IApiService apiService, IScreeningApi screeningApi, NavigationManager navigationManager, ILogger<TicketDetail> logger)
+    private static readonly Placemark placemark = new()
+    {
+        CountryName = "Netherlands",
+        AdminArea = "Noord-Brabant",
+        Thoroughfare = "Hogeschoollaan 1",
+        Locality = "Breda"
+    };
+    private static readonly MapLaunchOptions options = new()
+    {
+        Name = "Hogeschoollaan 1",
+        NavigationMode = NavigationMode.Driving
+    };
+
+    public TicketDetail(IOrderApi orderApi, IApiService apiService, IScreeningApi screeningApi, NavigationManager navigationManager, IMap map, ILogger<TicketDetail> logger)
     {
         this.orderApi = orderApi;
         this.apiService = apiService;
         this.screeningApi = screeningApi;
         this.navigationManager = navigationManager;
+        this.map = map;
         this.logger = logger;
     }
 
@@ -91,5 +106,13 @@ public partial class TicketDetail : ComponentBase
     private void Back()
     {
         navigationManager.NavigateTo("/tickets");
+    }
+
+    private async Task GetRouteDescription()
+    {
+        if (!await map.TryOpenAsync(placemark, options))
+        {
+            this.logger.LogError("No map application present on the device");
+        }
     }
 }

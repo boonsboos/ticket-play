@@ -7,6 +7,7 @@
   <Project Path="ConnectPlay.TicketPlay.API/ConnectPlay.TicketPlay.API.csproj" />
   <Project Path="ConnectPlay.TicketPlay.Tests/ConnectPlay.TicketPlay.Tests.csproj" Id="6b9c35e9-2c91-49f5-92fb-18e1aecc583c" />
   <Project Path="ConnectPlay.TicketPlay.UI.Native/ConnectPlay.TicketPlay.UI.Native.csproj" Id="e278bc21-e850-4a6a-bc3f-8baa90a7f6fd" />
+  <Project Path="ConnectPlay.TicketPlay.UI.Test/ConnectPlay.TicketPlay.UI.Test.csproj" Id="04b26a7e-e425-45d2-b77a-4f6902974691" />
   <Project Path="ConnectPlay.TicketPlay.UI/ConnectPlay.TicketPlay.UI.csproj" />
   <Project Path="ConnectPlay.TicketPlay/ConnectPlay.TicketPlay.csproj" />
 </Solution>

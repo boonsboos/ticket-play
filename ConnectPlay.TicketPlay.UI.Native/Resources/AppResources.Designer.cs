@@ -970,6 +970,15 @@ namespace ConnectPlay.TicketPlay.UI.Native.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Route description.
+        /// </summary>
+        internal static string TicketDetail_RouteDescription {
+            get {
+                return ResourceManager.GetString("TicketDetail_RouteDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Your order.
         /// </summary>
         internal static string TicketDetail_Title {

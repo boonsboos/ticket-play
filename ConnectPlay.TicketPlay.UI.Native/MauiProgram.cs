@@ -4,7 +4,6 @@ using ConnectPlay.TicketPlay.UI.Native.Resources;
 using ConnectPlay.TicketPlay.UI.Native.Services;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using System.Diagnostics;
 
 namespace ConnectPlay.TicketPlay.UI.Native;
 
@@ -27,16 +26,9 @@ public static class MauiProgram
         builder.Services.AddLogging(configure => { configure.AddDebug(); configure.AddSerilog(); builder.Services.AddSerilog((services, config) => config = logConfig); });
 
 #if DEBUG
-
-        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
         builder.Services.AddBlazorWebViewDeveloperTools();
-        //builder.Services.AddSerilog((services, config) => config = logConfig);
-        //builder.Logging.AddDebug();
-
-#else 
-
-        builder.builder.Services.AddTicketPlayApi(AppResources.Production_BaseUrl);
-
+        builder.Services.AddSerilog((services, config) => config = logConfig);
+        builder.Logging.AddDebug();
 #endif
 
         builder.Services.AddTicketPlayServices();
@@ -46,9 +38,10 @@ public static class MauiProgram
 
 #if ANDROID
         builder.Services.AddSingleton<INotificationService, Platforms.Android.Services.AndroidNotificationService>();
-        builder.Services.AddSingleton<Platforms.Android.TimedNotificationHandler> ();
+        builder.Services.AddSingleton<Platforms.Android.TimedNotificationHandler>();
+        builder.Services.AddTicketPlayApi(AppResources.BaseUrl);
 #elif WINDOWS
-        Debug.WriteLine("Windows!");
+        builder.Services.AddTicketPlayApi(AppResources.Development_BaseUrl);
         builder.Services.AddSingleton<INotificationService, Platforms.Windows.WindowsNotificationService>();
 #endif
 
@@ -56,6 +49,8 @@ public static class MauiProgram
 
         // hack to eagerly start these services
         // the DI container doesn't see that these services are used anywhere, so they have to be manually started
+        // ideally they are started and stopped on app lifecycle events, but for demonstration purposes it is okay
+        // to have these services remain active during the full lifetime of the application.
         using (var scope = app.Services.CreateScope())
         {
             var hs1 = scope.ServiceProvider.GetRequiredService<NotificationRouter>();
@@ -87,5 +82,6 @@ public static class MauiProgram
         services.AddSingleton<ISecureStorage>(SecureStorage.Default);
         services.AddSingleton<IConnectivity>(Connectivity.Current);
         services.AddSingleton<IGeolocation>(Geolocation.Default);
+        services.AddSingleton<IMap>(Map.Default);
     }
 }

@@ -447,4 +447,7 @@
   <data name="Register_ToLogin" xml:space="preserve">
     <value>Heb je al een account? Log hier in</value>
   </data>
+  <data name="TicketDetail_RouteDescription" xml:space="preserve">
+    <value>Routebeschrijving</value>
+  </data>
 </root>
