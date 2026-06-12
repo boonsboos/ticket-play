@@ -87,7 +87,7 @@ public class OrderServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
-            async () => await orderProcessingService.ReserveAsync(2, new NewOrder { Arrangements = [], Tickets = [] })
+            async () => await orderProcessingService.ReserveAsync(2, new NewOrder { Arrangements = [], Tickets = [] }, Substitute.For<User>())
         );
     }
 
@@ -111,6 +111,7 @@ public class OrderServiceTests
         {
             Id = 1,
             Total = 10m,
+            OrdererId = Guid.Empty,
             Status = OrderStatus.Pending,
             Tickets =
             [
@@ -149,12 +150,13 @@ public class OrderServiceTests
         var order = new Order
         {
             Id = 1,
+            OrdererId = Guid.Empty,
             Total = 10m,
             Status = OrderStatus.Pending,
             Tickets = [new Ticket { ScreeningId = 1, SeatId = 1, Seat = new Seat { Row = 1, SeatNumber = 1, IsForWheelchair = false }, TicketType = TicketType.Regular }]
         };
 
-        var paidOrder = new Order { Id = 2, Total = 10m, Status = OrderStatus.Paid };
+        var paidOrder = new Order { Id = 2, Total = 10m, Status = OrderStatus.Paid, OrdererId = Guid.Empty };
 
         // Ticket belonging to another paid order occupying the seat we want
         var existingTicket = new Ticket { ScreeningId = 1, SeatId = 5, Seat = takenSeat, OrderId = 2, Order = paidOrder, TicketType = TicketType.Regular };
@@ -194,11 +196,12 @@ public class OrderServiceTests
         {
             Id = 1,
             Total = 10m,
+            OrdererId = Guid.Empty,
             Status = OrderStatus.Pending,
             Tickets = [new Ticket { ScreeningId = 1, SeatId = 1, Seat = new Seat { Row = 1, SeatNumber = 1, IsForWheelchair = false }, TicketType = TicketType.Regular }]
         };
 
-        var pendingOrder = new Order { Id = 3, Total = 10m, Status = OrderStatus.Pending };
+        var pendingOrder = new Order { Id = 3, Total = 10m, Status = OrderStatus.Pending, OrdererId = Guid.Empty };
 
         // Ticket belonging to another pending order occupying the seat we want
         var existingTicket = new Ticket { ScreeningId = 1, SeatId = 7, Seat = reservedSeat, OrderId = 3, Order = pendingOrder, TicketType = TicketType.Regular };

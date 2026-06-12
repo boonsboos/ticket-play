@@ -13,10 +13,10 @@
         <DataAnnotationsValidator/>
         <ValidationSummary/>
         <div class="d-flex py-2">
-            <InputText class="form-control" DisplayName="@AppResources.Login_Email" @bind-Value="LoginForm.Email" placeholder="@AppResources.Login_Email" />
+            <InputText class="form-control" id="email" DisplayName="@AppResources.Login_Email" @bind-Value="LoginForm.Email" placeholder="@AppResources.Login_Email" />
         </div>
         <div class="d-flex py-2">
-            <InputText type="password" class="form-control" DisplayName="@AppResources.Login_Password" @bind-Value="LoginForm.Password" placeholder="@AppResources.Login_Password" />
+            <InputText type="password" class="form-control" id="pw" DisplayName="@AppResources.Login_Password" @bind-Value="LoginForm.Password" placeholder="@AppResources.Login_Password" />
         </div>
 
         <button type="submit" class="btn btn-outline-primary my-4" @onclick="SubmitLogin">@AppResources.Login_Action</button>

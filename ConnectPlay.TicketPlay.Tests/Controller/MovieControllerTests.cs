@@ -3,8 +3,10 @@ using ConnectPlay.TicketPlay.API.Controllers;
 using Microsoft.AspNetCore.Mvc; // To use OkObjectResult and IActionResult
 using NSubstitute; // This is the mocking library used in the test
 using ConnectPlay.TicketPlay.Contracts.Movie;
+using Microsoft.AspNetCore.Identity;
+using ConnectPlay.TicketPlay.Models;
 
-namespace ConnectPlay.TicketPlay.Tests;
+namespace ConnectPlay.TicketPlay.Tests.Controller;
 
 [TestClass]
 public class MovieControllerTests
@@ -14,13 +16,15 @@ public class MovieControllerTests
     {
         // Arrange
         var movieRepository = Substitute.For<IMovieRepository>(); // Create fake repository
+        var favoritesRepository = Substitute.For<IFavoritesRepository>();
+        var userManager = Substitute.For<UserManager<User>>(null, null, null, null, null, null, null, null, null);
 
         // If the repository is called to get todays movies return an empty list
         movieRepository
             .GetTodaysMoviesAsync()
-            .Returns(new List<OverviewMovie>()); // EMPTY LIST
+            .Returns([]); // EMPTY LIST
 
-        var controller = new MovieController(movieRepository); // Create controller with fake the repository
+        var controller = new MovieController(movieRepository, favoritesRepository, userManager); // Create controller with fake the repository
 
         // Act
         var todaysMovies = await controller.GetTodayAsync(); // Call the method we want to test

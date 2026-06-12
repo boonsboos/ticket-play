@@ -12,7 +12,7 @@ public partial class Register : ComponentBase
     private readonly IAuthApi _authApi;
     private readonly NavigationManager _navigationManager;
 
-    private RegisterFormModel RegisterForm = new();
+    private readonly RegisterFormModel RegisterForm = new();
 
     private int Attempt = 0;
     private int RegisterAttempt = 0;

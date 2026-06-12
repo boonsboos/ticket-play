@@ -3,7 +3,7 @@
 namespace ConnectPlay.TicketPlay.UI.Test;
 
 [TestClass]
-public sealed class RegistrationTest : UITestBase
+public sealed class LoginTest : UITestBase
 {
     [TestMethod]
     public async Task TryRegisteringAsync()
@@ -12,15 +12,8 @@ public sealed class RegistrationTest : UITestBase
         IPage page = await GetPageAsync();
 
         // Act
-        await page.Locator("#register").ClickAsync();
-
-        // Assert
-        Assert.EndsWith("/register", page.Url);
-
-        // Act
         await page.Locator("input#email").FillAsync("test@test.com");
         await page.Locator("input#pw").FillAsync("Password1234?");
-        await page.Locator("input#pw-repeat").FillAsync("Password1234?");
 
         await page.Locator("button").ClickAsync();
 

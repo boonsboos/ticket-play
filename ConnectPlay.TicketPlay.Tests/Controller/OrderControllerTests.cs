@@ -4,12 +4,13 @@ using ConnectPlay.TicketPlay.API.Controllers;
 using ConnectPlay.TicketPlay.Contracts.Orders;
 using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
-namespace ConnectPlay.TicketPlay.Tests;
+namespace ConnectPlay.TicketPlay.Tests.Controller;
 
 [TestClass]
 public class OrderControllerTests
@@ -22,7 +23,8 @@ public class OrderControllerTests
         return new OrderController(
             orderService ?? Substitute.For<IOrderService>(),
             orderRepository ?? Substitute.For<IOrderRepository>(),
-            logger ?? Substitute.For<ILogger<OrderController>>());
+            logger ?? Substitute.For<ILogger<OrderController>>(),
+            Substitute.For<UserManager<User>>(null, null, null, null, null, null, null, null, null));
     }
 
     [TestMethod]
@@ -44,8 +46,8 @@ public class OrderControllerTests
     {
         // Arrange
         var orderService = Substitute.For<IOrderService>();
-        var placedOrder = new Order { Total = 10m, Status = OrderStatus.Pending };
-        orderService.ReserveAsync(Arg.Any<int>(), Arg.Any<NewOrder>()).Returns(placedOrder);
+        var placedOrder = new Order { Total = 10m, Status = OrderStatus.Pending, OrdererId = Guid.Empty };
+        orderService.ReserveAsync(Arg.Any<int>(), Arg.Any<NewOrder>(), Arg.Any<User>()).Returns(placedOrder);
 
         var controller = CreateController(orderService: orderService);
         var newOrder = new NewOrder { Tickets = [TicketType.Regular], Arrangements = [] };
@@ -64,7 +66,7 @@ public class OrderControllerTests
     {
         // Arrange
         var orderService = Substitute.For<IOrderService>();
-        orderService.ReserveAsync(Arg.Any<int>(), Arg.Any<NewOrder>())
+        orderService.ReserveAsync(Arg.Any<int>(), Arg.Any<NewOrder>(), Arg.Any<User>())
             .ThrowsAsync(new ArgumentException("Screening does not exist"));
 
         var controller = CreateController(orderService: orderService);
@@ -82,7 +84,7 @@ public class OrderControllerTests
     {
         // Arrange
         var orderService = Substitute.For<IOrderService>();
-        orderService.ReserveAsync(Arg.Any<int>(), Arg.Any<NewOrder>())
+        orderService.ReserveAsync(Arg.Any<int>(), Arg.Any<NewOrder>(), Arg.Any<User>())
             .ThrowsAsync(new InvalidOperationException("No available seats"));
 
         var controller = CreateController(orderService: orderService);
@@ -221,7 +223,7 @@ public class OrderControllerTests
     {
         // Arrange
         var orderRepository = Substitute.For<IOrderRepository>();
-        var order = new Order { Total = 20m, Status = OrderStatus.Paid };
+        var order = new Order { Total = 20m, Status = OrderStatus.Paid, OrdererId = Guid.Empty };
         orderRepository.GetOrderByOrderCodeAsync("ABC12345").Returns(order);
 
         var controller = CreateController(orderRepository: orderRepository);
@@ -295,7 +297,7 @@ public class OrderControllerTests
     {
         // Arrange
         var orderService = Substitute.For<IOrderService>();
-        var updatedOrder = new Order { Total = 10m, Status = OrderStatus.Pending };
+        var updatedOrder = new Order { Total = 10m, Status = OrderStatus.Pending, OrdererId = Guid.Empty };
         orderService.UpdateSeatsAsync(Arg.Any<int>(), Arg.Any<IEnumerable<Seat>>()).Returns(updatedOrder);
 
         var controller = CreateController(orderService: orderService);
