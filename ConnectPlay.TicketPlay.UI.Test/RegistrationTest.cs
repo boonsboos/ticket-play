@@ -6,7 +6,7 @@ namespace ConnectPlay.TicketPlay.UI.Test;
 public sealed class RegistrationTest : UITestBase
 {
     [TestMethod]
-    public async Task TryRegisteringAsync()
+    public async Task Navigation_ToRegistrationPage_PossibleAsync()
     {
         // Arrange
         IPage page = await GetPageAsync();
@@ -16,6 +16,29 @@ public sealed class RegistrationTest : UITestBase
 
         // Assert
         Assert.EndsWith("/register", page.Url);
+    }
+
+    [TestMethod]
+    public async Task Navigation_ToLoginPage_FromRegistrationPage_PossibleAsync()
+    {
+        // Arrange
+        IPage page = await GetPageAsync();
+
+        // Act
+        await page.Locator("#register").ClickAsync();
+        await page.Locator("#login").ClickAsync();
+
+        // Assert
+        Assert.EndsWith("/login", page.Url);
+    }
+
+    [TestMethod]
+    [Ignore("Run manually")]
+    public async Task RegisteringAccount_Successful_LogsInAsync()
+    {
+        // Arrange
+        IPage page = await GetPageAsync();
+        await page.Locator("#register").ClickAsync();
 
         // Act
         await page.Locator("input#email").FillAsync("test@test.com");
