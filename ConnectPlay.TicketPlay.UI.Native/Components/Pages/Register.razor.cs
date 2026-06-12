@@ -36,6 +36,8 @@ public partial class Register : ComponentBase
             return;
         }
 
+        MatchingPasswords = true;
+
         RegisterAttempt++;
 
         var response = await _authApi.RegisterAsync(new RegistrationRequest
@@ -49,6 +51,8 @@ public partial class Register : ComponentBase
             Registered = false;
             return;
         }
+
+        Registered = true;
 
         await this._apiService.LoginAsync(RegisterForm.Email, RegisterForm.Password);
 

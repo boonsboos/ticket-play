@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using ConnectPlay.TicketPlay.UI.Native.Abstract;
 using ConnectPlay.TicketPlay.UI.Native.Notifications;
 using ConnectPlay.TicketPlay.UI.Native.Platforms.Android.Services;
@@ -14,6 +15,7 @@ namespace ConnectPlay.TicketPlay.UI.Native.Platforms.Android;
     ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density,
     LaunchMode = LaunchMode.SingleTop
 )]
+[Register("nl.connectplay.ticketplay.nativeui.MainActivity")]
 public class MainActivity : MauiAppCompatActivity
 {
     protected override void OnCreate(Bundle? savedInstanceState)
