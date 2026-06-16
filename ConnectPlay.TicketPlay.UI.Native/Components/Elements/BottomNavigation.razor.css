@@ -16,3 +16,7 @@
     border-radius: 50%;
     background-color: darkgray;
 }
+
+.bottom-nav-always-bottom {
+    top: 100vh;
+}
