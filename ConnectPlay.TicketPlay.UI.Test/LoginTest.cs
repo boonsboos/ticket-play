@@ -6,7 +6,7 @@ namespace ConnectPlay.TicketPlay.UI.Test;
 public sealed class LoginTest : UITestBase
 {
     [TestMethod]
-    public async Task TryRegisteringAsync()
+    public async Task TryLoggingInAsync()
     {
         // Arrange
         IPage page = await GetPageAsync();
