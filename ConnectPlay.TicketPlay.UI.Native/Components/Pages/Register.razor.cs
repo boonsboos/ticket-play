@@ -16,8 +16,8 @@ public partial class Register : ComponentBase
 
     private int Attempt = 0;
     private int RegisterAttempt = 0;
-    private bool Registered = false;
-    private bool MatchingPasswords = false;
+    private bool? Registered = null;
+    private bool? MatchingPasswords = null;
 
     public Register(IApiService apiService, IAuthApi authApi, NavigationManager navigationManager)
     {
@@ -54,12 +54,7 @@ public partial class Register : ComponentBase
 
         Registered = true;
 
-        await this._apiService.LoginAsync(RegisterForm.Email, RegisterForm.Password);
-
-        if (_apiService.IsAuthenticated)
-        {
-            _navigationManager.NavigateTo("/");
-        }
+        _navigationManager.NavigateTo("/login");
     }
 
     private class RegisterFormModel

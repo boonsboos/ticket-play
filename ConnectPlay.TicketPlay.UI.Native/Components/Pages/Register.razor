@@ -4,12 +4,12 @@
 <div class="d-flex flex-column align-items-center justify-content-center g-2 container">
     <h1 class="text-center my-2">@AppResources.Register_Action</h1>
 
-    @if (!MatchingPasswords && Attempt > 0)
+    @if (MatchingPasswords == false && Attempt > 0)
     {
         <p class="text-danger">@AppResources.Register_NoMatch</p>
     }
 
-    @if (!Registered && RegisterAttempt > 0)
+    @if (Registered == false && RegisterAttempt > 0)
     {
         <p class="text-danger">@AppResources.Register_Fail</p>
     }
