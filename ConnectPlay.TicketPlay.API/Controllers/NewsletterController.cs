@@ -10,21 +10,24 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 public class NewsletterController(INewsletterRepository newsletterRepository) : ControllerBase
 {
     [HttpPost("subscriber")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateSubscriberAsync([FromBody] NewsletterSubscriber subscriber)
     {
         var exists = await newsletterRepository.EmailExistsAsync(subscriber.Email);
 
         if (exists)
         {
-            return StatusCode(StatusCodes.Status409Conflict);
+            return Conflict();
         }
 
         await newsletterRepository.CreateSubscriberAsync(subscriber);
 
-        return StatusCode(StatusCodes.Status201Created); // "Subscriber was created", no payload given.
+        return Created(); 
     }
 
     [HttpGet("subscriber")]
+    [ProducesResponseType<int>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetNewsletterSubscriberCountAsync()
     {
         var subscriberCount = await newsletterRepository.GetNewsletterSubscriberCountAsync();
@@ -33,8 +36,9 @@ public class NewsletterController(INewsletterRepository newsletterRepository) : 
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> SendNewsletterAsync([FromBody] CreateNewsletterRequest request)
     {
-        return StatusCode(StatusCodes.Status201Created);
+        return Created();
     }
 }

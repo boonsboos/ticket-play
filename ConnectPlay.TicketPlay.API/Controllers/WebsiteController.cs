@@ -24,6 +24,9 @@ public class WebsiteController : ControllerBase
 
     [HttpGet]
     [Route("overview")]
+    [ProducesResponseType<IEnumerable<OverviewMovieDay>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetOverviewAsync()
     {
         var screenings = await screeningRepository.GetWeekOverviewAsync();
@@ -76,6 +79,7 @@ public class WebsiteController : ControllerBase
 
     [HttpPost]
     [Route("arrangements")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> CreateArrangementAsync([FromBody] NewArrangement newArrangement)
     {
         await arrangementRepository.CreateAsync(newArrangement);
@@ -85,6 +89,7 @@ public class WebsiteController : ControllerBase
 
     [HttpGet]
     [Route("arrangements")]
+    [ProducesResponseType<IEnumerable<Arrangement>>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetArrangementsAsync()
     {
         var arrangements = await arrangementRepository.GetAllAsync();

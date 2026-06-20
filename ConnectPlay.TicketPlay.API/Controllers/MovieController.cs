@@ -94,11 +94,14 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
         }
 
         await _movieRepository.CreateMovieAsync(dto);
-        return StatusCode(StatusCodes.Status201Created); // "Movie was created", no payload given.
+        return Created(); // "Movie was created", no payload given.
     }
 
     [Authorize]
     [HttpPost("{movieId:int}/favorite")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> AddFavoriteAsync([FromRoute] int movieId)
     {
         if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User)!, out var userId))
@@ -118,6 +121,9 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
 
     [Authorize]
     [HttpDelete("{movieId:int}/favorite")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> RemoveFavoriteAsync([FromRoute] int movieId)
     {
         if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User)!, out var userId))
@@ -137,6 +143,8 @@ public class MovieController : ControllerBase // Controllerbase provides useful 
 
     [Authorize]
     [HttpGet("favorites")]
+    [ProducesResponseType<IEnumerable<Favorite>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetUserFavoritesAsync()
     {
         if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User)!, out var userId))

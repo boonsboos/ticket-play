@@ -23,6 +23,9 @@ public class RecommendationController : ControllerBase
 
     [Authorize]
     [HttpGet]
+    [ProducesResponseType<IEnumerable<Movie>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetRecommendationsAsync()
     {
         if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User), out var userId))

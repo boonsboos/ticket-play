@@ -11,6 +11,10 @@ namespace ConnectPlay.TicketPlay.API.Controllers;
 public class HallController(IHallRepository hallRepository, IHallService hallService) : ControllerBase
 {
     [HttpPost]
+    [ProducesResponseType<CreateHallResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     public async Task<IActionResult> CreateHallAsync([FromBody] CreateHallRequest request)
     {
         if (await hallRepository.HallNumberExistAsync(request.HallNumber))
@@ -80,13 +84,18 @@ public class HallController(IHallRepository hallRepository, IHallService hallSer
             Capacity = createdHall.Capacity
         });
     }
+
     [HttpGet("all")]
-    public async Task<IEnumerable<Hall>> GetHallsAsync()
+    [ProducesResponseType<IEnumerable<Hall>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetHallsAsync()
     {
-        return await hallRepository.GetHallsAsync();
+        return Ok(await hallRepository.GetHallsAsync());
     }
 
     [HttpGet("{id}/layout")]
+    [ProducesResponseType<HallLayoutResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetHallLayoutAsync([FromRoute] int id)
     {
         var hallLayout = await hallService.GetHallLayoutAsync(id);

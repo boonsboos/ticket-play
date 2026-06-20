@@ -17,7 +17,7 @@ public class ScreeningController : ControllerBase
     }
 
     [HttpPost("new")]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType<CreateScreeningRequest>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Create([FromBody] CreateScreeningRequest dto)
     {
@@ -57,6 +57,8 @@ public class ScreeningController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
+    [ProducesResponseType<Screening>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetScreeningById(int id)
     {
         var screening = await _screeningRepository.GetScreeningAsync(id);

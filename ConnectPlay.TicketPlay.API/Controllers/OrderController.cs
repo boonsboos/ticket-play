@@ -1,10 +1,12 @@
 ﻿using ConnectPlay.TicketPlay.Abstract.Repositories;
 using ConnectPlay.TicketPlay.API.Abstract;
 using ConnectPlay.TicketPlay.Contracts.Orders;
+using ConnectPlay.TicketPlay.Contracts.Seat;
 using ConnectPlay.TicketPlay.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace ConnectPlay.TicketPlay.API.Controllers;
 
@@ -28,6 +30,9 @@ public class OrderController : ControllerBase
     [Authorize]
     [HttpPost]
     [Route("{screeningId}/reserve")] // /kiosk/1234/reserve
+    [ProducesResponseType<Order>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PlaceOrderAsync([FromRoute] int screeningId, [FromBody] NewOrder order)
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -61,6 +66,9 @@ public class OrderController : ControllerBase
     [Authorize]
     [HttpPut]
     [Route("{orderId}/cancel")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> CancelOrderAsync([FromRoute] int orderId) //FromRoute get the orderId from the url and use it as a parameter
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -90,6 +98,9 @@ public class OrderController : ControllerBase
     [Authorize]
     [HttpPut]
     [Route("{orderId}/pay")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PayOrderAsync([FromRoute] int orderId)
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -119,6 +130,9 @@ public class OrderController : ControllerBase
     [Authorize]
     [HttpGet]
     [Route("{orderId}/pdf")]
+    [ProducesResponseType(StatusCodes.Status200OK, Description = "Contains a application/pdf file.")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> PrintTicketsAsync([FromRoute] int orderId)
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -152,6 +166,8 @@ public class OrderController : ControllerBase
 
     [HttpGet]
     [Route("code/{orderCode}")]
+    [ProducesResponseType<Order>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetOrderByOrderCodeAsync([FromRoute] string orderCode)
     {
         var order = await orderRepository.GetOrderByOrderCodeAsync(orderCode);
@@ -164,6 +180,10 @@ public class OrderController : ControllerBase
     [Authorize]
     [HttpGet]
     [Route("{orderId}")]
+    [ProducesResponseType<Order>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetOrderByOrderIdAsync([FromRoute] int orderId)
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -190,6 +210,8 @@ public class OrderController : ControllerBase
 
     [HttpGet]
     [Route("taken-seats")] // /taken-seats?screeningId=1234&orderId=5678
+    [ProducesResponseType<IEnumerable<SeatResponse>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetTakenSeatsAsync([FromQuery] int screeningId, [FromQuery] int orderId)
     {
         try
@@ -207,6 +229,9 @@ public class OrderController : ControllerBase
     [Authorize]
     [HttpPut]
     [Route("{orderId}/update-seats")]
+    [ProducesResponseType<Order>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> UpdateOrderSeatsAsync([FromRoute] int orderId, [FromBody] IEnumerable<Seat> seats)
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -242,6 +267,9 @@ public class OrderController : ControllerBase
 
     [Authorize]
     [HttpGet]
+    [ProducesResponseType<IEnumerable<Order>>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetOrdersAsync()
     {
         if (!Guid.TryParse(userManager.GetUserId(HttpContext.User), out var userId))
@@ -253,6 +281,7 @@ public class OrderController : ControllerBase
         if (user is null)
             return Forbid();
 
+        // will only get the orders that are not in the past
         var orders = await orderRepository.GetOrdersAsync(userId);
 
         return Ok(orders);

@@ -30,6 +30,9 @@ public class AuthenticationController : ControllerBase
     [HttpPost]
     [Route("register")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register([FromBody] RegistrationRequest registration)
     {
         var user = new User
@@ -61,6 +64,8 @@ public class AuthenticationController : ControllerBase
     [HttpPost]
     [Route("login")]
     [AllowAnonymous]
+    [ProducesResponseType<TokenResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Login([FromBody] RegistrationRequest login)
     {
         var user = await _userManager.FindByEmailAsync(login.Email);
@@ -83,6 +88,8 @@ public class AuthenticationController : ControllerBase
     [HttpPost]
     [Route("refresh")]
     [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Refresh([FromBody] RefreshRequest refreshRequest)
     {
         if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User), out var userId))
@@ -106,6 +113,8 @@ public class AuthenticationController : ControllerBase
     [HttpPut]
     [Route("logout")]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Logout()
     {
         if (!Guid.TryParse(_userManager.GetUserId(HttpContext.User), out var userId))
